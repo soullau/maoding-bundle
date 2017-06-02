@@ -1,0 +1,8 @@
+.svn/
+node_modules/
+.idea/libraries/
+*/target/
+*.log
+*.stackdump
+*.patch
+*.pdf
