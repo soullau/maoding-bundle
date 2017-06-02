@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/basic-core/basic-core.iml" filepath="$PROJECT_DIR$/basic-core/basic-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/corp-bll/corp-bll.iml" filepath="$PROJECT_DIR$/corp-bll/corp-bll.iml" />
+      <module fileurl="file://$PROJECT_DIR$/corp-client/corp-client.iml" filepath="$PROJECT_DIR$/corp-client/corp-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/corp-server/corp-server.iml" filepath="$PROJECT_DIR$/corp-server/corp-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/file-center/file-center.iml" filepath="$PROJECT_DIR$/file-center/file-center.iml" />
+      <module fileurl="file://$PROJECT_DIR$/file-center-bll/file-center-bll.iml" filepath="$PROJECT_DIR$/file-center-bll/file-center-bll.iml" />
+      <module fileurl="file://$PROJECT_DIR$/im-easemob/im-easemob.iml" filepath="$PROJECT_DIR$/im-easemob/im-easemob.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/maoding-bundle.iml" filepath="$PROJECT_DIR$/.idea/maoding-bundle.iml" />
+      <module fileurl="file://$PROJECT_DIR$/notify-endpoint/notify-endpoint.iml" filepath="$PROJECT_DIR$/notify-endpoint/notify-endpoint.iml" />
+    </modules>
+  </component>
+</project>
