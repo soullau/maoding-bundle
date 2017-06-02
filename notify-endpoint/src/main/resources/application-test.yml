@@ -1,0 +1,26 @@
+app:
+    http:
+        host: 172.16.6.73
+        port: 8087
+    sockJs:
+        host: 172.16.6.73
+        port: 8383
+        endPoint: /sockjs/*
+
+    clientSubUrl_TopicAll: clientSubUrl.topicAll
+    clientSubUrl_TopicSpec: clientSubUrl.topicSpec
+
+# ===================================================================
+# ActiveMQ
+# ===================================================================
+activeMQ:
+    broker:
+        url: tcp://172.16.6.73:61616
+    listen:
+        destination: queueListen
+
+# ===================================================================
+# CORS
+# ===================================================================
+cors:
+    allowedOriginPattern: "*"

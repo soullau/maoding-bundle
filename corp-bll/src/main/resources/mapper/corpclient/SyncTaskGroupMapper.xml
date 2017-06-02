@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.maoding.corpbll.module.corpclient.dao.SyncTaskGroupDao">
+
+    <select id="selectUnfinishedTaskGroups" resultType="com.maoding.corpbll.module.corpclient.model.SyncTaskGroup">
+        select * from sync_task_group
+        where
+        corp_endpoint = #{corpEndpoint}
+        and company_id= #{companyId}
+        and task_group_status != 2
+        order by create_date
+        <if test="count != null  and count != 0 ">
+            limit 0,${count}
+        </if>
+    </select>
+</mapper>
