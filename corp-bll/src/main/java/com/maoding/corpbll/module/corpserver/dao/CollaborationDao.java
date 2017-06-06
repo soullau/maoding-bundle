@@ -2,37 +2,35 @@ package com.maoding.corpbll.module.corpserver.dao;
 
 
 import com.maoding.core.base.BaseDao;
-import com.maoding.corpbll.module.corpserver.dto.CoCompany;
-import com.maoding.corpbll.module.corpserver.dto.CoProjectProcess;
-import com.maoding.corpbll.module.corpserver.dto.CoUser;
+import com.maoding.corpbll.module.corpserver.dto.CoCompanyDTO;
+import com.maoding.corpbll.module.corpserver.dto.CoProjectProcessDTO;
+import com.maoding.corpbll.module.corpserver.dto.CoUserDTO;
 import com.maoding.corpbll.module.corpserver.dto.ProjectDTO;
-import com.maoding.corpbll.module.corpserver.model.AccountEntity;
-import com.maoding.corpbll.module.corpserver.model.CollaborationEntity;
-import com.maoding.corpbll.module.corpserver.model.ProjectTaskEntity;
+import com.maoding.corpbll.module.corpserver.model.AccountDo;
+import com.maoding.corpbll.module.corpserver.model.CollaborationDo;
+import com.maoding.corpbll.module.corpserver.model.ProjectTaskDo;
 import org.apache.ibatis.annotations.Param;
 
-import java.math.BigInteger;
 import java.util.List;
-import java.util.Map;
 
 
-public interface CollaborationDao extends BaseDao<CollaborationEntity> {
+public interface CollaborationDao extends BaseDao<CollaborationDo> {
 
-    AccountEntity getAccountByCellphone(@Param("cellphone") String cellphone);
+    AccountDo getAccountByCellphone(@Param("cellphone") String cellphone);
 
-    List<CoCompany> listCompanyByIds(@Param("companyIds") List<String> companyIds);
+    List<CoCompanyDTO> listCompanyByIds(@Param("companyIds") List<String> companyIds);
 
     List<ProjectDTO> listProjectByCompanyId(@Param("companyId") String companyId, @Param("syncDate") String syncDate);
 
     ProjectDTO getProjectById(@Param("projectId") String projectId);
 
-    List<CoUser> listUserByCompanyId(@Param("companyId") String companyId);
+    List<CoUserDTO> listUserByCompanyId(@Param("companyId") String companyId);
 
-    List<CoProjectProcess> listProjectProcessByTaskId(@Param("taskId") String taskId, @Param("syncDate") String syncDate);
+    List<CoProjectProcessDTO> listProjectProcessByTaskId(@Param("taskId") String taskId, @Param("syncDate") String syncDate);
 
-    List<ProjectTaskEntity> listProjectTask(@Param("projectId") String projectId, @Param("syncDate") String syncDate);
+    List<ProjectTaskDo> listProjectTask(@Param("projectId") String projectId, @Param("syncDate") String syncDate);
 
-    CoUser getTaskPrincipal(@Param("projectTaskId") String projectTaskId);
+    CoUserDTO getTaskPrincipal(@Param("projectTaskId") String projectTaskId);
 
     Long sumDocmgrSizeByCompanyId(@Param("companyId") String companyId);
 }

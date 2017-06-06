@@ -33,13 +33,18 @@ import java.util.Map;
 @Controller
 public class Application extends SpringBootServletInitializer {
 
+    /**
+     * 是否启用定时任务(调试用）
+     **/
+    public static Boolean EnableSchedule = true;
+
     @Autowired
     private CoService coService;
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
 
-        if(StringUtils.isBlank(CorpClientConfig.EndPoint))
+        if (StringUtils.isBlank(CorpClientConfig.EndPoint))
             throw new RuntimeException("请先配置EndPoint");
     }
 
@@ -53,5 +58,23 @@ public class Application extends SpringBootServletInitializer {
     @ResponseBody
     public ApiResult returnNodeStatus(@RequestBody Map<String, Object> param) throws Exception {
         return coService.handleMyTaskByProjectNodeId(param);
+    }
+
+    /**
+     * 根据组织ID获取公司网盘容量信息
+     */
+    @RequestMapping(value = "/system/getCompanyDiskInfo", method = RequestMethod.POST)
+    @ResponseBody
+    public ApiResult getCompanyDiskInfo(@RequestBody Map<String, Object> param) throws Exception {
+        return coService.getCompanyDiskInfo(param);
+    }
+
+    /**
+     * 根据组织ID更新协同占用空间
+     */
+    @RequestMapping(value = "/system/updateCorpSizeOnCompanyDisk", method = RequestMethod.POST)
+    @ResponseBody
+    public ApiResult updateCorpSizeOnCompanyDisk(@RequestBody Map<String, Object> param) throws Exception {
+        return coService.updateCorpSizeOnCompanyDisk(param);
     }
 }

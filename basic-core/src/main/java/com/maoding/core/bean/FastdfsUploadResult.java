@@ -22,6 +22,11 @@ public class FastdfsUploadResult {
      **/
     private Boolean needFlow;
 
+    /**
+     * 表ID，视业务情况赋值（可选字段）
+     */
+    private String netFileId;
+
     public static FastdfsUploadResult parse(MultipartFileParam param, String group, String path) {
         FastdfsUploadResult r = new FastdfsUploadResult();
         r.setUploadId(param.getUploadId());
@@ -126,5 +131,13 @@ public class FastdfsUploadResult {
 
     public void setNeedFlow(Boolean needFlow) {
         this.needFlow = needFlow;
+    }
+
+    public String getNetFileId() {
+        return netFileId;
+    }
+
+    public void setNetFileId(String netFileId) {
+        this.netFileId = netFileId;
     }
 }

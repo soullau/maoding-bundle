@@ -20,6 +20,8 @@ public class UpdateStatusRunner implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
+        if (!Application.EnableSchedule)
+            return;
         log.info("------- CommandLineRunner Start -------");
         syncTaskService.runUpdateStatusTask();
     }

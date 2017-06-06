@@ -4,7 +4,7 @@ package com.maoding.corpbll.module.corpclient.dto;
  * Created by Wuwq on 2017/2/9.
  * 组织同步清单
  */
-public class SyncCompanyDto_Select {
+public class SyncCompanyDTO_Select {
 
     private String id;
     /**

@@ -7,6 +7,10 @@ public class CorpServer {
 
     public static final String URL_LOGIN = "/collaboration/login";
 
+    public static final String URL_GET_COMPANY_DISK_INFO="/collaboration/getCompanyDiskInfo";
+
+    public static final String URL_GET_UPDATE_CORP_SIZE="/collaboration/updateCorpSizeOnCompanyDisk";
+
     public static final String URL_LIST_COMPANY_BY_IDS = "/collaboration/listCompanyByIds";
 
     public static final String URL_LIST_USER_BY_COMPANY_ID = "/collaboration/listUserByCompanyId";

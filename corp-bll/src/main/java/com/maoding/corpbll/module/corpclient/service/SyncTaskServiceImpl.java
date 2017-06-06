@@ -6,9 +6,9 @@ import com.maoding.core.bean.ApiResult;
 import com.maoding.corpbll.constDefine.*;
 import com.maoding.corpbll.module.corpclient.dao.SyncTaskDao;
 import com.maoding.corpbll.module.corpclient.dao.SyncTaskGroupDao;
-import com.maoding.corpbll.module.corpclient.model.SyncTask;
-import com.maoding.corpbll.module.corpclient.model.SyncTaskGroup;
-import com.maoding.corpbll.module.corpserver.dto.SyncCompanyDto_Select;
+import com.maoding.corpbll.module.corpclient.model.SyncTaskDO;
+import com.maoding.corpbll.module.corpclient.model.SyncTaskGroupDO;
+import com.maoding.corpbll.module.corpserver.dto.SyncCompanyDTO_Select;
 import com.maoding.utils.JsonUtils;
 import com.maoding.utils.StringUtils;
 import org.redisson.api.RedissonClient;
@@ -102,7 +102,7 @@ public class SyncTaskServiceImpl extends BaseService implements SyncTaskService 
         if (!apiResult.isSuccessful())
             throw new RuntimeException("拉取同步组织失败：" + apiResult.getMsg());
 
-        List<SyncCompanyDto_Select> scs = JsonUtils.json2list(JsonUtils.obj2json(apiResult.getData()), SyncCompanyDto_Select.class);
+        List<SyncCompanyDTO_Select> scs = JsonUtils.json2list(JsonUtils.obj2json(apiResult.getData()), SyncCompanyDTO_Select.class);
 
         if (scs == null || scs.size() == 0)
             return;
@@ -114,7 +114,7 @@ public class SyncTaskServiceImpl extends BaseService implements SyncTaskService 
         Semaphore sp = new Semaphore(2);
 
         scs.forEach(s -> {
-            SyncCompanyDto_Select sc = s;
+            SyncCompanyDTO_Select sc = s;
             //异步并发
             CompletableFuture.runAsync(() -> {
                 try {
@@ -158,7 +158,7 @@ public class SyncTaskServiceImpl extends BaseService implements SyncTaskService 
     /**
      * 同步任务
      */
-    private void runOneTask(SyncTask task) throws InterruptedException {
+    private void runOneTask(SyncTaskDO task) throws InterruptedException {
         //筛选待同步、待重试
         int syncStatus = task.getSyncStatus();
         if (syncStatus == SyncStatus.WaitSync || syncStatus == SyncStatus.WaitRetry) {
@@ -248,7 +248,7 @@ public class SyncTaskServiceImpl extends BaseService implements SyncTaskService 
     /**
      * 执行指定优先级的任务
      */
-    private boolean runTasksByPriority(String corpEndpoint, String companyId, SyncTaskGroup group, int syncPriority, List<SyncTask> tasks) {
+    private boolean runTasksByPriority(String corpEndpoint, String companyId, SyncTaskGroupDO group, int syncPriority, List<SyncTaskDO> tasks) {
         if (tasks.size() > 0) {
             log.info("{}-{} 开始执行 {} 级同步任务", corpEndpoint, companyId, syncPriority);
 
@@ -259,7 +259,7 @@ public class SyncTaskServiceImpl extends BaseService implements SyncTaskService 
             Semaphore sp = new Semaphore(2);
 
             tasks.forEach(t -> {
-                SyncTask task = t;
+                SyncTaskDO task = t;
                 //异步并发
                 CompletableFuture.runAsync(() -> {
                     try {
@@ -301,12 +301,12 @@ public class SyncTaskServiceImpl extends BaseService implements SyncTaskService 
      */
     private void runTasksByCompany(String corpEndpoint, String companyId) {
         //查询未完成的任务组（按1个来查）
-        List<SyncTaskGroup> groups = syncTaskGroupDao.selectUnfinishedTaskGroups(corpEndpoint, companyId, 1);
+        List<SyncTaskGroupDO> groups = syncTaskGroupDao.selectUnfinishedTaskGroups(corpEndpoint, companyId, 1);
         if (groups.size() == 0)
             return;
         log.info("{}-{} 发现未完成的任务组：{} 个", corpEndpoint, companyId, groups.size());
 
-        SyncTaskGroup group = groups.get(0);
+        SyncTaskGroupDO group = groups.get(0);
         //判断状态是否为执行中
         if (group.getTaskGroupStatus() == TaskGroupStatus.Running) {
             long seconds = Duration.between(group.getLastEntry(), LocalDateTime.now()).getSeconds();
@@ -328,7 +328,7 @@ public class SyncTaskServiceImpl extends BaseService implements SyncTaskService 
         log.info("{}-{} 任务组：{} 更新状态为：执行中", corpEndpoint, companyId, group.getId());
 
         //获取待同步的任务
-        List<SyncTask> tasks = syncTaskDao.selectUnfinishedTasks(group.getId(), 0);
+        List<SyncTaskDO> tasks = syncTaskDao.selectUnfinishedTasks(group.getId(), 0);
         log.info("{}-{} 发现 {} 个待同步的任务", corpEndpoint, companyId, tasks.size());
         if (tasks.size() == 0) {
             if (syncTaskGroupDao.updateAsFinishedStatus(group.getId(), group.getTaskGroupStatus()) > 0) {
@@ -339,9 +339,9 @@ public class SyncTaskServiceImpl extends BaseService implements SyncTaskService 
         }
 
         //按优先级分组
-        List<SyncTask> tasks_L1 = Lists.newArrayList();
-        List<SyncTask> tasks_L2 = Lists.newArrayList();
-        List<SyncTask> tasks_L3 = Lists.newArrayList();
+        List<SyncTaskDO> tasks_L1 = Lists.newArrayList();
+        List<SyncTaskDO> tasks_L2 = Lists.newArrayList();
+        List<SyncTaskDO> tasks_L3 = Lists.newArrayList();
 
         tasks.forEach(t -> {
             switch (t.getSyncPriority()) {
@@ -385,7 +385,7 @@ public class SyncTaskServiceImpl extends BaseService implements SyncTaskService 
         if (!apiResult.isSuccessful())
             throw new RuntimeException("拉取同步组织失败：" + apiResult.getMsg());
 
-        List<SyncCompanyDto_Select> scs = JsonUtils.json2list(JsonUtils.obj2json(apiResult.getData()), SyncCompanyDto_Select.class);
+        List<SyncCompanyDTO_Select> scs = JsonUtils.json2list(JsonUtils.obj2json(apiResult.getData()), SyncCompanyDTO_Select.class);
         if (scs == null || scs.size() == 0)
             return;
 
@@ -393,7 +393,7 @@ public class SyncTaskServiceImpl extends BaseService implements SyncTaskService 
             return;
 
         scs.forEach(o -> {
-            SyncCompanyDto_Select sc = o;
+            SyncCompanyDTO_Select sc = o;
             //异步并发
             CompletableFuture.runAsync(() -> {
                 try {

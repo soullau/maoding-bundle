@@ -10,25 +10,39 @@ import com.maoding.fastdfsClient.domain.StorePath;
 import com.maoding.fastdfsClient.service.AppendFileStorageClient;
 import com.maoding.fastdfsClient.service.FastFileStorageClient;
 import com.maoding.utils.StringUtils;
+import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.fileupload.FileItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Optional;
 
 /**
  * Created by Wuwq on 2017/06/01.
  */
 @Service("fastdfsService")
+@Transactional(propagation = Propagation.NOT_SUPPORTED)
 public class FastdfsServiceImpl extends BaseService implements FastdfsService {
+
+    private final static String ZOOM_WIDTH = "zoomWidth";
+    private final static String ZOOM_HEIGHT = "zoomHeight";
+    private final static String ZOOM_KEEP_RATIO = "zoomKeepRatio";
+
     @Autowired
     private FastFileStorageClient storageClient;
 
     @Autowired
     private AppendFileStorageClient appendStorageClient;
 
+
     /**
-     * 上传到FastDFS
+     * 上传文件
      */
     @Override
     public FastdfsUploadResult upload(MultipartFileParam param) throws IOException {
@@ -49,7 +63,7 @@ public class FastdfsServiceImpl extends BaseService implements FastdfsService {
             if (chunk == 0) {
                 //TODO 当FastDFS服务器存在多个组的时候需要分配逻辑
                 StorePath storePath = appendStorageClient.uploadAppenderFile(FdfsClientConstants.DEFAULT_GROUP, fileItem.getInputStream(), fileItem.getSize(), extName);
-                fuResult=FastdfsUploadResult.parse(param, storePath.getGroup(), storePath.getPath());
+                fuResult = FastdfsUploadResult.parse(param, storePath.getGroup(), storePath.getPath());
                 fuResult.setNeedFlow(true);
                 return fuResult;
             }
@@ -80,6 +94,62 @@ public class FastdfsServiceImpl extends BaseService implements FastdfsService {
         return fuResult;
     }
 
+    /**
+     * 上传LOGO
+     */
+    public FastdfsUploadResult uploadLogo(MultipartFileParam param) throws Exception {
+        Thumbnails.Builder builder = Thumbnails.of(param.getFileItem().getInputStream());
+
+        //缩放
+        String zoomWidth = Optional.ofNullable((String) param.getParam().get(ZOOM_WIDTH)).filter(s -> StringUtils.isNotBlank(s) && !s.equals("null")).orElse(null);
+        String zoomHeight = Optional.ofNullable((String) param.getParam().get(ZOOM_HEIGHT)).filter(s -> StringUtils.isNotBlank(s) && !s.equals("null")).orElse(null);
+        Boolean zoomKeepRatio = Optional.ofNullable((Boolean) param.getParam().get(ZOOM_KEEP_RATIO)).filter(s -> s != null && !s.equals("null")).orElse(true);
+
+
+        if (zoomWidth == null && zoomHeight != null) {
+            builder = builder.width(Integer.parseInt(zoomWidth));
+            builder = builder.keepAspectRatio(zoomKeepRatio);
+        } else if (zoomWidth != null && zoomHeight == null) {
+            builder = builder.height(Integer.parseInt(zoomHeight));
+            builder = builder.keepAspectRatio(zoomKeepRatio);
+        } else if (zoomWidth != null && zoomHeight != null) {
+            builder = builder.size(Integer.parseInt(zoomWidth), Integer.parseInt(zoomHeight));
+            builder = builder.keepAspectRatio(zoomKeepRatio);
+        } else {
+            builder = builder.scale(1f);
+        }
+
+
+        //转换
+        String extName = "jpg";
+        if (param.getFileExtName().equalsIgnoreCase("png"))
+            extName = "png";
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        builder.outputQuality(0.9f).
+                outputFormat(extName).
+                toOutputStream(os);
+
+        //上传最终图
+        InputStream is = new ByteArrayInputStream(os.toByteArray());
+        long fileSize = os.size();
+        os.close();
+
+        StorePath storePath = storageClient.uploadFile(is, fileSize, extName, null);
+        FastdfsUploadResult fuResult = new FastdfsUploadResult();
+        fuResult.setUploadId(param.getUploadId());
+        fuResult.setFileName(param.getFileName());
+        fuResult.setFileExtName(param.getFileExtName());
+        fuResult.setFastdfsGroup(storePath.getGroup());
+        fuResult.setFastdfsPath(storePath.getPath());
+        fuResult.setFileSize(param.getSize());
+        fuResult.setNeedFlow(false);
+
+        return fuResult;
+    }
+
+    /**
+     * 从 FastDFS 删除文件
+     */
     @Override
     public ApiResult delete(String group, String path) {
         if (StringUtils.isBlank(path))
@@ -92,6 +162,6 @@ public class FastdfsServiceImpl extends BaseService implements FastdfsService {
         } else {
             return ApiResult.failed("指定删除文件的参数无效", null);
         }
-        return ApiResult.success(null,null);
+        return ApiResult.success(null, null);
     }
 }

@@ -4,9 +4,11 @@ import com.maoding.core.base.BaseService;
 import com.maoding.core.bean.ApiResult;
 import com.maoding.core.bean.FastdfsUploadResult;
 import com.maoding.core.bean.MultipartFileParam;
+import com.maoding.fastdfsClient.exception.FdfsServerException;
 import com.maoding.filecenterbll.constDefine.NetFileStatus;
 import com.maoding.filecenterbll.constDefine.NetFileType;
 import com.maoding.filecenterbll.module.file.dao.NetFileDAO;
+import com.maoding.filecenterbll.module.file.dto.DeleteDTO;
 import com.maoding.filecenterbll.module.file.model.NetFileDO;
 import com.mysql.jdbc.StringUtils;
 import org.slf4j.Logger;
@@ -42,46 +44,49 @@ public class AttachmentServiceImpl extends BaseService implements AttachmentServ
     @Override
     public ApiResult uploadCompanyLogo(HttpServletRequest request) throws Exception {
         MultipartFileParam param = MultipartFileParam.parse(request);
-        FastdfsUploadResult fuResult = fastdfsService.upload(param);
+        if (param.isChunked())
+            throw new UnsupportedOperationException("该上传不支持分片模式");
+
+        FastdfsUploadResult fuResult = fastdfsService.uploadLogo(param);
         if (fuResult.getNeedFlow())
             return ApiResult.success(null, fuResult);
+
+        String companyId = (String) param.getParam().get("companyId");
+        String accountId = (String) param.getParam().get("accountId");
 
         //业务系统逻辑
         Example example = new Example(NetFileDO.class);
         example.createCriteria()
-                .andCondition("company_id = ", param.getParam().get("companyId"))
-                .andCondition("type = ", NetFileType.COMPANY_LOGO_ATTACH);
-        List<NetFileDO> companyAttachList = netFileDAO.selectByExample(example);
+                .andCondition("company_id = ", companyId)
+                .andCondition("type = ", NetFileType.COMPANY_LOGO_ATTACH)
+                .andCondition("status = ", NetFileStatus.Normal);
 
-        if (CollectionUtils.isEmpty(companyAttachList)) {
+        List<NetFileDO> logos = netFileDAO.selectByExample(example);
 
-            String companyId = (String) param.getParam().get("companyId");
-            String accountId = (String) param.getParam().get("accountId");
+        if (CollectionUtils.isEmpty(logos)) {
             saveNewNetFile(companyId, accountId, null, NetFileType.COMPANY_LOGO_ATTACH, 0, null, fuResult);
-
         } else {
-            NetFileDO netFileDO = companyAttachList.get(0);
-/*            Map<String,Object> objectMap = new HashMap<>();
-            objectMap.put("group",netFileDO.getFileGroup());
-            objectMap.put("path",netFileDO.getFilePath().replaceAll(netFileDO.getFileGroup()+"/",""));
-            //TODO 异步删除上一个头像（暂时忽略是否删除失败的策略）
-            String json= JsonUtils.obj2json(param);
-            RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"),json);
-            Request request1 = new Request.Builder()
-                    .url(fileCenterUrl+"/fastDelete")
-                    .post(body)
-                    .build();
-            OkHttpUtils.enqueue(request1);*/
+            NetFileDO netFileDO = logos.get(0);
 
+            try {
+                //删除原来的
+                fastdfsService.delete(netFileDO.getFileGroup(), netFileDO.getFilePath());
+            } catch (Exception ex) {
+                log.error("Fast删除公司Logo发生异常", ex);
+            }
+
+            //更新新的Logo存储信息
             netFileDO.setFileGroup(fuResult.getFastdfsGroup());
             netFileDO.setFilePath(fuResult.getFastdfsPath());
             netFileDO.setFileSize(fuResult.getFileSize());
             netFileDO.setFileName(fuResult.getFileName());
             netFileDO.setFileExtName(fuResult.getFileExtName());
+            netFileDO.setUpdateBy(accountId);
+            netFileDO.setUpdateDate(LocalDateTime.now());
             netFileDAO.updateByPrimaryKey(netFileDO);
         }
 
-        //修改群组
+        //TODO 修改群组
 //        ImGroupEntity group = new ImGroupEntity();
 //        group.setOrgId(companyId);
 //        if (!StringUtil.isNullOrEmpty(filePath)) {
@@ -92,16 +97,11 @@ public class AttachmentServiceImpl extends BaseService implements AttachmentServ
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
-        return ApiResult.failed(null, null);
+        return ApiResult.success(null, fuResult);
     }
 
     /**
-     * 方法描述：上传公司轮播图片
-     * 作者：MaoSF
-     * 日期：2017/6/1
-     * @param request
-     * @param:
-     * @return:
+     * 上传公司轮播图片
      */
     @Override
     public ApiResult uploadCompanyBanner(HttpServletRequest request) throws Exception {
@@ -139,12 +139,7 @@ public class AttachmentServiceImpl extends BaseService implements AttachmentServ
     }
 
     /**
-     * 方法描述：上传报销附件
-     * 作者：MaoSF
-     * 日期：2017/6/1
-     * @param request
-     * @param:
-     * @return:
+     * 上传报销附件
      */
     @Override
     public ApiResult uploadExpenseAttach(HttpServletRequest request) throws Exception {
@@ -155,23 +150,12 @@ public class AttachmentServiceImpl extends BaseService implements AttachmentServ
 
         String companyId = (String) param.getParam().get("companyId");
         String accountId = (String) param.getParam().get("accountId");
-        String mainId = (String) param.getParam().get("mainId");
-        String id = (String) param.getParam().get("id");
+        String targetId = (String) param.getParam().get("targetId");
 
-        if (StringUtils.isNullOrEmpty(id)) {
-            //保存
-            NetFileDO netFileDO = saveNewNetFile(companyId, accountId, null, NetFileType.COMPANY_BANNER_ATTACH, 0, mainId, fuResult);
-        } else {
-            NetFileDO netFileDO = new NetFileDO();
-            netFileDO.setId(id);
-            netFileDO.setFileGroup(fuResult.getFastdfsGroup());
-            netFileDO.setFilePath(fuResult.getFastdfsPath());
-            netFileDO.setFileSize(fuResult.getFileSize());
-            netFileDO.setFileName(fuResult.getFileName());
-            netFileDO.setFileExtName(fuResult.getFileExtName());
-            netFileDAO.updateByPrimaryKey(netFileDO);
-        }
-        return ApiResult.success(null, null);
+
+        NetFileDO netFileDO = saveNewNetFile(companyId, accountId, null, NetFileType.EXPENSE_ATTACH, 0, targetId, fuResult);
+
+        return ApiResult.success(null, fuResult);
     }
 
     /**
@@ -193,20 +177,44 @@ public class AttachmentServiceImpl extends BaseService implements AttachmentServ
         Example selectExample = new Example(NetFileDO.class);
         selectExample.createCriteria()
                 .andCondition("company_id = ", companyId)
-                .andCondition("project_id = ",projectId)
+                .andCondition("project_id = ", projectId)
                 .andCondition("type = ", NetFileType.PROJECT_CONTRACT_ATTACH)
-                .andCondition("status = ",NetFileStatus.Normal);
-        NetFileDO updateObj=new NetFileDO();
+                .andCondition("status = ", NetFileStatus.Normal);
+        NetFileDO updateObj = new NetFileDO();
         updateObj.setStatus(NetFileStatus.Deleted.toString());
         updateObj.setUpdateBy(accountId);
         updateObj.setUpdateDate(LocalDateTime.now());
-        int count=netFileDAO.updateByExampleSelective(updateObj,selectExample);
+        int count = netFileDAO.updateByExampleSelective(updateObj, selectExample);
 
         //插入新记录
-        NetFileDO newObj=saveNewNetFile(companyId,accountId,projectId,NetFileType.PROJECT_CONTRACT_ATTACH,null,null,fuResult);
+        NetFileDO newObj = saveNewNetFile(companyId, accountId, projectId, NetFileType.PROJECT_CONTRACT_ATTACH, null, null, fuResult);
 
         return ApiResult.success(null, fuResult);
     }
+
+    /**
+     * 删除附件
+     */
+    @Override
+    public ApiResult delete(DeleteDTO dto) {
+        //TODO  因为是逻辑删除，需要定时任务清理
+       /* ApiResult ar=fastdfsService.delete(netFileDO.getFileGroup(),netFileDO.getFilePath());
+        if(!ar.isSuccessful())
+            return ar;*/
+
+        NetFileDO updateObj = new NetFileDO();
+        updateObj.setId(dto.getId());
+        updateObj.setStatus(NetFileStatus.Deleted.toString());
+        updateObj.setUpdateBy(dto.getAccountId());
+        updateObj.setUpdateDate(LocalDateTime.now());
+
+        if (netFileDAO.updateByPrimaryKeySelective(updateObj) > 0) {
+            //TODO 项目动态的逻辑代码
+            return ApiResult.success(null, null);
+        }
+        return ApiResult.failed(null, null);
+    }
+
 
     /**
      * 插入新的NetFile纪录
@@ -229,6 +237,7 @@ public class AttachmentServiceImpl extends BaseService implements AttachmentServ
         netFileDO.setParam4(seq);
         netFileDO.setTargetId(targetId);
         netFileDAO.insert(netFileDO);
+        fuResult.setNetFileId(netFileDO.getId());
         return netFileDO;
     }
 }

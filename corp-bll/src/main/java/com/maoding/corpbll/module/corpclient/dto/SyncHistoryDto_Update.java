@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
  * Created by Wuwq on 2017/2/9.
  * 同步记录
  */
-public class SyncHistoryDto_Update {
+public class SyncHistoryDTO_Update {
     /*协同端id*/
     private String corpEndpoint;
     /*组织Id*/

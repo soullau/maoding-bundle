@@ -11,7 +11,6 @@ import com.maoding.filecenterbll.module.dynamic.service.DynamicService;
 import com.maoding.filecenterbll.module.file.dao.NetFileDAO;
 import com.maoding.filecenterbll.module.file.dto.DeleteDTO;
 import com.maoding.filecenterbll.module.file.dto.DirectoryDTO;
-import com.maoding.filecenterbll.module.file.dto.NetFileDTO;
 import com.maoding.filecenterbll.module.file.dto.RenameDTO;
 import com.maoding.filecenterbll.module.file.model.NetFileDO;
 import com.maoding.utils.StringUtils;

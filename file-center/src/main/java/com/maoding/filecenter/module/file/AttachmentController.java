@@ -1,12 +1,10 @@
 package com.maoding.filecenter.module.file;
 
 import com.maoding.core.bean.ApiResult;
+import com.maoding.filecenterbll.module.file.dto.DeleteDTO;
 import com.maoding.filecenterbll.module.file.service.AttachmentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -25,7 +23,43 @@ public class AttachmentController {
      */
     @RequestMapping(value = "/uploadProjectContract", method = RequestMethod.POST)
     @ResponseBody
-    public ApiResult uploadFile(HttpServletRequest request) throws Exception {
+    public ApiResult uploadProjectContract(HttpServletRequest request) throws Exception {
         return attachmentService.uploadProjectContract(request);
+    }
+
+    /**
+     * 上传公司logo
+     */
+    @RequestMapping(value = "/uploadCompanyLogo", method = RequestMethod.POST)
+    @ResponseBody
+    public ApiResult uploadCompanyLogo(HttpServletRequest request) throws Exception {
+        return attachmentService.uploadCompanyLogo(request);
+    }
+
+    /**
+     * 上传公司轮播图
+     */
+    @RequestMapping(value = "/uploadCompanyBanner", method = RequestMethod.POST)
+    @ResponseBody
+    public ApiResult uploadCompanyBanner(HttpServletRequest request) throws Exception {
+        return attachmentService.uploadCompanyBanner(request);
+    }
+
+    /**
+     * 上传报销附件
+     */
+    @RequestMapping(value = "/uploadExpenseAttach", method = RequestMethod.POST)
+    @ResponseBody
+    public ApiResult uploadExpenseAttach(HttpServletRequest request) throws Exception {
+        return attachmentService.uploadExpenseAttach(request);
+    }
+
+    /**
+     * 删除文件
+     */
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public ApiResult deleteFile(@RequestBody DeleteDTO dto) {
+        return attachmentService.delete(dto);
     }
 }

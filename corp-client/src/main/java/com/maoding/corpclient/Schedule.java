@@ -26,6 +26,8 @@ public class Schedule {
     //同步所有数据
     @Scheduled(initialDelay = 0, fixedDelay = 86400 * 1000)
     public void job_SyncAll() throws Exception {
+        if (!Application.EnableSchedule)
+            return;
         log.info("-------------- SyncAll Start --------------");
         syncTaskService.syncAllCompanyUserAndProject(CorpClientConfig.EndPoint);
     }
@@ -41,6 +43,8 @@ public class Schedule {
     //拉取变更
     @Scheduled(initialDelay = 10 * 1000, fixedDelay = 15 * 1000)
     public void job_PullChanges() throws Exception {
+        if (!Application.EnableSchedule)
+            return;
         log.info("------- -------PullChanges Start --------------");
         syncService.pullChanges(CorpClientConfig.EndPoint);
     }
@@ -48,6 +52,8 @@ public class Schedule {
     //执行同步任务
     @Scheduled(initialDelay = 20 * 1000, fixedDelay = 15 * 1000)
     public void job_RunSyncTask() throws Exception {
+        if (!Application.EnableSchedule)
+            return;
         log.info("-------------- RunSyncTask Start --------------");
         syncTaskService.runSyncTask(CorpClientConfig.EndPoint);
     }

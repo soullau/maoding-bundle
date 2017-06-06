@@ -5,10 +5,10 @@ import com.maoding.core.base.BaseService;
 import com.maoding.core.bean.ApiResult;
 import com.maoding.corpbll.constDefine.RKey;
 import com.maoding.corpbll.module.corpserver.dao.SyncCompanyDao;
-import com.maoding.corpbll.module.corpserver.dto.SyncCompanyDto_Create;
-import com.maoding.corpbll.module.corpserver.dto.SyncCompanyDto_Select;
-import com.maoding.corpbll.module.corpserver.dto.SyncCompanyDto_Update;
-import com.maoding.corpbll.module.corpserver.model.SyncCompany;
+import com.maoding.corpbll.module.corpserver.dto.SyncCompanyDTO_Create;
+import com.maoding.corpbll.module.corpserver.dto.SyncCompanyDTO_Select;
+import com.maoding.corpbll.module.corpserver.dto.SyncCompanyDTO_Update;
+import com.maoding.corpbll.module.corpserver.model.SyncCompanyDo;
 import com.maoding.utils.StringUtils;
 import org.redisson.api.RLock;
 import org.redisson.api.RReadWriteLock;
@@ -39,7 +39,7 @@ public class SyncCompanyServiseImpl extends BaseService implements SyncCompanySe
     private RedissonClient redissonClient;
 
     //增加redis记录（读写锁）
-    private void redisAdd(SyncCompany obj) {
+    private void redisAdd(SyncCompanyDo obj) {
         RReadWriteLock lock = redissonClient.getReadWriteLock("Lock_" + RKey.CorpCompanies);
         RLock r = lock.writeLock();
         r.lock(5, TimeUnit.SECONDS);
@@ -64,12 +64,12 @@ public class SyncCompanyServiseImpl extends BaseService implements SyncCompanySe
 
 
     @Override
-    public ApiResult create(SyncCompanyDto_Create dto) {
-        SyncCompany entity = new SyncCompany();
+    public ApiResult create(SyncCompanyDTO_Create dto) {
+        SyncCompanyDo entity = new SyncCompanyDo();
         BeanUtils.copyProperties(dto, entity);
         entity.initEntity();
 
-        Example example = new Example(SyncCompany.class, true);
+        Example example = new Example(SyncCompanyDo.class, true);
         example.createCriteria()
                 .andCondition("corp_endpoint = ", dto.getCorpEndpoint())
                 .andCondition("company_id = ", dto.getCompanyId());
@@ -89,8 +89,8 @@ public class SyncCompanyServiseImpl extends BaseService implements SyncCompanySe
     }
 
     @Override
-    public ApiResult update(SyncCompanyDto_Update dto) {
-        SyncCompany entity = new SyncCompany();
+    public ApiResult update(SyncCompanyDTO_Update dto) {
+        SyncCompanyDo entity = new SyncCompanyDo();
         BeanUtils.copyProperties(dto, entity);
         entity.resetUpdateDate();
 
@@ -102,7 +102,7 @@ public class SyncCompanyServiseImpl extends BaseService implements SyncCompanySe
 
     @Override
     public ApiResult delete(String corpEndpoint, String companyId) {
-        Example example = new Example(SyncCompany.class);
+        Example example = new Example(SyncCompanyDo.class);
         example.createCriteria()
                 .andCondition("corp_endpoint = ", corpEndpoint)
                 .andCondition("company_id = ", companyId);
@@ -117,7 +117,7 @@ public class SyncCompanyServiseImpl extends BaseService implements SyncCompanySe
 
     @Override
     public ApiResult delete(String id) {
-        SyncCompany sc = syncCompanyDao.selectByPrimaryKey(id);
+        SyncCompanyDo sc = syncCompanyDao.selectByPrimaryKey(id);
         if (syncCompanyDao.deleteByPrimaryKey(id) > 0) {
             //删除redis记录（读写锁）
             //TODO 待考虑失败的情况
@@ -129,7 +129,7 @@ public class SyncCompanyServiseImpl extends BaseService implements SyncCompanySe
 
     @Override
     public ApiResult select(String corpEndpoint) {
-        List<SyncCompanyDto_Select> dtos;
+        List<SyncCompanyDTO_Select> dtos;
         if (StringUtils.isNotBlank(corpEndpoint))
             dtos = syncCompanyDao.selectSyncCompany(corpEndpoint);
         else
@@ -144,7 +144,7 @@ public class SyncCompanyServiseImpl extends BaseService implements SyncCompanySe
      */
     @Override
     public ApiResult syncToRedis() {
-        List<SyncCompanyDto_Select> dtos = syncCompanyDao.selectSyncCompany(null);
+        List<SyncCompanyDTO_Select> dtos = syncCompanyDao.selectSyncCompany(null);
 
         List<String> vals = Lists.newArrayList();
         dtos.forEach(sc -> vals.add(sc.getCorpEndpoint() + ":" + sc.getCompanyId()));

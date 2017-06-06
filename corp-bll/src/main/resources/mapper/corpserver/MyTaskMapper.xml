@@ -20,14 +20,14 @@
         WHERE t.id = #{myTaskId,jdbcType=VARCHAR}
     </update>
 
-    <select id="getMyTaskByProcessNodeId" resultType="com.maoding.corpbll.module.corpserver.model.MyTaskEntity"
+    <select id="getMyTaskByProcessNodeId" resultType="com.maoding.corpbll.module.corpserver.model.MyTaskDo"
             parameterType="java.lang.String">
         SELECT t.*
         FROM maoding_web_my_task t
         WHERE t.target_id = #{processNodeId,jdbcType=VARCHAR} AND (t.status = '0' OR t.status = '1')
     </select>
 
-    <select id="getPrincipalTaskByProjectTaskId" resultType="com.maoding.corpbll.module.corpserver.model.MyTaskEntity"
+    <select id="getPrincipalTaskByProjectTaskId" resultType="com.maoding.corpbll.module.corpserver.model.MyTaskDo"
             parameterType="java.lang.String">
         SELECT t.*
         FROM maoding_web_my_task t

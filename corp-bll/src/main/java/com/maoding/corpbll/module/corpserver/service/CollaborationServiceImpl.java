@@ -6,14 +6,12 @@ import com.maoding.core.base.BaseService;
 import com.maoding.core.bean.ApiResult;
 import com.maoding.corpbll.constDefine.RKey;
 import com.maoding.corpbll.constDefine.SyncCmd;
-import com.maoding.corpbll.module.corpserver.dao.CollaborationDao;
-import com.maoding.corpbll.module.corpserver.dao.MyTaskDao;
-import com.maoding.corpbll.module.corpserver.dao.ProcessNodeDao;
-import com.maoding.corpbll.module.corpserver.dao.ProjectTaskDao;
+import com.maoding.corpbll.module.corpserver.dao.*;
 import com.maoding.corpbll.module.corpserver.dto.*;
-import com.maoding.corpbll.module.corpserver.model.AccountEntity;
-import com.maoding.corpbll.module.corpserver.model.MyTaskEntity;
-import com.maoding.corpbll.module.corpserver.model.ProjectTaskEntity;
+import com.maoding.corpbll.module.corpserver.model.AccountDo;
+import com.maoding.corpbll.module.corpserver.model.CompanyDiskDo;
+import com.maoding.corpbll.module.corpserver.model.MyTaskDo;
+import com.maoding.corpbll.module.corpserver.model.ProjectTaskDo;
 import com.maoding.utils.MD5Helper;
 import com.maoding.utils.StringUtils;
 import org.redisson.api.RLock;
@@ -24,9 +22,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -58,9 +55,11 @@ public class CollaborationServiceImpl extends BaseService implements Collaborati
     @Autowired
     private ProjectTaskDao projectTaskDao;
 
+    @Autowired
+    private CompanyDiskDao companyDiskDao;
 
     @Override
-    public List<CoCompany> listCompanyByIds(List<String> companyIds) {
+    public List<CoCompanyDTO> listCompanyByIds(List<String> companyIds) {
         return collaborationDao.listCompanyByIds(companyIds);
     }
 
@@ -71,8 +70,8 @@ public class CollaborationServiceImpl extends BaseService implements Collaborati
     }
 
     @Override
-    public List<CoUser> listUserByCompanyId(String companyId) {
-        List<CoUser> coUsers = collaborationDao.listUserByCompanyId(companyId);
+    public List<CoUserDTO> listUserByCompanyId(String companyId) {
+        List<CoUserDTO> coUsers = collaborationDao.listUserByCompanyId(companyId);
         return coUsers;
     }
 
@@ -88,7 +87,7 @@ public class CollaborationServiceImpl extends BaseService implements Collaborati
      * 获取项目节点（含任务成员状态信息）
      */
     @Override
-    public List<CoProjectPhase> listNode(String companyId, String projectId) throws Exception {
+    public List<CoProjectPhaseDTO> listNode(String companyId, String projectId) throws Exception {
 
         //读取协同组织
         Set<String> syncCompanies = Sets.newHashSet();
@@ -103,15 +102,15 @@ public class CollaborationServiceImpl extends BaseService implements Collaborati
             log.error("读取协同组织发生异常", e);
         }
 
-        List<CoProjectPhase> result = Lists.newArrayList();
-        List<ProjectTaskEntity> tasks = collaborationDao.listProjectTask(projectId, null);
+        List<CoProjectPhaseDTO> result = Lists.newArrayList();
+        List<ProjectTaskDo> tasks = collaborationDao.listProjectTask(projectId, null);
         if (tasks.size() > 0) {
             //筛选出阶段
-            List<ProjectTaskEntity> phases = tasks.stream().filter(t -> t.getTaskType() == 1).sorted(Comparator.comparingInt(ProjectTaskEntity::getSeq)).collect(Collectors.toList());
+            List<ProjectTaskDo> phases = tasks.stream().filter(t -> t.getTaskType() == 1).sorted(Comparator.comparingInt(ProjectTaskDo::getSeq)).collect(Collectors.toList());
 
-            for (ProjectTaskEntity phase : phases) {
+            for (ProjectTaskDo phase : phases) {
                 //项目阶段
-                CoProjectPhase coPhase = new CoProjectPhase();
+                CoProjectPhaseDTO coPhase = new CoProjectPhaseDTO();
                 coPhase.setStatus(phase.getTaskStatus().equals("0") ? 1 : 0);
                 coPhase.setProjectPhaseId(phase.getId());
                 coPhase.setProjectId(projectId);
@@ -123,14 +122,14 @@ public class CollaborationServiceImpl extends BaseService implements Collaborati
                 result.add(coPhase);
 
                 //根据路径筛选阶段子任务(按层级排序）
-                List<ProjectTaskEntity> childTasks = tasks.stream().filter(t -> t.getTaskType() != 1 && StringUtils.startsWithIgnoreCase(t.getTaskPath(), phase.getId())).sorted(Comparator.comparingInt(c -> c.getTaskLevel() * 100000 + c.getSeq())).collect(Collectors.toList());
+                List<ProjectTaskDo> childTasks = tasks.stream().filter(t -> t.getTaskType() != 1 && StringUtils.startsWithIgnoreCase(t.getTaskPath(), phase.getId())).sorted(Comparator.comparingInt(c -> c.getTaskLevel() * 100000 + c.getSeq())).collect(Collectors.toList());
 
                 if (childTasks.size() <= 0)
                     continue;
 
-                for (ProjectTaskEntity ct : childTasks) {
+                for (ProjectTaskDo ct : childTasks) {
                     //创建子任务
-                    CoTask coTask = new CoTask();
+                    CoTaskDTO coTask = new CoTaskDTO();
                     coTask.setStatus(ct.getTaskStatus().equals("0") ? 1 : 0);
                     coTask.setId(ct.getId());
                     coTask.setProjectPhaseID(phase.getId());
@@ -156,16 +155,16 @@ public class CollaborationServiceImpl extends BaseService implements Collaborati
     }
 
     //填充任务成员
-    private void fillMember(CoTask coTask) {
+    private void fillMember(CoTaskDTO coTask) {
         //获取所有的流程节点
-        List<CoProjectProcess> processes = collaborationDao.listProjectProcessByTaskId(coTask.getId(), null);
-        for (CoProjectProcess process : processes) {
+        List<CoProjectProcessDTO> processes = collaborationDao.listProjectProcessByTaskId(coTask.getId(), null);
+        for (CoProjectProcessDTO process : processes) {
 
             //处理设计人员
-            List<CoProjectProcessNode> ppNodes = processNodeDao.listProcessNodeByProcessId(process.getId(), null);
-            for (CoProjectProcessNode node : ppNodes) {
+            List<CoProjectProcessNodeDTO> ppNodes = processNodeDao.listProcessNodeByProcessId(process.getId(), null);
+            for (CoProjectProcessNodeDTO node : ppNodes) {
 
-                CoTaskMember coMember = new CoTaskMember();
+                CoTaskMemberDTO coMember = new CoTaskMemberDTO();
                 coMember.setId(node.getAccountId());
                 coMember.setRole(node.getNodeName());
                 coMember.setPeerID(node.getId());
@@ -175,9 +174,9 @@ public class CollaborationServiceImpl extends BaseService implements Collaborati
             }
 
             //处理任务负责人
-            CoUser user = collaborationDao.getTaskPrincipal(coTask.getId());
+            CoUserDTO user = collaborationDao.getTaskPrincipal(coTask.getId());
             if (user != null) {
-                CoTaskMember coMember = new CoTaskMember();
+                CoTaskMemberDTO coMember = new CoTaskMemberDTO();
                 coMember.setId(user.getAccountId());
                 coMember.setRole("任务负责人");
                 coMember.setPeerID("");
@@ -192,7 +191,7 @@ public class CollaborationServiceImpl extends BaseService implements Collaborati
     public ApiResult login(Map<String, Object> map) throws Exception {
         String loginname = map.get("loginName").toString();
         String password = MD5Helper.getMD5For32(map.get("password").toString());
-        AccountEntity user = collaborationDao.getAccountByCellphone(loginname);
+        AccountDo user = collaborationDao.getAccountByCellphone(loginname);
         if (user == null) {
             return ApiResult.failed("用户不存在！", null);
         }
@@ -213,13 +212,13 @@ public class CollaborationServiceImpl extends BaseService implements Collaborati
      */
     @Override
     public ApiResult finishMyTask(String processNodeId) {
-        CoProjectProcessNode node = processNodeDao.getProcessNodeById(processNodeId);
+        CoProjectProcessNodeDTO node = processNodeDao.getProcessNodeById(processNodeId);
         if (node == null)
             return ApiResult.failed("设校审节点不存在！", null);
         if (!StringUtils.isBlank(node.getCompleteTime()))
             return ApiResult.success("设校审节点原来已是完成状态！", null);
 
-        MyTaskEntity myTask = myTaskDao.getMyTaskByProcessNodeId(processNodeId);
+        MyTaskDo myTask = myTaskDao.getMyTaskByProcessNodeId(processNodeId);
         if (myTask == null)
             return ApiResult.failed("设校审任务不存在！", null);
         if (myTask.getStatus().equals("1"))
@@ -236,28 +235,28 @@ public class CollaborationServiceImpl extends BaseService implements Collaborati
      */
     @Override
     public ApiResult activeMyTask(String processNodeId) {
-        CoProjectProcessNode node = processNodeDao.getProcessNodeById(processNodeId);
+        CoProjectProcessNodeDTO node = processNodeDao.getProcessNodeById(processNodeId);
         if (node == null)
             return ApiResult.failed("设校审节点不存在！", null);
         if (StringUtils.isBlank(node.getCompleteTime()))
             return ApiResult.success("设校审节点原来已是未完成状态！", null);
 
-        MyTaskEntity myTask = myTaskDao.getMyTaskByProcessNodeId(processNodeId);
+        MyTaskDo myTask = myTaskDao.getMyTaskByProcessNodeId(processNodeId);
         if (myTask == null)
             return ApiResult.failed("设校审任务不存在！", null);
         if (myTask.getStatus().equals("0"))
             return ApiResult.success("设校审任务原来已是未完成状态！", null);
 
-        ProjectTaskEntity pTask = projectTaskDao.selectByPrimaryKey(myTask.getParam1());
+        ProjectTaskDo pTask = projectTaskDao.selectByPrimaryKey(myTask.getParam1());
         if (pTask == null)
             return ApiResult.failed("设校审任务所在生产节点不存在！", null);
 
-        ProjectTaskEntity pTaskParent = projectTaskDao.selectByPrimaryKey(pTask.getTaskPid());
+        ProjectTaskDo pTaskParent = projectTaskDao.selectByPrimaryKey(pTask.getTaskPid());
         if (pTaskParent != null && pTaskParent.getCompleteDate() != null)
             return ApiResult.failed("父生产节点已处于已完成状态，不允许激活！", null);
 
         //任务务负责人
-        CoUser taskPrincipal = collaborationDao.getTaskPrincipal(pTask.getId());
+        CoUserDTO taskPrincipal = collaborationDao.getTaskPrincipal(pTask.getId());
 
         //是否任务负责人
         if (taskPrincipal != null && taskPrincipal.getAccountId().equals(node.getAccountId())) {
@@ -266,11 +265,11 @@ public class CollaborationServiceImpl extends BaseService implements Collaborati
 
                 //生产根任务
                 if (pTask.getTaskType() == 2 && pTaskParent != null) {
-                    MyTaskEntity mt = new MyTaskEntity();
+                    MyTaskDo mt = new MyTaskDo();
                     mt.setTargetId(pTaskParent.getId());
                     mt.setStatus("0");
                     mt.setTaskType(22);
-                    MyTaskEntity rootDesignTask = myTaskDao.selectOne(mt);
+                    MyTaskDo rootDesignTask = myTaskDao.selectOne(mt);
                     if (rootDesignTask != null) {
                         //无效化设计负责人的任务
                         myTaskDao.updateMyTaskAsInvalid(rootDesignTask.getId());
@@ -285,7 +284,7 @@ public class CollaborationServiceImpl extends BaseService implements Collaborati
             processNodeDao.updateProcessNodeAsActived(processNodeId);
 
             //激活任务负责人任务
-            MyTaskEntity principalTask = myTaskDao.getPrincipalTaskByProjectTaskId(pTask.getId());
+            MyTaskDo principalTask = myTaskDao.getPrincipalTaskByProjectTaskId(pTask.getId());
             if (principalTask != null)
                 myTaskDao.updateMyTaskAsActived(principalTask.getId());
 
@@ -373,5 +372,42 @@ public class CollaborationServiceImpl extends BaseService implements Collaborati
         Long size=collaborationDao.sumDocmgrSizeByCompanyId(companyId);
         String sizeDescription=StringUtils.getSize(size);
         return ApiResult.success(sizeDescription,size);
+    }
+
+    /**
+     * 根据组织ID获取公司网盘容量信息
+     */
+    @Override
+    public ApiResult getCompanyDiskInfo(String companyId) {
+        if(com.mysql.jdbc.StringUtils.isNullOrEmpty(companyId))
+            return ApiResult.failed("未指定组织ID",null);
+
+        Example example=new Example(CompanyDiskDo.class);
+        example.createCriteria().andCondition("company_id = ",companyId);
+        List<CompanyDiskDo> companyDiskDos = companyDiskDao.selectByExample(example);
+        if(companyDiskDos.size()==0)
+            return ApiResult.failed("找不到指定组织的网盘信息",null);
+
+        return ApiResult.success("获取获取公司网盘容量信息成功！",companyDiskDos.get(0));
+    }
+
+    /**
+     * 根据组织ID更新协同占用空间
+     */
+    @Override
+    public ApiResult updateCorpSizeOnCompanyDisk(String companyId, Long corpSize) {
+        if(com.mysql.jdbc.StringUtils.isNullOrEmpty(companyId))
+            return ApiResult.failed("未指定组织ID",null);
+
+        Example example=new Example(CompanyDiskDo.class);
+        example.createCriteria().andCondition("company_id = ",companyId);
+        List<CompanyDiskDo> companyDiskDos = companyDiskDao.selectByExample(example);
+        if(companyDiskDos.size()==0)
+            return ApiResult.failed("找不到指定组织的网盘信息",null);
+
+        CompanyDiskDo cd=companyDiskDos.get(0);
+        cd.setCorpSize(corpSize);
+        cd.recalcFreeSize();
+        return ApiResult.success(null,cd);
     }
 }

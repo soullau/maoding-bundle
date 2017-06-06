@@ -4,7 +4,7 @@ package com.maoding.corpbll.module.corpserver.dto;
  * Created by Wuwq on 2017/2/9.
  * 组织同步清单
  */
-public class SyncCompanyDto_Create {
+public class SyncCompanyDTO_Create {
 
     /**
      * 协同端id

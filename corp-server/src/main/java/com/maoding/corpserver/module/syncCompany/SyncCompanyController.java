@@ -3,8 +3,8 @@ package com.maoding.corpserver.module.syncCompany;
 import com.maoding.core.base.BaseController;
 import com.maoding.core.bean.ApiResult;
 import com.maoding.corpbll.constDefine.SyncCmd;
-import com.maoding.corpbll.module.corpserver.dto.SyncCompanyDto_Create;
-import com.maoding.corpbll.module.corpserver.dto.SyncCompanyDto_Update;
+import com.maoding.corpbll.module.corpserver.dto.SyncCompanyDTO_Create;
+import com.maoding.corpbll.module.corpserver.dto.SyncCompanyDTO_Update;
 import com.maoding.corpbll.module.corpserver.service.CollaborationService;
 import com.maoding.corpbll.module.corpserver.service.SyncCompanyServise;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +25,13 @@ public class SyncCompanyController extends BaseController {
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     @ResponseBody
-    public ApiResult create(@RequestBody SyncCompanyDto_Create dto) throws Exception {
+    public ApiResult create(@RequestBody SyncCompanyDTO_Create dto) throws Exception {
         return syncCompanyServise.create(dto);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-    public ApiResult update(@RequestBody SyncCompanyDto_Update dto) throws Exception {
+    public ApiResult update(@RequestBody SyncCompanyDTO_Update dto) throws Exception {
         return syncCompanyServise.update(dto);
     }
 

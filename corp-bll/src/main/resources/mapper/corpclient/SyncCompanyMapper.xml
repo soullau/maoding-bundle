@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.maoding.corpbll.module.corpclient.dao.SyncCompanyDao">
-    <select id="selectSyncCompany" resultType="com.maoding.corpbll.module.corpclient.dto.SyncCompanyDto_Select">
+    <select id="selectSyncCompany" resultType="com.maoding.corpbll.module.corpclient.dto.SyncCompanyDTO_Select">
         SELECT s.*,c.company_name
         FROM maoding_corp_sync_company s
         LEFT JOIN maoding_web_company c ON c.id = s.company_id

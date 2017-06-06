@@ -4,7 +4,7 @@ package com.maoding.corpbll.module.corpclient.dto;
  * Created by Wuwq on 2017/2/9.
  * 同步记录
  */
-public class SyncHistoryDto_Create {
+public class SyncHistoryDTO_Create {
     /*协同端id*/
     private String corpEndpoint;
     /*组织Id*/

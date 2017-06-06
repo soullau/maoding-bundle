@@ -1,7 +1,7 @@
 package com.maoding.corpbll.module.corpclient.dao;
 
 import com.maoding.core.base.BaseDao;
-import com.maoding.corpbll.module.corpclient.model.SyncTaskGroup;
+import com.maoding.corpbll.module.corpclient.model.SyncTaskGroupDO;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.ResultType;
 import org.apache.ibatis.annotations.Update;
@@ -12,12 +12,12 @@ import java.util.List;
 /**
  * Created by Wuwq on 2017/2/16.
  */
-public interface SyncTaskGroupDao extends BaseDao<SyncTaskGroup> {
+public interface SyncTaskGroupDao extends BaseDao<SyncTaskGroupDO> {
 
     /**
      * 查询未完成的任务组
      */
-    List<SyncTaskGroup> selectUnfinishedTaskGroups(@Param("corpEndpoint") String corpEndpoint, @Param("companyId") String companyId, @Param("count") int count);
+    List<SyncTaskGroupDO> selectUnfinishedTaskGroups(@Param("corpEndpoint") String corpEndpoint, @Param("companyId") String companyId, @Param("count") int count);
 
     /**
      * 更新状态为：待同步

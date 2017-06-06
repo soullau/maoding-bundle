@@ -43,6 +43,24 @@ public class CoServiceImpl extends BaseService implements CoService {
     }
 
     /**
+     * 根据组织ID获取公司网盘容量信息
+     */
+    @Override
+    public ApiResult getCompanyDiskInfo(Map<String, Object> param) throws Exception {
+        ApiResult apiResult = syncService.pullFromCorpServer(param, CorpServer.URL_GET_COMPANY_DISK_INFO);
+        return apiResult;
+    }
+
+    /**
+     * 根据组织ID更新协同占用空间
+     */
+    @Override
+    public ApiResult updateCorpSizeOnCompanyDisk(Map<String, Object> param) throws Exception {
+        ApiResult apiResult = syncService.pullFromCorpServer(param, CorpServer.URL_GET_UPDATE_CORP_SIZE);
+        return apiResult;
+    }
+
+    /**
      * 设置节点完成状态
      */
     @Override
@@ -65,7 +83,7 @@ public class CoServiceImpl extends BaseService implements CoService {
 
             // SetUsers(int[] statuss, string[] ids, string[] names, string[] loginIds, string[] passwords = null, string[] descriptions = null, string[] specialtyIds = null)
 
-            List<CoUser> users = JsonUtils.json2list(JsonUtils.obj2json(apiResult.getData()), CoUser.class);
+            List<CoUserDTO> users = JsonUtils.json2list(JsonUtils.obj2json(apiResult.getData()), CoUserDTO.class);
 
             if (users.size() == 0)
                 return ApiResult.success(null, null);
@@ -77,14 +95,14 @@ public class CoServiceImpl extends BaseService implements CoService {
             List<String> loginIds = Lists.newArrayList();
 
             for (int i = 0; i < users.size(); i++) {
-                CoUser user = users.get(i);
+                CoUserDTO user = users.get(i);
                 statuss.add(user.getStatus().equals("0") ? "1" : "0");
                 ids.add(user.getAccountId());
                 names.add(user.getAccountName());
                 loginIds.add(user.getCellphone());
             }
 
-            CoUsers coUsers = new CoUsers();
+            CoUsersDTO coUsers = new CoUsersDTO();
             coUsers.setStatuss(statuss);
             coUsers.setIds(ids);
             coUsers.setNames(names);
@@ -115,7 +133,7 @@ public class CoServiceImpl extends BaseService implements CoService {
             List<ProjectDTO> projects = JsonUtils.json2list(JsonUtils.obj2json(apiResult.getData()), ProjectDTO.class);
 
             for (ProjectDTO p : projects) {
-                CoProject coProject = new CoProject();
+                CoProjectDTO coProject = new CoProjectDTO();
                 coProject.setId(p.getProjectId());
                 coProject.setCode(p.getPstatus() + "nnn");
                 coProject.setName(p.getProjectName());
@@ -158,7 +176,7 @@ public class CoServiceImpl extends BaseService implements CoService {
 
         ProjectDTO resultDTO = JsonUtils.obj2pojo(apiResult.getData(), ProjectDTO.class);
 
-        CoProject coProject = new CoProject();
+        CoProjectDTO coProject = new CoProjectDTO();
         coProject.setId(resultDTO.getProjectId());
         coProject.setCode(resultDTO.getPstatus() + "nnn");
         coProject.setName(resultDTO.getProjectName());
@@ -194,12 +212,12 @@ public class CoServiceImpl extends BaseService implements CoService {
             param.put("syncDate", syncDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         ApiResult apiResult = syncService.pullFromCorpServer(param, CorpServer.URL_LIST_NODE);
         if (apiResult.isSuccessful()) {
-            List<CoProjectPhase> nodes = JsonUtils.json2list(JsonUtils.obj2json(apiResult.getData()), CoProjectPhase.class);
+            List<CoProjectPhaseDTO> nodes = JsonUtils.json2list(JsonUtils.obj2json(apiResult.getData()), CoProjectPhaseDTO.class);
             if (nodes.size() > 0) {
-                for (CoProjectPhase node : nodes) {
+                for (CoProjectPhaseDTO node : nodes) {
 
                     //项目阶段
-                    CoProjectPhase coPhase = new CoProjectPhase();
+                    CoProjectPhaseDTO coPhase = new CoProjectPhaseDTO();
                     BeanUtils.copyProperties(node, coPhase);
                     coPhase.setTasks(null);
 
@@ -225,7 +243,7 @@ public class CoServiceImpl extends BaseService implements CoService {
     /**
      * 设置任务
      */
-    private ApiResult setTasks(String projectId, List<CoTask> coTasks) throws Exception {
+    private ApiResult setTasks(String projectId, List<CoTaskDTO> coTasks) throws Exception {
         if (coTasks == null || coTasks.size() == 0)
             return ApiResult.success(null, null);
 

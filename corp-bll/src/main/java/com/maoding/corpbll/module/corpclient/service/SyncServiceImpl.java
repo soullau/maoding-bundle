@@ -8,9 +8,9 @@ import com.maoding.corpbll.constDefine.*;
 import com.maoding.corpbll.module.corpclient.dao.SyncTaskDao;
 import com.maoding.corpbll.module.corpclient.dao.SyncTaskGroupDao;
 import com.maoding.corpbll.module.corpclient.dto.PushResult;
-import com.maoding.corpbll.module.corpclient.model.SyncTask;
-import com.maoding.corpbll.module.corpclient.model.SyncTaskGroup;
-import com.maoding.corpbll.module.corpserver.dto.SyncCompanyDto_Select;
+import com.maoding.corpbll.module.corpclient.model.SyncTaskDO;
+import com.maoding.corpbll.module.corpclient.model.SyncTaskGroupDO;
+import com.maoding.corpbll.module.corpserver.dto.SyncCompanyDTO_Select;
 import com.maoding.utils.GsonUtils;
 import com.maoding.utils.JsonUtils;
 import com.maoding.utils.OkHttpUtils;
@@ -68,7 +68,7 @@ public class SyncServiceImpl extends BaseService implements SyncService {
         if (!apiResult.isSuccessful())
             throw new RuntimeException("拉取同步组织失败：" + apiResult.getMsg());
 
-        List<SyncCompanyDto_Select> scs = JsonUtils.json2list(JsonUtils.obj2json(apiResult.getData()), SyncCompanyDto_Select.class);
+        List<SyncCompanyDTO_Select> scs = JsonUtils.json2list(JsonUtils.obj2json(apiResult.getData()), SyncCompanyDTO_Select.class);
         if (scs == null || scs.size() == 0)
             return;
 
@@ -78,9 +78,9 @@ public class SyncServiceImpl extends BaseService implements SyncService {
         Semaphore sp = new Semaphore(2);
 
         //遍历
-        scs.forEach((SyncCompanyDto_Select o) -> {
+        scs.forEach((SyncCompanyDTO_Select o) -> {
 
-            SyncCompanyDto_Select sc = o;
+            SyncCompanyDTO_Select sc = o;
 
             //异步并发
             CompletableFuture.runAsync(() -> {
@@ -128,18 +128,18 @@ public class SyncServiceImpl extends BaseService implements SyncService {
                 LocalDateTime syncPoint = LocalDateTime.now().plusMinutes(10);
 
                 //创建任务组
-                SyncTaskGroup group = new SyncTaskGroup();
+                SyncTaskGroupDO group = new SyncTaskGroupDO();
                 group.initEntity();
                 group.setCorpEndpoint(corpEndpoint);
                 group.setCompanyId(companyId);
                 group.setSyncPoint(syncPoint);
                 group.setTaskGroupStatus(TaskGroupStatus.WaitRuning);
 
-                ArrayList<SyncTask> tasks = Lists.newArrayList();
+                ArrayList<SyncTaskDO> tasks = Lists.newArrayList();
 
                 //判断是否存在ALL变更
                 if (changes.stream().anyMatch(c -> c.equalsIgnoreCase(SyncCmd.ALL))) {
-                    SyncTask cuTask = new SyncTask();
+                    SyncTaskDO cuTask = new SyncTaskDO();
                     cuTask.initEntity();
                     cuTask.setTaskGroupId(group.getId());
                     cuTask.setCorpEndpoint(corpEndpoint);
@@ -160,7 +160,7 @@ public class SyncServiceImpl extends BaseService implements SyncService {
                         //判断是不是CU变更
                         if (StringUtils.equalsIgnoreCase(c, SyncCmd.CU)) {
 
-                            SyncTask cuTask = new SyncTask();
+                            SyncTaskDO cuTask = new SyncTaskDO();
                             cuTask.initEntity();
                             cuTask.setTaskGroupId(group.getId());
                             cuTask.setCorpEndpoint(corpEndpoint);
@@ -181,7 +181,7 @@ public class SyncServiceImpl extends BaseService implements SyncService {
                         String changeType = splits[0];
                         String projectId = splits[1];
 
-                        SyncTask task = new SyncTask();
+                        SyncTaskDO task = new SyncTaskDO();
                         task.initEntity();
                         task.setTaskGroupId(group.getId());
                         task.setCorpEndpoint(corpEndpoint);
