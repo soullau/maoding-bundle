@@ -4,13 +4,13 @@ import com.maoding.core.base.BaseService;
 import com.maoding.filecenterbll.constDefine.DynamicConst;
 import com.maoding.filecenterbll.constDefine.NetFileType;
 import com.maoding.filecenterbll.module.dynamic.dao.DynamicDAO;
+import com.maoding.filecenterbll.module.dynamic.dao.ZUserDAO;
+import com.maoding.filecenterbll.module.dynamic.dto.ZUserDTO;
 import com.maoding.filecenterbll.module.dynamic.model.DynamicDO;
 import com.maoding.filecenterbll.module.dynamic.model.ProjectDynamicsDO;
 import com.maoding.filecenterbll.module.file.model.NetFileDO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
 
 /**
  * Created by Chengliang.zhang on 2017/6/5.
@@ -19,6 +19,9 @@ import java.util.Date;
 public class DynamicServiceImpl extends BaseService implements DynamicService{
     @Autowired
     private DynamicDAO dynamicDAO;
+
+    @Autowired
+    private ZUserDAO userDAO;
 
     /**
      * 记录项目动态
@@ -40,19 +43,19 @@ public class DynamicServiceImpl extends BaseService implements DynamicService{
         dynamic.setUserId(dto.getCreateBy());
         dynamic.setCompanyUserId(getCompanyUserId(dto.getCompanyId(),dto.getCreateBy()));
         dynamic.setCompanyId(dto.getCompanyId());
-        dynamic.setCompanyId(dto.getProjectId());
+        dynamic.setProjectId(dto.getProjectId());
         dynamic.setTargetType(DynamicConst.TARGET_TYPE_SKY_DRIVE);
         dynamic.setTargetId(dto.getId());
         dynamic.setNodeName(dto.getFileName());
         dynamic.setType((dto.getType() == NetFileType.FILE) ?
                 DynamicConst.DYNAMIC_TYPE_UPLOAD_FILE :
                 DynamicConst.DYNAMIC_TYPE_CREATE_DIRECTORY);
-        dynamic.setContent(dto.getFileName());
         return dynamic;
     }
 
     private String getCompanyUserId(String companyId, String userId){
-        return null;
+        ZUserDTO user = userDAO.getUserByCompanyIdAndUserId(companyId,userId);
+        return (user != null) ? user.getCompanyUserId() : null;
     }
 
     /**
@@ -61,17 +64,22 @@ public class DynamicServiceImpl extends BaseService implements DynamicService{
     @Override
     public DynamicDO createDynamicFrom(NetFileDO dtoNew, NetFileDO dtoOld) {
         DynamicDO dynamic = new DynamicDO();
-        dynamic.setUserId(dtoNew.getCreateBy());
-        String cid = (dtoNew.getCompanyId() != null) ? dtoNew.getCompanyId() : dtoOld.getCompanyId();
-        String pid = (dtoNew.getProjectId() != null) ? dtoNew.getProjectId() : dtoOld.getProjectId();
-        dynamic.setCompanyUserId(getCompanyUserId(cid,dtoNew.getCreateBy()));
+        String uid = dtoNew.getUpdateBy();
+        String cid = dtoOld.getCompanyId();
+        String pid = dtoOld.getProjectId();
+        String did = getCompanyUserId(cid,uid);
+        String tid = dtoNew.getId();
+        dynamic.setUserId(uid);
+        dynamic.setCompanyUserId(did);
         dynamic.setCompanyId(cid);
-        dynamic.setCompanyId(pid);
+        dynamic.setProjectId(pid);
         dynamic.setTargetType(DynamicConst.TARGET_TYPE_SKY_DRIVE);
-        dynamic.setTargetId(dtoNew.getId());
+        dynamic.setTargetId(tid);
         dynamic.setNodeName(dtoOld.getFileName());
-        dynamic.setType(DynamicConst.DYNAMIC_TYPE_UPDATE_FILE);
-        dynamic.setContent(dtoOld.getFileName() + DynamicConst.SEPARATOR + dtoNew.getFileName());
+        dynamic.setType((dtoOld.getType() == NetFileType.FILE) ?
+                DynamicConst.DYNAMIC_TYPE_UPDATE_FILE :
+                DynamicConst.DYNAMIC_TYPE_UPDATE_DIRECTORY);
+        dynamic.setContent(dtoNew.getFileName());
         return dynamic;
     }
     /**
@@ -83,12 +91,13 @@ public class DynamicServiceImpl extends BaseService implements DynamicService{
         dynamic.setUserId(userId);
         dynamic.setCompanyUserId(companyUserId);
         dynamic.setCompanyId(dto.getCompanyId());
-        dynamic.setCompanyId(dto.getProjectId());
+        dynamic.setProjectId(dto.getProjectId());
         dynamic.setTargetType(DynamicConst.TARGET_TYPE_SKY_DRIVE);
         dynamic.setTargetId(dto.getId());
         dynamic.setNodeName(dto.getFileName());
-        dynamic.setType(DynamicConst.DYNAMIC_TYPE_DELETE_FILE);
-        dynamic.setContent(dto.getFileName());
+        dynamic.setType((dto.getType() == NetFileType.FILE) ?
+                DynamicConst.DYNAMIC_TYPE_DELETE_FILE :
+                DynamicConst.DYNAMIC_TYPE_DELETE_DIRECTORY);
         return dynamic;
     }
 
@@ -108,7 +117,6 @@ public class DynamicServiceImpl extends BaseService implements DynamicService{
         entity.setCreateBy(data.getUserId());
         String content = getUserName(entity.getCompanyUserId(),data.getUserId());
         content += DynamicConst.SEPARATOR + data.getNodeName();
-        content += DynamicConst.SEPARATOR + getDynamicTypeName(data.getType());
         content += DynamicConst.SEPARATOR + ((data.getContent() != null) ? data.getContent() : "");
         content += DynamicConst.SEPARATOR + DynamicConst.SEPARATOR + DynamicConst.SEPARATOR +  data.getType().toString();
         entity.setContent(content);
@@ -116,9 +124,19 @@ public class DynamicServiceImpl extends BaseService implements DynamicService{
     }
 
     private String getUserName(String companyUserId,String userId){
-        return "";
-    }
-    private String getDynamicTypeName(Integer type){
-        return "";
+        String userName = "";
+
+        if (companyUserId != null) {
+            ZUserDTO user = userDAO.getUserByCompanyUserId(companyUserId);
+            if (user != null) {
+                userName = (user.getAliasName() != null) ? user.getAliasName() : user.getUserName();
+            }
+        } else if (userId != null) {
+            ZUserDTO user = userDAO.getUserById(userId);
+            if (user != null){
+                userName = (user.getAliasName() != null) ? user.getAliasName() : user.getUserName();
+            }
+        }
+        return userName;
     }
 }
