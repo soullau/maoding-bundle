@@ -78,18 +78,18 @@
 	</appender>
 
 	<!-- 开发环境 -->
-	<!--<logger name="com.maoding" level="DEBUG" additivity="false">
+	<logger name="com.maoding" level="DEBUG" additivity="false">
         <appender-ref ref="console"/>
         <appender-ref ref="DEBUG"/>
         <appender-ref ref="ERROR_ONLY"/>
-    </logger>-->
+    </logger>
 
 	<!-- 生产环境 -->
-	<logger name="com.maoding" level="INFO" additivity="false">
-		<appender-ref ref="console"/>
-		<appender-ref ref="INFO"/>
-		<appender-ref ref="ERROR_ONLY"/>
-	</logger>
+	<!--<logger name="com.maoding" level="INFO" additivity="false">-->
+		<!--<appender-ref ref="console"/>-->
+		<!--<appender-ref ref="INFO"/>-->
+		<!--<appender-ref ref="ERROR_ONLY"/>-->
+	<!--</logger>-->
 
 	<!-- 不要提交此文件！！！调整环境一般不用改变此处，相应注释屏蔽掉上面其中一种就好 -->
 	<root level="ERROR">
