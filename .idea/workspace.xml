@@ -48,7 +48,7 @@
       <file leaf-file-name="NetFileServiceImpl.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenterbll/module/file/service/NetFileServiceImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2075">
+            <state relative-caret-position="2300">
               <caret line="153" column="53" selection-start-line="153" selection-start-column="53" selection-end-line="153" selection-end-column="53" />
               <folding />
             </state>
@@ -2196,7 +2196,7 @@
       <workItem from="1496389355315" duration="516000" />
       <workItem from="1496389895313" duration="13675000" />
       <workItem from="1496649867816" duration="12088000" />
-      <workItem from="1496716252775" duration="16431000" />
+      <workItem from="1496716252775" duration="16912000" />
     </task>
     <task id="LOCAL-00001" summary="实现文档类项目动态">
       <created>1496739440127</created>
@@ -2209,7 +2209,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="43313000" />
+    <option name="totallyTimeSpent" value="43794000" />
   </component>
   <component name="TodoView" selected-index="2">
     <todo-panel id="selected-file">
@@ -2697,7 +2697,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenterbll/module/file/service/NetFileServiceImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2075">
+        <state relative-caret-position="2300">
           <caret line="153" column="53" selection-start-line="153" selection-start-column="53" selection-end-line="153" selection-end-column="53" />
           <folding />
         </state>
