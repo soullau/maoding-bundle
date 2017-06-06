@@ -7,6 +7,7 @@ import com.maoding.core.bean.MultipartFileParam;
 import com.maoding.core.exception.DataNotFoundException;
 import com.maoding.filecenterbll.constDefine.NetFileStatus;
 import com.maoding.filecenterbll.constDefine.NetFileType;
+import com.maoding.filecenterbll.module.dynamic.service.DynamicService;
 import com.maoding.filecenterbll.module.file.dao.NetFileDAO;
 import com.maoding.filecenterbll.module.file.dto.DeleteDTO;
 import com.maoding.filecenterbll.module.file.dto.DirectoryDTO;
@@ -37,6 +38,9 @@ public class NetFileServiceImpl extends BaseService implements NetFileService {
 
     @Autowired
     private FastdfsService fastdfsService;
+
+    @Autowired
+    private DynamicService dynamicService;
 
     /**
      * 创建目录
@@ -71,7 +75,7 @@ public class NetFileServiceImpl extends BaseService implements NetFileService {
         }
 
         if (netFileDAO.insert(netFileDO) > 0) {
-            //TODO 项目动态的逻辑代码
+            dynamicService.addDynamic(dynamicService.createDynamicFrom(netFileDO)); //添加项目动态
             return ApiResult.success(null, null);
         }
         return ApiResult.failed(null, null);
@@ -117,8 +121,10 @@ public class NetFileServiceImpl extends BaseService implements NetFileService {
             netFileDO.setSkyDrivePath(String.format("%s-%s", parent.getSkyDrivePath(), netFileDO.getId()));
         }
 
-        if (netFileDAO.insert(netFileDO) > 0)
+        if (netFileDAO.insert(netFileDO) > 0) {
+            dynamicService.addDynamic(dynamicService.createDynamicFrom(netFileDO)); //添加项目动态
             return ApiResult.success(null, fuResult);
+        }
 
         return ApiResult.failed(null, null);
     }
@@ -146,7 +152,7 @@ public class NetFileServiceImpl extends BaseService implements NetFileService {
         updateObj.setUpdateDate(LocalDateTime.now());
 
         if (netFileDAO.updateByPrimaryKeySelective(updateObj) > 0) {
-            //TODO 项目动态的逻辑代码
+            dynamicService.addDynamic(dynamicService.createDynamicFrom(updateObj,netFileDO)); //添加项目动态
             return ApiResult.success(null, null);
         }
         return ApiResult.failed(null, null);
@@ -185,7 +191,7 @@ public class NetFileServiceImpl extends BaseService implements NetFileService {
         updateObj.setUpdateDate(LocalDateTime.now());
 
         if (netFileDAO.updateByPrimaryKeySelective(updateObj) > 0) {
-            //TODO 项目动态的逻辑代码
+            dynamicService.addDynamic(dynamicService.createDynamicFrom(netFileDO,null,dto.getAccountId())); //添加项目动态
             return ApiResult.success(null, null);
         }
         return ApiResult.failed(null, null);

@@ -16,13 +16,25 @@ public class DynamicDO {
      */
     private String companyUserId;
     /**
+     * 项目编号
+     */
+    private String projectId;
+    /**
+     * 公司编号
+     */
+    private String companyId;
+    /**
      * 被操作的信息类型
      */
     private Integer targetType;
     /**
-     * 被操作的信息编号（和被操作的信息类型一起生成被操作的节点描述文字）
+     * 被操作的信息编号
      */
     private String targetId;
+    /**
+     * 被操作的信息的名称
+     */
+    private String nodeName;
     /**
      * 动态类型编号
      */
@@ -48,6 +60,22 @@ public class DynamicDO {
         this.companyUserId = companyUserId;
     }
 
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
+    }
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
+
     public Integer getTargetType() {
         return targetType;
     }
@@ -62,6 +90,14 @@ public class DynamicDO {
 
     public void setTargetId(String targetId) {
         this.targetId = targetId;
+    }
+
+    public String getNodeName() {
+        return nodeName;
+    }
+
+    public void setNodeName(String nodeName) {
+        this.nodeName = nodeName;
     }
 
     public Integer getType() {

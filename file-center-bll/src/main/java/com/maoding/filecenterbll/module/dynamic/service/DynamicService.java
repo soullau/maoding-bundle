@@ -15,15 +15,22 @@ import java.util.List;
  */
 public interface DynamicService {
     /**
-     * 创建文件类项目动态
+     * 记录项目动态
      */
-    void createDynamic(DirectoryDTO dto);
-    void createDynamic(RenameDTO dto);
-    void createDynamic(DeleteDTO dto);
-    void createDynamic(NetFileDO dto);
+    void addDynamic(DynamicDO dynamic);
 
     /**
-     * 转换新表设计为原有设计（保持兼容性）
+     * 生成创建对象类项目动态
      */
-    ProjectDynamicsDO toProjectDynamics(DynamicDO data);
+    DynamicDO createDynamicFrom(NetFileDO dto);
+
+    /**
+     * 生成更改对象类项目动态
+     */
+    DynamicDO createDynamicFrom(NetFileDO dtoNew, NetFileDO dtoOld);
+
+    /**
+     * 生成删除对象类项目动态
+     */
+    DynamicDO createDynamicFrom(NetFileDO dto, String companyUserId, String userId);
 }
