@@ -10,6 +10,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/assets/**").addResourceLocations("classpath:/static/assets/");
+        registry.addResourceHandler("/crossdomain.xml").addResourceLocations("classpath:/static/crossdomain.xml");
     }
 }
 

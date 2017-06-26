@@ -15,9 +15,9 @@ public interface SyncTaskService {
     void runSyncTask(String corpEndpoint) throws Exception;
 
     /**
-     * 启动时修改执行中的状态
+     * 启动时把任务状态为“执行中”的重置为“等待执行”
      */
-    void runUpdateStatusTask();
+    void resetTaskStatus();
 
 //    /**
 //     * 同步组织
@@ -32,5 +32,5 @@ public interface SyncTaskService {
     /**
      * 同步组织人员和项目
      */
-    ApiResult syncOneCompanyUserAndProject(String companyId);
+    ApiResult syncOneCompany(String companyId);
 }

@@ -44,6 +44,6 @@ public interface SyncTaskGroupDAO extends BaseDao<SyncTaskGroupDO> {
      * 更新状态为：待同步
      */
     @ResultType(Integer.class)
-    @Update("update sync_task_group set task_group_status = 0 , update_date = now() where task_group_status = #{oldStatus}")
-    int updateAsWaitRunningOldStatus(@Param("oldStatus") int oldStatus);
+    @Update("update sync_task_group set task_group_status = 0 , update_date = now() where task_group_status = 1")
+    int updateRunngingAsWaitRunningStatus();
 }

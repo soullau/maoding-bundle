@@ -1,9 +1,10 @@
 package com.maoding.corp.module.corpclient.service;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.maoding.constDefine.corp.*;
 import com.maoding.core.base.BaseService;
 import com.maoding.core.bean.ApiResult;
-import com.maoding.corp.constDefine.*;
 import com.maoding.corp.module.corpclient.dao.SyncTaskDAO;
 import com.maoding.corp.module.corpclient.dao.SyncTaskGroupDAO;
 import com.maoding.corp.module.corpclient.model.SyncTaskDO;
@@ -11,15 +12,17 @@ import com.maoding.corp.module.corpclient.model.SyncTaskGroupDO;
 import com.maoding.corp.module.corpserver.dto.SyncCompanyDTO_Select;
 import com.maoding.utils.JsonUtils;
 import com.maoding.utils.StringUtils;
-import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Semaphore;
@@ -39,14 +42,11 @@ public class SyncTaskServiceImpl extends BaseService implements SyncTaskService 
     @Autowired
     private SyncTaskDAO syncTaskDao;
 
-    //@Autowired
-    //private SyncCompanyDao syncCompanyDao;
-
-    @Autowired
-    private RedissonClient redissonClient;
-
     @Autowired
     private CoService coService;
+
+    @Autowired
+    private SowService sowService;
 
     @Autowired
     private SyncService syncService;
@@ -121,7 +121,7 @@ public class SyncTaskServiceImpl extends BaseService implements SyncTaskService 
                     sp.acquire();
 
                     //执行同步逻辑
-                    syncOneCompanyUserAndProject(sc.getCompanyId());
+                    syncOneCompany(sc.getCompanyId());
 
                 } catch (Exception e) {
                     log.error("异步并发 syncCompanyUserAndProject 失败1", e);
@@ -144,12 +144,21 @@ public class SyncTaskServiceImpl extends BaseService implements SyncTaskService 
      * 同步组织人员和项目
      */
     @Override
-    public ApiResult syncOneCompanyUserAndProject(String companyId) {
+    public ApiResult syncOneCompany(String companyId) {
         try {
-            coService.pushUserByCompanyId(companyId, null);
-            coService.pushProjectByCompanyId(companyId, null);
+            sowService.pushUserByCompanyId(companyId, null);
+            sowService.pushProjectByCompanyId(companyId, null);
+            //协同占用空间同步
+            ApiResult ar = sowService.getCorpSizeByCompanyId(companyId);
+            if (ar.isSuccessful()) {
+                Long corpSize = Math.round((double)ar.getData());
+                Map<String, Object> param = Maps.newHashMap();
+                param.put("companyId", companyId);
+                param.put("corpSize", corpSize.toString());
+                coService.updateCorpSizeOnCompanyDisk(param);
+            }
         } catch (Exception e) {
-            log.error(String.format("组织：%s 拉取同步数据发生异常", companyId), e);
+            log.error(String.format("组织：%s 同步数据发生异常（syncOneCompany）", companyId), e);
         }
         return ApiResult.success(null, null);
     }
@@ -182,21 +191,21 @@ public class SyncTaskServiceImpl extends BaseService implements SyncTaskService 
                     log.debug("Ep：{} 组织：{} 任务（{}）：{}  同步开始", task.getCorpEndpoint(), task.getCompanyId(), task.getSyncCmd(), task.getId());
 
                 if (SyncCmd.ALL.equalsIgnoreCase(task.getSyncCmd())) {
-                    ApiResult apiResult = syncOneCompanyUserAndProject(task.getCompanyId());
+                    ApiResult apiResult = syncOneCompany(task.getCompanyId());
                     isOk = apiResult.isSuccessful();
                 } else if (SyncCmd.CU.equalsIgnoreCase(task.getSyncCmd())) {
 
-                    ApiResult apiResult = coService.pushUserByCompanyId(task.getCompanyId(), task.getSyncPoint());
+                    ApiResult apiResult = sowService.pushUserByCompanyId(task.getCompanyId(), task.getSyncPoint());
                     isOk = apiResult.isSuccessful();
 
                 } else if (SyncCmd.PU.equalsIgnoreCase(task.getSyncCmd())) {
 
-                    ApiResult apiResult = coService.setProject(task.getCompanyId(), task.getProjectId(), task.getSyncPoint());
+                    ApiResult apiResult = sowService.setProject(task.getCompanyId(), task.getProjectId(), task.getSyncPoint());
                     isOk = apiResult.isSuccessful();
 
                 } else if (SyncCmd.PT.equalsIgnoreCase(task.getSyncCmd())) {
 
-                    ApiResult apiResult = coService.setProjectNodes(task.getCompanyId(), task.getProjectId(), task.getSyncPoint());
+                    ApiResult apiResult = sowService.setProjectNodes(task.getCompanyId(), task.getProjectId(), task.getSyncPoint());
                     isOk = apiResult.isSuccessful();
 
                 } else if (SyncCmd.PF.equalsIgnoreCase(task.getSyncCmd())) {
@@ -409,9 +418,10 @@ public class SyncTaskServiceImpl extends BaseService implements SyncTaskService 
     /**
      * 执行同步任务
      */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
-    public void runUpdateStatusTask() {
+    public void resetTaskStatus() {
         //获取组织
-        syncTaskGroupDao.updateAsWaitRunningOldStatus(1);
+        syncTaskGroupDao.updateRunngingAsWaitRunningStatus();
     }
 }

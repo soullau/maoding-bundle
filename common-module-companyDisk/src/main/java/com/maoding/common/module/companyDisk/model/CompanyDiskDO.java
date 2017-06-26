@@ -1,6 +1,7 @@
 package com.maoding.common.module.companyDisk.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.maoding.core.base.BaseEntity;
 
 import javax.persistence.Table;
@@ -13,7 +14,7 @@ import javax.persistence.Table;
 public class CompanyDiskDO extends BaseEntity {
 
     /**
-     * 组织Id
+     * 组织Id（Id主键也是存companyId)
      */
     private String companyId;
     /**
@@ -33,12 +34,17 @@ public class CompanyDiskDO extends BaseEntity {
      */
     private Long docmgrSize;
     /**
+     * 其他占用容量
+     */
+    private Long otherSize;
+    /**
      * 剩余容量
      */
     private Long freeSize;
     /**
      * 版本控制(乐观锁）
      */
+    @JsonIgnore
     private Long upVersion;
 
     public String getCompanyId() {
@@ -81,6 +87,14 @@ public class CompanyDiskDO extends BaseEntity {
         this.docmgrSize = docmgrSize;
     }
 
+    public Long getOtherSize() {
+        return otherSize;
+    }
+
+    public void setOtherSize(Long otherSize) {
+        this.otherSize = otherSize;
+    }
+
     public Long getFreeSize() {
         return freeSize;
     }
@@ -95,9 +109,9 @@ public class CompanyDiskDO extends BaseEntity {
     public Long recalcFreeSize() {
         //判断协同文档是否云端存储
         if (corpOnCloud)
-            freeSize = totalSize - corpSize - docmgrSize;
+            freeSize = totalSize - corpSize - docmgrSize - otherSize;
         else
-            freeSize = totalSize - docmgrSize;
+            freeSize = totalSize - docmgrSize - otherSize;
 
         return freeSize;
     }

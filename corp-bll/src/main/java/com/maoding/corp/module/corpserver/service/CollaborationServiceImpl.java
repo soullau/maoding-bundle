@@ -2,12 +2,14 @@ package com.maoding.corp.module.corpserver.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.maoding.common.module.companyDisk.dao.CompanyDiskDAO;
+import com.maoding.constDefine.corp.RKey;
+import com.maoding.constDefine.corp.SyncCmd;
 import com.maoding.core.base.BaseService;
 import com.maoding.core.bean.ApiResult;
-import com.maoding.corp.constDefine.RKey;
-import com.maoding.corp.constDefine.SyncCmd;
-import com.maoding.corp.module.corpserver.dao.*;
+import com.maoding.corp.module.corpserver.dao.CollaborationDAO;
+import com.maoding.corp.module.corpserver.dao.MyTaskDAO;
+import com.maoding.corp.module.corpserver.dao.ProcessNodeDAO;
+import com.maoding.corp.module.corpserver.dao.ProjectTaskDAO;
 import com.maoding.corp.module.corpserver.dto.*;
 import com.maoding.corp.module.corpserver.model.AccountDO;
 import com.maoding.corp.module.corpserver.model.MyTaskDO;
@@ -23,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -54,9 +57,6 @@ public class CollaborationServiceImpl extends BaseService implements Collaborati
     @Autowired
     private ProjectTaskDAO projectTaskDao;
 
-    @Autowired
-    private CompanyDiskDAO companyDiskDao;
-
     @Override
     public List<CoCompanyDTO> listCompanyByIds(List<String> companyIds) {
         return collaborationDao.listCompanyByIds(companyIds);
@@ -73,7 +73,6 @@ public class CollaborationServiceImpl extends BaseService implements Collaborati
         List<CoUserDTO> coUsers = collaborationDao.listUserByCompanyId(companyId);
         return coUsers;
     }
-
 
 
     @Override
@@ -121,7 +120,7 @@ public class CollaborationServiceImpl extends BaseService implements Collaborati
                 result.add(coPhase);
 
                 //根据路径筛选阶段子任务(按层级排序）
-                List<ProjectTaskDO> childTasks = tasks.stream().filter(t -> t.getTaskType() != 1 && StringUtils.startsWithIgnoreCase(t.getTaskPath(), phase.getId())).sorted(Comparator.comparingInt(c -> c.getTaskLevel() * 100000 + c.getSeq())).collect(Collectors.toList());
+                List<ProjectTaskDO> childTasks = tasks.stream().filter(t -> t.getTaskType() != 1 && StringUtils.startsWithIgnoreCase(t.getTaskPath(), phase.getId())).sorted(Comparator.comparingLong(c -> c.getTaskLevel() * 100000L + Timestamp.valueOf(c.getCreateDate()).getTime())).collect(Collectors.toList());
 
                 if (childTasks.size() <= 0)
                     continue;

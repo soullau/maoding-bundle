@@ -29,9 +29,8 @@ public interface SyncService {
      */
     ApiResult pullFromCorpServer(Map<String, Object> param, String url) throws Exception;
 
-
     /**
      * 推送到对方协同服务端
      */
-    PushResult pushToSOWServer(Object param, String url) throws Exception;
+    PushResult postToSOWServer(Object param, String url) throws Exception;
 }

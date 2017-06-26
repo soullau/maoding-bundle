@@ -1,10 +1,10 @@
 package com.maoding.corp.module.corpclient.service;
 
 import com.google.common.collect.Lists;
+import com.maoding.constDefine.corp.*;
 import com.maoding.core.base.BaseService;
 import com.maoding.core.bean.ApiResult;
 import com.maoding.corp.config.CorpClientConfig;
-import com.maoding.corp.constDefine.*;
 import com.maoding.corp.module.corpclient.dao.SyncTaskDAO;
 import com.maoding.corp.module.corpclient.dao.SyncTaskGroupDAO;
 import com.maoding.corp.module.corpclient.dto.PushResult;
@@ -301,18 +301,18 @@ public class SyncServiceImpl extends BaseService implements SyncService {
     /**
      * 推送到对方协同服务端
      */
-    public PushResult pushToSOWServer(Object param, String url) throws Exception {
+    public PushResult postToSOWServer(Object param, String url) throws Exception {
         if (log.isDebugEnabled())
-            log.debug("pushToSOWServer {} {}", CorpClientConfig.SowServer + url, JsonUtils.obj2json(param));
+            log.debug("postToSOWServer {} {}", CorpClientConfig.SowServer + url, JsonUtils.obj2json(param));
         else
-            log.info("pushToSOWServer {}", CorpClientConfig.SowServer + url);
+            log.info("postToSOWServer {}", CorpClientConfig.SowServer + url);
         Response res = OkHttpUtils.postJson(CorpClientConfig.SowServer + url, param);
         if (res.isSuccessful()) {
             try {
                 PushResult pushResult = GsonUtils.fromJson(res.body().string(), PushResult.class);
                 return pushResult;
             } catch (Exception e) {
-                log.error("pushToSOWServer 解析返回结果失败", e);
+                log.error("postToSOWServer 解析返回结果失败", e);
             }
         }
         return PushResult.failed();

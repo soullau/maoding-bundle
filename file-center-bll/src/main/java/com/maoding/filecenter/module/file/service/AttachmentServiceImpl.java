@@ -2,13 +2,14 @@ package com.maoding.filecenter.module.file.service;
 
 import com.google.common.collect.Lists;
 import com.maoding.common.module.companyDisk.service.CompanyDiskService;
+import com.maoding.constDefine.companyDisk.FileSizeSumType;
 import com.maoding.core.base.BaseService;
 import com.maoding.core.bean.ApiResult;
 import com.maoding.core.bean.FastdfsUploadResult;
 import com.maoding.core.bean.MultipartFileParam;
-import com.maoding.filecenter.constDefine.ImGroupType;
-import com.maoding.filecenter.constDefine.NetFileStatus;
-import com.maoding.filecenter.constDefine.NetFileType;
+import com.maoding.constDefine.im.ImGroupType;
+import com.maoding.constDefine.netFile.NetFileStatus;
+import com.maoding.constDefine.netFile.NetFileType;
 import com.maoding.filecenter.module.file.dao.NetFileDAO;
 import com.maoding.filecenter.module.file.dto.DeleteDTO;
 import com.maoding.filecenter.module.file.dto.NetFileOrderDTO;
@@ -115,7 +116,7 @@ public class AttachmentServiceImpl extends BaseService implements AttachmentServ
 
         //producerService.sendGroupMessage(updateGroupDestination, group);
 
-        return ApiResult.success(null, fuResult);
+        return ApiResult.success("组织logo已上传成功", fuResult);
     }
 
     /**
@@ -149,8 +150,8 @@ public class AttachmentServiceImpl extends BaseService implements AttachmentServ
         ApiResult ar = saveNewNetFile(companyId, accountId, null, NetFileType.COMPANY_BANNER_ATTACH, seq, null, fuResult);
         if (ar.isSuccessful()) {
             //计算剩余空间
-            companyDiskService.recalcSizeOnAddFile(companyId, fuResult.getFileSize());
-            return ar;
+            companyDiskService.recalcSizeOnFileAdded(companyId, FileSizeSumType.OTHER, fuResult.getFileSize());
+            return ApiResult.success(null,fuResult);
         }
 
         return ApiResult.failed(null, null);
@@ -227,8 +228,8 @@ public class AttachmentServiceImpl extends BaseService implements AttachmentServ
         if (ar.isSuccessful()) {
             //TODO 要考虑清理一些新建但没有提交的报销单附件空间
             //计算剩余空间
-            companyDiskService.recalcSizeOnAddFile(companyId, fuResult.getFileSize());
-            return ar;
+            companyDiskService.recalcSizeOnFileAdded(companyId, FileSizeSumType.OTHER, fuResult.getFileSize());
+            return ApiResult.success(null,fuResult);
         }
 
         return ApiResult.failed(null, null);
@@ -280,15 +281,15 @@ public class AttachmentServiceImpl extends BaseService implements AttachmentServ
             }
             //计算剩余空间
             if (subFileSize > 0L)
-                companyDiskService.recalcSizeOnRemoveFile(companyId, subFileSize);
+                companyDiskService.recalcSizeOnFileRemoved(companyId,FileSizeSumType.OTHER, subFileSize);
         }
 
         //插入新记录
         ApiResult ar = saveNewNetFile(companyId, accountId, projectId, NetFileType.PROJECT_CONTRACT_ATTACH, null, null, fuResult);
         if (ar.isSuccessful()) {
             //计算剩余空间
-            companyDiskService.recalcSizeOnAddFile(companyId, fuResult.getFileSize());
-            return ar;
+            companyDiskService.recalcSizeOnFileAdded(companyId, FileSizeSumType.OTHER, fuResult.getFileSize());
+            return ApiResult.success(null,fuResult);
         }
 
         return ApiResult.failed(null, null);
@@ -319,7 +320,7 @@ public class AttachmentServiceImpl extends BaseService implements AttachmentServ
 
         if (netFileDAO.updateByPrimaryKeySelective(updateObj) > 0) {
             //计算剩余空间
-            companyDiskService.recalcSizeOnRemoveFile(netFileDO.getCompanyId(), netFileDO.getFileSize());
+            companyDiskService.recalcSizeOnFileRemoved(netFileDO.getCompanyId(),FileSizeSumType.OTHER, netFileDO.getFileSize());
             return ApiResult.success(null, null);
         }
         return ApiResult.failed(null, null);

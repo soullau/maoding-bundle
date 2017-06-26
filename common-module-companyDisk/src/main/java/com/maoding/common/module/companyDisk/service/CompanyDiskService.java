@@ -1,6 +1,8 @@
 package com.maoding.common.module.companyDisk.service;
 
 
+import com.maoding.constDefine.companyDisk.FileChangeType;
+import com.maoding.constDefine.companyDisk.FileSizeSumType;
 import com.maoding.core.bean.ApiResult;
 
 
@@ -17,19 +19,39 @@ public interface CompanyDiskService {
     ApiResult initAllDisk();
 
     /**
-     * 当添加文件时重新计算容量
+     * 当文档库添加文件时重新计算容量（线程安全）
      */
-    ApiResult recalcSizeOnAddFile(String companyId, Long fileSize);
+    ApiResult recalcSizeOnFileAdded(String companyId, FileSizeSumType sumType, Long fileSize);
 
     /**
-     * 当删除文件时重新计算容量
+     * 当删除文件时重新计算容量（线程安全）
      */
-    ApiResult recalcSizeOnRemoveFile(String companyId, Long fileSize);
+    ApiResult recalcSizeOnFileRemoved(String companyId, FileSizeSumType sumType, Long fileSize);
 
     /**
-     * 根据组织ID统计文档库大小
+     * 当文档库变更时重新计算容量（非线程安全）
      */
-    ApiResult sumDocmgrSizeByCompanyId(String companyId);
+    ApiResult recalcSizeOnFileChangedUnsafely(String companyId, FileSizeSumType sumType, FileChangeType changeType, Long fileSize);
+
+    /**
+     * 根据组织ID统计指定类型文件大小（线程安全）
+     */
+    ApiResult recalcSize(String companyId, FileSizeSumType sumType);
+
+    /**
+     * 根据组织ID统计指定类型文件大小（非线程安全）
+     */
+    ApiResult recalcSizeUnsafely(String companyId, FileSizeSumType sumType);
+
+    /**
+     * 根据组织ID更新协同占用空间（线程安全）
+     */
+    ApiResult updateCorpSize(String companyId, Long corpSize);
+
+    /**
+     * 根据组织ID更新协同占用空间（非线程安全）
+     */
+    ApiResult updateCorpSizeUnsafely(String companyId, Long corpSize);
 
     /**
      * 根据组织ID获取公司网盘容量信息
@@ -37,7 +59,7 @@ public interface CompanyDiskService {
     ApiResult getCompanyDiskInfo(String companyId);
 
     /**
-     * 根据组织ID更新协同占用空间
+     * 根据组织ID切换协同部署方式
      */
-    ApiResult updateCorpSizeOnCompanyDisk(String companyId,Long corpSize);
+    ApiResult switchCorpDeployType(String companyId, Boolean corpOnCloud);
 }

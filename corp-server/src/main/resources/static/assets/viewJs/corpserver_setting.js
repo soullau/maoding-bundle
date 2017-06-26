@@ -9,84 +9,129 @@ var corpserver_setting = {
     },
     refreshData: function () {
         var that = this;
-        axios.get('/corpserver/syncCompany/selectAll')
-            .then(function (res) {
-                if (res.data && res.data.code) {
-                    if (res.data.code === '0') {
-                        $('#tbody').html('');
-                        $.each(res.data.data, function (i, o) {
-                            $('#tbody').append(_.sprintf('<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td> <a name="btnRemove" href="javacript:void(0)" data-id="%s" class="btn btn-danger btn-sm ">删除</a>&nbsp;<a name="btnSync" href="javacript:void(0)" data-id="%s" class="btn btn-danger btn-sm ">立即同步</a></td></tr>', o.corpEndpoint, o.companyId, $.trim(o.companyName).length === 0 ? '<span style="color:red;">无法匹配</span>' : o.companyName, $.trim(o.remarks), o.id, o.companyId))
-                        });
-
-                        that.bindAction();
-                    }
-                    else
-                        alert("数据请求失败，" + res.data.msg);
-                } else {
-                    alert("数据请求失败");
-                }
-            })
-            .catch(function (err) {
-                console.error(err);
-            });
+        var ajaxOpts = {
+            url: restApi.url_syncCompany_selectAll
+        };
+        m_ajax.getJson(ajaxOpts, function (res) {
+            if (res.code === '0') {
+                $('#tbody').html('');
+                var html = template('m_setting/m_setting_list', {list: res.data});
+                $('#tbody').append(html);
+                that.bindAction();
+            }
+            else {
+                if (!isNullOrBlank(res.msg))
+                    S_toastr.error(res.msg);
+                else
+                    S_toastr.error("数据请求失败");
+            }
+        });
     },
     bindAdd: function () {
-        var that=this;
+        var that = this;
         $('#btnAdd').click(function () {
             var corpEndpoint = $.trim($('#corpEndpoint').val());
             var companyId = $.trim($('#companyId').val());
             var remarks = $.trim($('#remarks').val());
 
-            axios.post('/corpserver/syncCompany/create', {
-                corpEndpoint: corpEndpoint,
-                companyId: companyId,
-                remarks: remarks
-            }).then(function (res) {
-                if (res.data && res.data.code) {
-                    console.log(res);
-                    if (res.data.code === '0')
-                        that.refreshData();
-                    else
-                        alert("数据提交失败，" + res.data.msg);
-                } else {
-                    alert("数据提交失败");
+            var ajaxOpts = {
+                url: restApi.url_syncCompany_create,
+                postData: {
+                    corpEndpoint: corpEndpoint,
+                    companyId: companyId,
+                    remarks: remarks
                 }
-            }).catch(function (err) {
-                console.error(err);
+            };
+            m_ajax.postJson(ajaxOpts, function (res) {
+                if (res.code === '0') {
+                    that.refreshData();
+                }
+                else {
+                    if (!isNullOrBlank(res.msg))
+                        S_toastr.error(res.msg);
+                    else
+                        S_toastr.error("数据请求失败");
+                }
             });
         });
     }
     , bindAction: function () {
-        var that=this;
+        var that = this;
+        $('a[name="btnSwitchDeployCorp"]').click(function () {
+            var companyId = $(this).attr('data-company-id');
+            var ajaxOpts = {
+                url: restApi.url_companyDisk_switchCorpDeployType,
+                postData: {
+                    companyId: companyId
+                }
+            };
+            m_ajax.postJson(ajaxOpts, function (res) {
+                if (res.code === '0') {
+                    that.refreshData();
+                }
+                else {
+                    if (!isNullOrBlank(res.msg))
+                        S_toastr.error(res.msg);
+                    else
+                        S_toastr.error("数据请求失败");
+                }
+            });
+        });
+
+        $('a[name="btnRecalcSize"]').click(function () {
+            var companyId = $(this).attr('data-company-id');
+            var ajaxOpts = {
+                url: restApi.url_companyDisk_recalcSizeByCompanyId,
+                postData: {
+                    companyId: companyId
+                }
+            };
+            m_ajax.postJson(ajaxOpts, function (res) {
+                if (res.code === '0') {
+                    that.refreshData();
+                }
+                else {
+                    if (!isNullOrBlank(res.msg))
+                        S_toastr.error(res.msg);
+                    else
+                        S_toastr.error("数据请求失败");
+                }
+            });
+        });
+
         $('a[name="btnRemove"]').click(function () {
             var id = $(this).attr('data-id');
-            axios.post('/corpserver/syncCompany/delete/' + id, {}).then(function (res) {
-                if (res.data && res.data.code) {
-                    console.log(res);
-                    if (res.data.code === '0')
-                        that.refreshData();
-                    else
-                        alert("数据提交失败，" + res.data.msg);
-                } else {
-                    alert("数据提交失败");
+            var ajaxOpts = {
+                url: restApi.url_syncCompany_delete + '/' + id
+            };
+            m_ajax.postJson(ajaxOpts, function (res) {
+                if (res.code === '0') {
+                    that.refreshData();
                 }
-            }).catch(function (err) {
-                console.error(err);
+                else {
+                    if (!isNullOrBlank(res.msg))
+                        S_toastr.error(res.msg);
+                    else
+                        S_toastr.error("数据请求失败");
+                }
             });
         });
 
         $('a[name="btnSync"]').click(function () {
-            var id = $(this).attr('data-id');
-            axios.post('/corpserver/syncCompany/pushSyncAllCmd/' + id, {}).then(function (res) {
-                if (res.data && res.data.code) {
-                    console.log(res);
-                    if (res.data.code !== '0')
-                        alert("数据提交失败");
-                } else {
-                    alert("数据提交失败");
+            var id = $(this).attr('data-company-id');
+            var ajaxOpts = {
+                url: restApi.url_syncCompany_pushSyncAllCmd + '/' + id
+            };
+            m_ajax.postJson(ajaxOpts, function (res) {
+                if (res.code === '0') {
+                    S_toastr.success("已经发送同步指令，同步可能需要1-2分钟")
                 }
-            }).catch(function (err) {
-                console.error(err);
+                else {
+                    if (!isNullOrBlank(res.msg))
+                        S_toastr.error(res.msg);
+                    else
+                        S_toastr.error("数据请求失败");
+                }
             });
         });
     }

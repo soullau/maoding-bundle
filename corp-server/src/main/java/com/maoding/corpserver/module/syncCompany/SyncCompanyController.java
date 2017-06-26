@@ -2,7 +2,7 @@ package com.maoding.corpserver.module.syncCompany;
 
 import com.maoding.core.base.BaseController;
 import com.maoding.core.bean.ApiResult;
-import com.maoding.corp.constDefine.SyncCmd;
+import com.maoding.constDefine.corp.SyncCmd;
 import com.maoding.corp.module.corpserver.dto.SyncCompanyDTO_Create;
 import com.maoding.corp.module.corpserver.dto.SyncCompanyDTO_Update;
 import com.maoding.corp.module.corpserver.service.CollaborationService;

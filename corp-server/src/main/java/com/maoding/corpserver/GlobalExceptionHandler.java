@@ -4,11 +4,18 @@ import com.maoding.core.bean.ApiResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
+import java.util.List;
 
 /**
  * Created by Wuwq on 2016/12/14.
@@ -17,6 +24,25 @@ import javax.servlet.http.HttpServletRequest;
 @ControllerAdvice
 public class GlobalExceptionHandler {
     private final static Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public ApiResult MethodArgumentNotValidException(HttpServletRequest req, MethodArgumentNotValidException ex) {
+        List<ObjectError> errors = ex.getBindingResult().getAllErrors();
+        StringBuffer errorMsg = new StringBuffer();
+        errors.stream().forEach(x -> errorMsg.append(x.getDefaultMessage()).append(";"));
+        return ApiResult.failed("参数验证失败（#01）：" + errorMsg.toString(), null);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public ApiResult MethodArgumentNotValidException(HttpServletRequest req, ConstraintViolationException ex) {
+        StringBuffer errorMsg = new StringBuffer();
+        ex.getConstraintViolations().forEach(c->errorMsg.append(c.getMessage()).append(";"));
+        return ApiResult.failed("参数验证失败（#02）：" + errorMsg.toString(), null);
+    }
 
     @ExceptionHandler(NoHandlerFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)

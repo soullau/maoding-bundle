@@ -1,13 +1,14 @@
 package com.maoding.filecenter.module.file.service;
 
 import com.maoding.common.module.companyDisk.service.CompanyDiskService;
+import com.maoding.constDefine.companyDisk.FileSizeSumType;
+import com.maoding.constDefine.netFile.NetFileStatus;
+import com.maoding.constDefine.netFile.NetFileType;
 import com.maoding.core.base.BaseService;
 import com.maoding.core.bean.ApiResult;
 import com.maoding.core.bean.FastdfsUploadResult;
 import com.maoding.core.bean.MultipartFileParam;
 import com.maoding.core.exception.DataNotFoundException;
-import com.maoding.filecenter.constDefine.NetFileStatus;
-import com.maoding.filecenter.constDefine.NetFileType;
 import com.maoding.common.module.dynamic.service.DynamicService;
 import com.maoding.filecenter.module.file.dao.NetFileDAO;
 import com.maoding.filecenter.module.file.dto.DeleteDTO;
@@ -46,15 +47,40 @@ public class NetFileServiceImpl extends BaseService implements NetFileService {
     private CompanyDiskService companyDiskService;
 
     /**
+     * 判断名字在同一文件夹下是否重复
+     */
+    private boolean duplicated(String pid, String fileName) {
+        Example selectExample = new Example(NetFileDO.class);
+        selectExample.createCriteria()
+                .andCondition("pid = ", pid)
+                .andCondition("file_name = ", fileName)
+                .andCondition("status = '0' ");
+        return netFileDAO.selectCountByExample(selectExample) > 0;
+    }
+
+    /**
+     * 根据PID重置IDPath
+     */
+    private void resetSkyDrivePath(NetFileDO netFileDO) throws DataNotFoundException {
+        if (StringUtils.isBlank(netFileDO.getPid())) {
+            netFileDO.setSkyDrivePath(netFileDO.getId());
+        } else {
+            NetFileDO parent = netFileDAO.selectByPrimaryKey(netFileDO.getPid());
+            if (parent == null)
+                throw new DataNotFoundException(String.format("找不到父目录：%s", netFileDO.getPid()));
+            netFileDO.setSkyDrivePath(String.format("%s-%s", parent.getSkyDrivePath(), netFileDO.getId()));
+        }
+    }
+
+    /**
      * 创建目录
      */
     @Override
     public ApiResult createDirectory(DirectoryDTO dir) throws DataNotFoundException {
-        Example selectExample = new Example(NetFileDO.class);
-        selectExample.createCriteria()
-                .andCondition("pid = ", dir.getPid())
-                .andCondition("file_name = ", dir.getFileName());
-        if (netFileDAO.selectCountByExample(selectExample) > 0)
+        if (StringUtils.isBlank(dir.getFileName()))
+            return ApiResult.failed("文件夹名称不能为空", null);
+
+        if (duplicated(dir.getPid(), dir.getFileName()))
             return ApiResult.failed("同级目录下已存在名称重复的项", null);
 
         NetFileDO netFileDO = new NetFileDO();
@@ -67,15 +93,8 @@ public class NetFileServiceImpl extends BaseService implements NetFileService {
         netFileDO.setType(NetFileType.DIRECTORY);
         netFileDO.setIsCustomize(0);
 
-        //根据父节点调整IDPath
-        if (StringUtils.isBlank(dir.getPid())) {
-            netFileDO.setSkyDrivePath(netFileDO.getId());
-        } else {
-            NetFileDO parent = netFileDAO.selectByPrimaryKey(dir.getPid());
-            if (parent == null)
-                throw new DataNotFoundException(String.format("找不到父目录：%s", dir.getPid()));
-            netFileDO.setSkyDrivePath(String.format("%s-%s", parent.getSkyDrivePath(), netFileDO.getId()));
-        }
+        //根据PID重置IDPath
+        resetSkyDrivePath(netFileDO);
 
         if (netFileDAO.insert(netFileDO) > 0) {
             //添加项目动态
@@ -102,13 +121,13 @@ public class NetFileServiceImpl extends BaseService implements NetFileService {
         String companyId = (String) param.getParam().get("companyId");
         String projectId = (String) param.getParam().get("projectId");
 
-        if(com.mysql.jdbc.StringUtils.isNullOrEmpty(companyId))
+        if (com.mysql.jdbc.StringUtils.isNullOrEmpty(companyId))
             return ApiResult.failed("组织ID不能为空", null);
 
-        if(com.mysql.jdbc.StringUtils.isNullOrEmpty(accountId))
+        if (com.mysql.jdbc.StringUtils.isNullOrEmpty(accountId))
             return ApiResult.failed("账号ID不能为空", null);
 
-        if(com.mysql.jdbc.StringUtils.isNullOrEmpty(projectId))
+        if (com.mysql.jdbc.StringUtils.isNullOrEmpty(projectId))
             return ApiResult.failed("项目ID不能为空", null);
 
         //业务系统逻辑
@@ -128,19 +147,13 @@ public class NetFileServiceImpl extends BaseService implements NetFileService {
         netFileDO.setFileExtName(fuResult.getFileExtName());
 
         netFileDO.setPid((String) param.getParam().get("pid"));
-        //根据父节点调整IDPath
-        if (StringUtils.isBlank(netFileDO.getPid())) {
-            netFileDO.setSkyDrivePath(netFileDO.getId());
-        } else {
-            NetFileDO parent = netFileDAO.selectByPrimaryKey(netFileDO.getPid());
-            if (parent == null)
-                throw new DataNotFoundException(String.format("找不到父目录：%s", netFileDO.getPid()));
-            netFileDO.setSkyDrivePath(String.format("%s-%s", parent.getSkyDrivePath(), netFileDO.getId()));
-        }
+
+        //根据PID重置IDPath
+        resetSkyDrivePath(netFileDO);
 
         if (netFileDAO.insert(netFileDO) > 0) {
             //计算剩余空间
-            companyDiskService.recalcSizeOnAddFile(companyId, fuResult.getFileSize());
+            companyDiskService.recalcSizeOnFileAdded(companyId, FileSizeSumType.DOCMGR, fuResult.getFileSize());
             //添加项目动态
             dynamicService.addDynamic(dynamicService.createDynamicFrom(netFileDO));
             return ApiResult.success(null, fuResult);
@@ -153,18 +166,14 @@ public class NetFileServiceImpl extends BaseService implements NetFileService {
      */
     @Override
     public ApiResult rename(NetFileRenameDTO dto) {
-        if(com.mysql.jdbc.StringUtils.isNullOrEmpty(dto.getId()))
+        if (com.mysql.jdbc.StringUtils.isNullOrEmpty(dto.getId()))
             return ApiResult.failed("ID不能为空", null);
 
         NetFileDO netFileDO = netFileDAO.selectByPrimaryKey(dto.getId());
         if (netFileDO == null)
             return ApiResult.failed("找不到要重命名的项", null);
 
-        Example selectExample = new Example(NetFileDO.class);
-        selectExample.createCriteria()
-                .andCondition("pid = ", netFileDO.getPid())
-                .andCondition("file_name = ", dto.getFileName());
-        if (netFileDAO.selectCountByExample(selectExample) > 0)
+        if (duplicated(netFileDO.getPid(), dto.getFileName()))
             return ApiResult.failed("同级目录下已存在名称重复的项", null);
 
         NetFileDO updateObj = new NetFileDO();
@@ -186,7 +195,7 @@ public class NetFileServiceImpl extends BaseService implements NetFileService {
      */
     @Override
     public ApiResult delete(DeleteDTO dto) {
-        if(com.mysql.jdbc.StringUtils.isNullOrEmpty(dto.getId()))
+        if (com.mysql.jdbc.StringUtils.isNullOrEmpty(dto.getId()))
             return ApiResult.failed("ID不能为空", null);
 
         NetFileDO netFileDO = netFileDAO.selectByPrimaryKey(dto.getId());
@@ -217,8 +226,12 @@ public class NetFileServiceImpl extends BaseService implements NetFileService {
         updateObj.setUpdateDate(LocalDateTime.now());
 
         if (netFileDAO.updateByPrimaryKeySelective(updateObj) > 0) {
-            //计算剩余空间
-            companyDiskService.recalcSizeOnRemoveFile(netFileDO.getCompanyId(), netFileDO.getFileSize());
+
+            if (netFileDO.getType().equals(NetFileType.FILE)) {
+                //计算剩余空间
+                companyDiskService.recalcSizeOnFileRemoved(netFileDO.getCompanyId(), FileSizeSumType.DOCMGR, netFileDO.getFileSize());
+            }
+
             //添加项目动态
             dynamicService.addDynamic(dynamicService.createDynamicFrom(netFileDO, null, dto.getAccountId()));
             return ApiResult.success(null, null);

@@ -2,15 +2,6 @@ server:
    port: 8085
    context-path:
 spring:
-   thymeleaf:
-     enabled: true
-     cache: false  # 这个开发配置为false，避免改了模板还要重启服务器
-     prefix: "classpath:/static/views/" # 配置模板路径的，默认就是templates，可不用配置
-     check-template-location: true # 检查模板位置，可不用配置
-     suffix: ".html"
-     encoding: UTF-8
-     content-type: "text/html"
-     mode: HTML5
    jmx:
      enabled: true
    mvc:
@@ -53,7 +44,7 @@ druid:
 # ===================================================================
 mybatis:
     config-location: classpath:mybatis-config.xml
-    mapper-locations: classpath:mapper/corpclient/*.xml
+    mapper-locations: classpath*:mapper/**/*Mapper.xml
 
 mapper:
     mappers:
@@ -75,7 +66,7 @@ corpClient:
 # Redisson
 # ===================================================================
 redisson:
-    address: "172.16.6.73:6679"
+    address: "redis://172.16.6.73:6679"
     password: "123456"
-    #address: "192.168.17.168:6679"
+    #address: "redis://192.168.17.168:6679"
     #password: ""

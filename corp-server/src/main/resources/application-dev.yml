@@ -53,7 +53,7 @@ druid:
 # ===================================================================
 mybatis:
     config-location: classpath:mybatis-config.xml
-    mapper-locations: classpath:mapper/corpserver/*.xml
+    mapper-locations: classpath*:mapper/**/*Mapper.xml
 
 mapper:
     mappers:
@@ -65,5 +65,5 @@ mapper:
 # Redisson
 # ===================================================================
 redisson:
-    address: "172.16.6.73:6679"
+    address: "redis://172.16.6.73:6679"
     password: "123456"

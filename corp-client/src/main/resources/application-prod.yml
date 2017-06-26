@@ -2,15 +2,6 @@ server:
    port: 8085
    context-path:
 spring:
-   thymeleaf:
-     enabled: true
-     cache: true  # 这个开发配置为false，避免改了模板还要重启服务器
-     prefix: "classpath:/static/views/" # 配置模板路径的，默认就是templates，可不用配置
-     check-template-location: true # 检查模板位置，可不用配置
-     suffix: ".html"
-     encoding: UTF-8
-     content-type: "text/html"
-     mode: HTML5
    jmx:
      enabled: true
    mvc:
@@ -53,7 +44,7 @@ druid:
 # ===================================================================
 mybatis:
     config-location: classpath:mybatis-config.xml
-    mapper-locations: classpath:mapper/corpclient/*.xml
+    mapper-locations: classpath*:mapper/**/*Mapper.xml
 
 mapper:
     mappers:
@@ -66,7 +57,7 @@ mapper:
 # ===================================================================
 corpClient:
     endPoint: ep1   #卯丁协同客户端Id（唯一性标识）
-    corpServer: http://112.74.211.53:8089/corpserver    #卯丁协同服务器
+    corpServer: http://112.74.211.53:8084/corpserver    #卯丁协同服务器
     #corpServer: http://192.168.17.168:8084/collaboration
 
     sowServer: http://127.0.0.1/WebAPI   #第三方协同服务器
@@ -75,5 +66,5 @@ corpClient:
 # Redisson
 # ===================================================================
 redisson:
-    address: "r-wz910fa53bf10114.redis.rds.aliyuncs.com:6379"
+    address: "redis://r-wz910fa53bf10114.redis.rds.aliyuncs.com:6379"
     password: "ReMD864g"

@@ -7,7 +7,7 @@ public class PushResult {
     private int ResultType;
     private String Message;
     private String LogMessage;
-    /*private Object appendData;*/
+    private Object AppendData;
 
     public PushResult() {
     }
@@ -50,5 +50,13 @@ public class PushResult {
 
     public boolean isSuccessful() {
         return this.ResultType == 0;
+    }
+
+    public Object getAppendData() {
+        return AppendData;
+    }
+
+    public void setAppendData(Object appendData) {
+        this.AppendData = appendData;
     }
 }

@@ -1,9 +1,8 @@
 package com.maoding.common.module.companyDisk.dao;
 
 
-import com.maoding.core.base.BaseDao;
 import com.maoding.common.module.companyDisk.model.CompanyDiskDO;
-import org.apache.ibatis.annotations.Param;
+import com.maoding.core.base.BaseDao;
 
 import java.util.List;
 
@@ -18,5 +17,13 @@ public interface CompanyDiskDAO extends BaseDao<CompanyDiskDO> {
 
     int updateWithOptimisticLock(CompanyDiskDO o);
 
-    Long sumDocmgrSizeByCompanyId(@Param("companyId") String companyId);
+    /**
+     * 根据组织ID统计文档库大小
+     */
+    Long sumDocmgrSizeByCompanyId(String companyId);
+
+    /**
+     * 根据组织ID统计其他文件大小
+     */
+    Long sumOtherSizeByCompanyId(String companyId);
 }

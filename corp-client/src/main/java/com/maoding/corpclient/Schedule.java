@@ -23,8 +23,9 @@ public class Schedule {
     @Autowired
     private SyncTaskService syncTaskService;
 
-    //同步所有数据
-    @Scheduled(initialDelay = 0, fixedDelay = 86400 * 1000)
+    //同步所有数据（每天凌晨1点）
+    //@Scheduled(initialDelay = 0, fixedDelay = 86400 * 1000)
+    @Scheduled(cron = "0 0 1 * * *")
     public void job_SyncAll() throws Exception {
         if (!Application.EnableSchedule)
             return;

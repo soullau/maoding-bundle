@@ -1498,7 +1498,7 @@
       <workItem from="1496802061804" duration="732000" />
       <workItem from="1496819949086" duration="2660000" />
       <workItem from="1496892855435" duration="2849000" />
-      <workItem from="1498457749886" duration="4235000" />
+      <workItem from="1498457749886" duration="4286000" />
     </task>
     <task id="LOCAL-00001" summary="实现文档类项目动态">
       <created>1496739440127</created>
@@ -1511,7 +1511,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="55660000" />
+    <option name="totallyTimeSpent" value="55711000" />
   </component>
   <component name="TodoView" selected-index="2">
     <todo-panel id="selected-file">

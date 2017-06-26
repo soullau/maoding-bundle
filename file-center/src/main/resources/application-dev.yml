@@ -51,7 +51,7 @@ druid:
 # ===================================================================
 mybatis:
     config-location: classpath:mybatis-config.xml
-    mapper-locations: classpath:mapper/**/*.xml
+    mapper-locations: classpath*:mapper/**/*.xml
 
 mapper:
     mappers:
