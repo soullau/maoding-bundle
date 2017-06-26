@@ -22,7 +22,7 @@ spring:
 # Druid
 # ===================================================================
 druid:
-    url: jdbc:mysql://172.16.6.71:3306/maoding_qa
+    url: jdbc:mysql://172.16.6.71:3306/maoding_new
     username: idccapp
     password: idccapp
     driverClassName: com.mysql.jdbc.Driver

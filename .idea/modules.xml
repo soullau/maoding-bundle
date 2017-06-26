@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/basic-core/basic-core.iml" filepath="$PROJECT_DIR$/basic-core/basic-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-module-companyDisk/common-module-companyDisk.iml" filepath="$PROJECT_DIR$/common-module-companyDisk/common-module-companyDisk.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-module-dynamic/common-module-dynamic.iml" filepath="$PROJECT_DIR$/common-module-dynamic/common-module-dynamic.iml" />
       <module fileurl="file://$PROJECT_DIR$/corp-bll/corp-bll.iml" filepath="$PROJECT_DIR$/corp-bll/corp-bll.iml" />
       <module fileurl="file://$PROJECT_DIR$/corp-client/corp-client.iml" filepath="$PROJECT_DIR$/corp-client/corp-client.iml" />
       <module fileurl="file://$PROJECT_DIR$/corp-server/corp-server.iml" filepath="$PROJECT_DIR$/corp-server/corp-server.iml" />

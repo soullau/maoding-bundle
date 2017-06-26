@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.maoding.corpbll.module.corpserver.dao.ProcessNodeDao">
+<mapper namespace="com.maoding.corp.module.corpserver.dao.ProcessNodeDAO">
 
     <select id="listProcessNodeByProcessId"
-            resultType="com.maoding.corpbll.module.corpserver.dto.CoProjectProcessNodeDTO"
+            resultType="com.maoding.corp.module.corpserver.dto.CoProjectProcessNodeDTO"
             parameterType="java.util.Map">
         select
         n.id, n.process_id, n.node_name, n.seq, n.node_seq,n.status,n.company_user_id,n.complete_time,u.user_name as
@@ -18,7 +18,7 @@
         order by n.seq
     </select>
 
-    <select id="getProcessNodeById" resultType="com.maoding.corpbll.module.corpserver.dto.CoProjectProcessNodeDTO"
+    <select id="getProcessNodeById" resultType="com.maoding.corp.module.corpserver.dto.CoProjectProcessNodeDTO"
             parameterType="java.lang.String">
         SELECT
             n.id,

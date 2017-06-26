@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Configuration
 @EnableAutoConfiguration
-@ComponentScan({"com.maoding.corpserver", "com.maoding.corpbll.module.corpserver"})
+@ComponentScan({"com.maoding.corpserver", "com.maoding.corp.module.corpserver", "com.maoding.common"})
 @Import({SpringContextUtils.class})
 @EnableAspectJAutoProxy(exposeProxy = true)
 @Controller

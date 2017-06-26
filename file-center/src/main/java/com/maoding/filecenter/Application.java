@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Import;
  */
 @Configuration
 @EnableAutoConfiguration(exclude = {MultipartAutoConfiguration.class})
-@ComponentScan({"com.maoding.filecenter","com.maoding.filecenterbll"})
+@ComponentScan({"com.maoding.filecenter","com.maoding.common"})
 @Import({SpringContextUtils.class, MultipartConfig.class, FdfsClientConfig.class})
 @EnableAspectJAutoProxy(exposeProxy = true)
 public class Application extends SpringBootServletInitializer {

@@ -27,6 +27,11 @@ public class FastdfsUploadResult {
      */
     private String netFileId;
 
+    /**
+     * 序号，视业务情况赋值（可选字段）
+     */
+    private Integer netFileSeq;
+
     public static FastdfsUploadResult parse(MultipartFileParam param, String group, String path) {
         FastdfsUploadResult r = new FastdfsUploadResult();
         r.setUploadId(param.getUploadId());
@@ -139,5 +144,13 @@ public class FastdfsUploadResult {
 
     public void setNetFileId(String netFileId) {
         this.netFileId = netFileId;
+    }
+
+    public Integer getNetFileSeq() {
+        return netFileSeq;
+    }
+
+    public void setNetFileSeq(Integer netFileSeq) {
+        this.netFileSeq = netFileSeq;
     }
 }

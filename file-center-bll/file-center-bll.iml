@@ -10,7 +10,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="basic-core" />
+    <orderEntry type="module" module-name="basic-core" scope="PROVIDED" />
+    <orderEntry type="module" module-name="common-module-companyDisk" scope="PROVIDED" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: ch.qos.logback:logback-classic:1.2.3" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: ch.qos.logback:logback-core:1.2.3" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.googlecode.log4jdbc:log4jdbc:1.2" level="project" />

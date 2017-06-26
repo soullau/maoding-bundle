@@ -23,6 +23,8 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="basic-core" />
+        <module name="common-module-companyDisk" />
+        <module name="common-module-dynamic" />
         <module name="corp-bll" />
         <module name="corp-client" />
         <module name="corp-server" />
@@ -34,6 +36,8 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="basic-core" target="1.8" />
+      <module name="common-module-companyDisk" target="1.8" />
+      <module name="common-module-dynamic" target="1.8" />
       <module name="corp-bll" target="1.8" />
       <module name="corp-client" target="1.8" />
       <module name="corp-server" target="1.8" />

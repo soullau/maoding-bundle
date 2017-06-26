@@ -11,6 +11,8 @@
 
     <modules>
         <module>basic-core</module>
+        <module>common-module-companyDisk</module>
+        <module>common-module-dynamic</module>
         <module>corp-bll</module>
         <module>corp-server</module>
         <module>corp-client</module>

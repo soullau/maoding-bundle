@@ -2,10 +2,10 @@ package com.maoding.filecenter.module.file;
 
 import com.maoding.core.bean.ApiResult;
 import com.maoding.core.exception.DataNotFoundException;
-import com.maoding.filecenterbll.module.file.dto.DeleteDTO;
-import com.maoding.filecenterbll.module.file.dto.DirectoryDTO;
-import com.maoding.filecenterbll.module.file.dto.RenameDTO;
-import com.maoding.filecenterbll.module.file.service.NetFileService;
+import com.maoding.filecenter.module.file.dto.DeleteDTO;
+import com.maoding.filecenter.module.file.dto.DirectoryDTO;
+import com.maoding.filecenter.module.file.dto.NetFileRenameDTO;
+import com.maoding.filecenter.module.file.service.NetFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,7 +44,7 @@ public class NetFileController {
      */
     @RequestMapping(value = "/rename", method = RequestMethod.POST)
     @ResponseBody
-    public ApiResult renameFile(@RequestBody RenameDTO dto) {
+    public ApiResult renameFile(@RequestBody NetFileRenameDTO dto) {
         return netFileService.rename(dto);
     }
 

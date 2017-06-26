@@ -2,8 +2,8 @@ package com.maoding.corpclient;
 
 
 import com.maoding.core.bean.ApiResult;
-import com.maoding.corpbll.config.CorpClientConfig;
-import com.maoding.corpbll.module.corpclient.service.CoService;
+import com.maoding.corp.config.CorpClientConfig;
+import com.maoding.corp.module.corpclient.service.CoService;
 import com.maoding.utils.SpringContextUtils;
 import com.maoding.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ import java.util.Map;
  */
 @Configuration
 @EnableAutoConfiguration
-@ComponentScan({"com.maoding.corpclient", "com.maoding.corpbll.module.corpclient"})
+@ComponentScan({"com.maoding.corpclient", "com.maoding.corp.module.corpclient"})
 @Import({SpringContextUtils.class, CorpClientConfig.class})
 @EnableAspectJAutoProxy(exposeProxy = true)
 @Controller

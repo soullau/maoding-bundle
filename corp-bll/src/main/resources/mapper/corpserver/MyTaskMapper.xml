@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.maoding.corpbll.module.corpserver.dao.MyTaskDao">
+<mapper namespace="com.maoding.corp.module.corpserver.dao.MyTaskDAO">
 
     <update id="updateMyTaskAsFinished">
         UPDATE maoding_web_my_task t
@@ -20,14 +20,14 @@
         WHERE t.id = #{myTaskId,jdbcType=VARCHAR}
     </update>
 
-    <select id="getMyTaskByProcessNodeId" resultType="com.maoding.corpbll.module.corpserver.model.MyTaskDo"
+    <select id="getMyTaskByProcessNodeId" resultType="com.maoding.corp.module.corpserver.model.MyTaskDO"
             parameterType="java.lang.String">
         SELECT t.*
         FROM maoding_web_my_task t
         WHERE t.target_id = #{processNodeId,jdbcType=VARCHAR} AND (t.status = '0' OR t.status = '1')
     </select>
 
-    <select id="getPrincipalTaskByProjectTaskId" resultType="com.maoding.corpbll.module.corpserver.model.MyTaskDo"
+    <select id="getPrincipalTaskByProjectTaskId" resultType="com.maoding.corp.module.corpserver.model.MyTaskDO"
             parameterType="java.lang.String">
         SELECT t.*
         FROM maoding_web_my_task t

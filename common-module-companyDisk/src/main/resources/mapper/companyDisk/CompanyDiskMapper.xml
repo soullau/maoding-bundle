@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.maoding.common.module.companyDisk.dao.CompanyDiskDAO">
+    <update id="updateWithOptimisticLock" parameterType="com.maoding.common.module.companyDisk.model.CompanyDiskDO">
+        UPDATE maoding_corp_company_disk
+        <trim suffixOverrides=",">
+            <set>
+                up_version=up_version+1,
+                <if test="totalSize != null">total_size =#{totalSize},</if>
+                <if test="corpSize != null">corp_size =#{corpSize},</if>
+                <if test="docmgrSize != null">docmgr_size =#{docmgrSize},</if>
+                <if test="freeSize != null">free_size =#{freeSize},</if>
+                <if test="corpOnCloud != null">corp_on_cloud =#{corpOnCloud},</if>
+                <if test="updateDate != null">update_date =#{updateDate},</if>
+            </set>
+            WHERE id=#{id} AND up_version=#{upVersion}
+        </trim>
+    </update>
+
+    <select id="listAll" resultType="com.maoding.common.module.companyDisk.model.CompanyDiskDO">
+        SELECT *
+        FROM maoding_corp_company_disk;
+    </select>
+
+    <select id="listUnInitCompanyId" resultType="java.lang.String">
+        SELECT c.id
+        FROM maoding_web_company c
+        WHERE c.status = '0' AND c.id NOT IN (SELECT d.company_id
+                                              FROM maoding_corp_company_disk d);
+    </select>
+
+
+</mapper>

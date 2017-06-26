@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.maoding.corpbll.module.corpserver.dao.CollaborationDao">
-    <select id="listCompanyByIds" resultType="com.maoding.corpbll.module.corpserver.dto.CoCompanyDTO"
+<mapper namespace="com.maoding.corp.module.corpserver.dao.CollaborationDAO">
+    <select id="listCompanyByIds" resultType="com.maoding.corp.module.corpserver.dto.CoCompanyDTO"
             parameterType="java.util.Map">
         select
         c.id as companyId , c.company_name
@@ -12,7 +12,7 @@
         </foreach>
     </select>
 
-    <select id="getProjectById" resultType="com.maoding.corpbll.module.corpserver.dto.ProjectDTO"
+    <select id="getProjectById" resultType="com.maoding.corp.module.corpserver.dto.ProjectDTO"
             parameterType="java.lang.String">
         SELECT
             p.company_id,
@@ -26,7 +26,7 @@
             p.id = #{projectId,jdbcType=VARCHAR}
     </select>
 
-    <select id="listProjectByCompanyId" resultType="com.maoding.corpbll.module.corpserver.dto.ProjectDTO"
+    <select id="listProjectByCompanyId" resultType="com.maoding.corp.module.corpserver.dto.ProjectDTO"
             parameterType="java.util.Map">
         SELECT
         p.company_id,
@@ -48,7 +48,7 @@
         ORDER BY p.create_date desc
     </select>
 
-    <select id="listProjectTask" resultType="com.maoding.corpbll.module.corpserver.model.ProjectTaskDo"
+    <select id="listProjectTask" resultType="com.maoding.corp.module.corpserver.model.ProjectTaskDO"
             parameterType="java.util.Map">
         SELECT
         t.*
@@ -65,7 +65,7 @@
     </select>
 
     <select id="listProjectProcessByTaskId"
-            resultType="com.maoding.corpbll.module.corpserver.dto.CoProjectProcessDTO"
+            resultType="com.maoding.corp.module.corpserver.dto.CoProjectProcessDTO"
             parameterType="java.util.Map">
         select a.id,a.process_name,a.company_id,a.project_id,a.task_manage_id
         from maoding_web_project_process a
@@ -77,7 +77,7 @@
     </select>
 
 
-    <select id="getTaskPrincipal" resultType="com.maoding.corpbll.module.corpserver.dto.CoUserDTO"
+    <select id="getTaskPrincipal" resultType="com.maoding.corp.module.corpserver.dto.CoUserDTO"
             parameterType="java.lang.String">
         SELECT
             u.id        AS companyUserId,
@@ -119,7 +119,7 @@
             </if>
         </select>-->
 
-    <select id="listUserByCompanyId" resultType="com.maoding.corpbll.module.corpserver.dto.CoUserDTO"
+    <select id="listUserByCompanyId" resultType="com.maoding.corp.module.corpserver.dto.CoUserDTO"
             parameterType="java.lang.String">
         SELECT
             u.id        AS companyUserId,
@@ -134,7 +134,7 @@
         WHERE u.company_id = #{companyId,jdbcType=VARCHAR} AND a.id IS NOT NULL
     </select>
 
-    <select id="getAccountByCellphone" resultType="com.maoding.corpbll.module.corpserver.model.AccountDo"
+    <select id="getAccountByCellphone" resultType="com.maoding.corp.module.corpserver.model.AccountDO"
             parameterType="java.lang.String">
         SELECT a.*
         FROM maoding_web_account a

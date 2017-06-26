@@ -18,6 +18,13 @@
             <groupId>com.maoding</groupId>
             <artifactId>basic-core</artifactId>
             <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.maoding</groupId>
+            <artifactId>common-module-companyDisk</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- 日志 -->

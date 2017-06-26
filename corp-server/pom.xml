@@ -33,6 +33,11 @@
         </dependency>
         <dependency>
             <groupId>com.maoding</groupId>
+            <artifactId>common-module-companyDisk</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.maoding</groupId>
             <artifactId>corp-bll</artifactId>
             <version>${project.version}</version>
         </dependency>

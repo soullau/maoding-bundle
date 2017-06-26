@@ -26,7 +26,7 @@ import javax.sql.DataSource;
  */
 @Configuration
 @ConfigurationProperties(prefix = "druid")
-@MapperScan(basePackages = "com.maoding.corpbll.module.corpserver.dao", sqlSessionFactoryRef = "sqlSessionFactory")
+@MapperScan(basePackages ={ "com.maoding.*.module.corpserver.dao", "com.maoding.common.module.*.dao"}, sqlSessionFactoryRef = "sqlSessionFactory")
 public class DbConfig extends DruidConfig {
 
     @Autowired

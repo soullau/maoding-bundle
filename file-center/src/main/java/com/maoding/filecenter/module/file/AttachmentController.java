@@ -1,8 +1,9 @@
 package com.maoding.filecenter.module.file;
 
 import com.maoding.core.bean.ApiResult;
-import com.maoding.filecenterbll.module.file.dto.DeleteDTO;
-import com.maoding.filecenterbll.module.file.service.AttachmentService;
+import com.maoding.filecenter.module.file.dto.DeleteDTO;
+import com.maoding.filecenter.module.file.dto.NetFileOrderDTO;
+import com.maoding.filecenter.module.file.service.AttachmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,6 +44,15 @@ public class AttachmentController {
     @ResponseBody
     public ApiResult uploadCompanyBanner(HttpServletRequest request) throws Exception {
         return attachmentService.uploadCompanyBanner(request);
+    }
+
+    /**
+     * 调整公司轮播图片顺序
+     */
+    @RequestMapping(value = "/orderCompanyBanner", method = RequestMethod.POST)
+    @ResponseBody
+    public ApiResult orderCompanyBanner(@RequestBody NetFileOrderDTO dto) throws Exception {
+        return attachmentService.orderCompanyBanner(dto);
     }
 
     /**
