@@ -112,10 +112,10 @@ public class DynamicServiceImpl extends BaseService implements DynamicService{
         if ((companyUserId == null) && (companyId != null) && (userId != null)){
             companyUserId = zInfoDAO.getCompanyUserIdByCompanyIdAndUserId(companyId,userId);
         }
-        if ((companyUserId == null) && (target != null)) userId = (String)BeanUtils.getProperty(target,"currentCompanyUserId");
-        if ((companyUserId == null) && (target != null)) userId = (String)BeanUtils.getProperty(target,"companyUserId");
-        if ((companyUserId == null) && (origin != null)) userId = (String)BeanUtils.getProperty(origin,"currentCompanyUserId");
-        if ((companyUserId == null) && (origin != null)) userId = (String)BeanUtils.getProperty(origin,"companyUserId");
+        if ((companyUserId == null) && (target != null)) companyUserId = (String)BeanUtils.getProperty(target,"currentCompanyUserId");
+        if ((companyUserId == null) && (target != null)) companyUserId = (String)BeanUtils.getProperty(target,"companyUserId");
+        if ((companyUserId == null) && (origin != null)) companyUserId = (String)BeanUtils.getProperty(origin,"currentCompanyUserId");
+        if ((companyUserId == null) && (origin != null)) companyUserId = (String)BeanUtils.getProperty(origin,"companyUserId");
 
         //调用相应创建日志方法
         if ((origin instanceof NetFileDO) || (target instanceof NetFileDO)){
