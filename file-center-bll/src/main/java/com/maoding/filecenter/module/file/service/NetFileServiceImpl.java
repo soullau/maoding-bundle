@@ -98,7 +98,7 @@ public class NetFileServiceImpl extends BaseService implements NetFileService {
 
         if (netFileDAO.insert(netFileDO) > 0) {
             //添加项目动态
-            dynamicService.addDynamic(dynamicService.createDynamicFrom(netFileDO));
+            dynamicService.addCreateDynamic(netFileDO,dir.getCompanyId(),dir.getAccountId());
             return ApiResult.success(null, null);
         }
         return ApiResult.failed(null, null);
@@ -155,7 +155,7 @@ public class NetFileServiceImpl extends BaseService implements NetFileService {
             //计算剩余空间
             companyDiskService.recalcSizeOnFileAdded(companyId, FileSizeSumType.DOCMGR, fuResult.getFileSize());
             //添加项目动态
-            dynamicService.addDynamic(dynamicService.createDynamicFrom(netFileDO));
+            dynamicService.addCreateDynamic(netFileDO,companyId,accountId);
             return ApiResult.success(null, fuResult);
         }
         return ApiResult.failed(null, null);
@@ -184,7 +184,7 @@ public class NetFileServiceImpl extends BaseService implements NetFileService {
 
         if (netFileDAO.updateByPrimaryKeySelective(updateObj) > 0) {
             //添加项目动态
-            dynamicService.addDynamic(dynamicService.createDynamicFrom(updateObj, netFileDO));
+            dynamicService.addDynamic(netFileDO,updateObj,netFileDO.getCompanyId(),dto.getAccountId());
             return ApiResult.success(null, null);
         }
         return ApiResult.failed(null, null);
@@ -233,7 +233,7 @@ public class NetFileServiceImpl extends BaseService implements NetFileService {
             }
 
             //添加项目动态
-            dynamicService.addDynamic(dynamicService.createDynamicFrom(netFileDO, null, dto.getAccountId()));
+            dynamicService.addDeleteDynamic(netFileDO,netFileDO.getCompanyId(),dto.getAccountId());
             return ApiResult.success(null, null);
         }
         return ApiResult.failed(null, null);

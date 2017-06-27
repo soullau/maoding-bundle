@@ -26,6 +26,12 @@
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.maoding</groupId>
+            <artifactId>common-module-dynamic</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
         <!-- 日志 -->
         <dependency><!-- logback -->
@@ -270,6 +276,11 @@
             <groupId>com.twelvemonkeys.imageio</groupId>
             <artifactId>imageio-tiff</artifactId>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.maoding</groupId>
+            <artifactId>common-module-dynamic</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

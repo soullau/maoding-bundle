@@ -38,6 +38,11 @@
         </dependency>
         <dependency>
             <groupId>com.maoding</groupId>
+            <artifactId>common-module-dynamic</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.maoding</groupId>
             <artifactId>file-center-bll</artifactId>
             <version>${project.version}</version>
         </dependency>

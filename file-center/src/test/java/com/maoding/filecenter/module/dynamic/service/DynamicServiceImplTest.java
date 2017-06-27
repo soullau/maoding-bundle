@@ -1,8 +1,6 @@
 package com.maoding.filecenter.module.dynamic.service;
 
 import com.maoding.filecenter.Application;
-import com.maoding.filecenter.module.dynamic.dao.ZUserDAO;
-import com.maoding.filecenter.module.dynamic.dto.ZUserDTO;
 import com.maoding.filecenter.module.file.dao.NetFileDAO;
 import com.maoding.filecenter.module.file.model.NetFileDO;
 import org.junit.Assert;
@@ -22,17 +20,12 @@ import java.util.List;
 @SpringBootTest(classes = Application.class)
 public class DynamicServiceImplTest {
     @Autowired
-    private ZUserDAO zUserDAO;
-
-    @Autowired
     private NetFileDAO netFileDAO;
 
     @Test
     public void testGetCompanyUserId(){
         String companyId="5339147901b34a0b99e16b6ac7054d64";
         String userId="8394a028dcfc453e80054973c3cb8c1b";
-        ZUserDTO user = zUserDAO.getUserByCompanyIdAndUserId(companyId,userId);
-        Assert.assertNotNull(user);
     }
 
     @Test

@@ -74,4 +74,76 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
                     + String.valueOf((size % 100)) + "GB";
         }
     }
+    /**
+     * 方法描述：非空判断
+     * 作        者：MaoSF
+     * 日        期：2016年7月7日-下午5:33:52
+     * @param o
+     * @return
+     */
+    public static boolean isNullOrEmpty(Object o){
+        if(o==null){
+            return true;
+        }else{
+            try{
+                if("".equals(o.toString()) ||  "".equals((o.toString()).trim())){
+                    return true;
+                }
+            }catch(Exception e){
+                return false;
+            }
+        }
+        return false;
+    }
+    public static Boolean isEmpty(String s){
+        return ((s == null) || s.trim().isEmpty());
+    }
+
+    /**
+     * 判断两个字符串是否相同，视null和""为相同字符串
+     */
+    public static Boolean isSame(String a,String b){
+        return (isEmpty(a) && isEmpty(b)) ||
+                (!isEmpty(a) && !isEmpty(b) && (a.equals(b)));
+    }
+
+    /**
+     * 方法描述：字符串格式化
+     * 作者：Chenxj
+     * 日期：2015年6月18日 - 下午4:50:07
+     * @param f
+     * @return StringBuilder
+     */
+    public static StringBuilder format(StringBuilder f,Object...objs){
+        StringBuilder sb=new StringBuilder();
+        int count=0;
+        int flag=0;
+        char a="?".charAt(0);
+        String b="";
+        for(int i=0;i<f.length();i++){
+            if(a==f.charAt(i)){
+                String s= "";
+                if(count<objs.length) {//2017-04-28添加此段代码，为了防止模板与参数不对应的情况，引起错误
+                    s = objs[count].toString();
+                }
+                f.replace(i,i+1,b);
+                sb.append(f.substring(flag, i)).append(s);
+                flag=i;
+                count++;
+            }
+        }
+        sb.append(f.substring(flag, f.length()));
+        return sb;
+    }
+    /**
+     * 方法描述：字符串格式化
+     * 作者：Chenxj
+     * 日期：2015年6月18日 - 下午4:58:56
+     * @param string
+     * @param objs
+     * @return String
+     */
+    public static String format(String string,Object...objs){
+        return format(new StringBuilder(string), objs).toString();
+    }
 }

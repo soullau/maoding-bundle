@@ -1,7 +1,7 @@
 package com.maoding.common.module.dynamic.model;
 
+import com.maoding.constDefine.dynamic.DynamicConst;
 import com.maoding.core.base.BaseEntity;
-import com.maoding.filecenter.constDefine.DynamicConst;
 
 import javax.persistence.Table;
 

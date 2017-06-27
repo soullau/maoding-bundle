@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="a48c27a9-261c-4ebb-a380-f95e74825140" name="Default" comment="实现文档类项目动态">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/basic-core/src/main/java/com/maoding/utils/BeanUtils.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/basic-core/src/main/java/com/maoding/utils/DateUtils.java" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenter/module/dynamic/dao/DynamicDAO.java" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenter/module/dynamic/dao/ZUserDAO.java" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenter/module/dynamic/dto/ZUserDTO.java" afterPath="" />
@@ -16,7 +18,13 @@
       <change type="DELETED" beforePath="$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenter/module/dynamic/model" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenter/module/dynamic/service" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/file-center-bll/src/main/resources/mapper/dynamic" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/basic-core/src/main/java/com/maoding/constDefine/dynamic/DynamicConst.java" afterPath="$PROJECT_DIR$/basic-core/src/main/java/com/maoding/constDefine/dynamic/DynamicConst.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/basic-core/src/main/java/com/maoding/utils/StringUtils.java" afterPath="$PROJECT_DIR$/basic-core/src/main/java/com/maoding/utils/StringUtils.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common-module-companyDisk/pom.xml" afterPath="$PROJECT_DIR$/common-module-companyDisk/pom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/file-center-bll/pom.xml" afterPath="$PROJECT_DIR$/file-center-bll/pom.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenter/module/file/service/NetFileServiceImpl.java" afterPath="$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenter/module/file/service/NetFileServiceImpl.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/file-center/pom.xml" afterPath="$PROJECT_DIR$/file-center/pom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/file-center/src/test/java/com/maoding/filecenter/module/dynamic/service/DynamicServiceImplTest.java" afterPath="$PROJECT_DIR$/file-center/src/test/java/com/maoding/filecenter/module/dynamic/service/DynamicServiceImplTest.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
     </list>
     <list id="d427ea4e-938b-4072-ab49-587990cdb5f5" name="修改SQL搜索路径" comment="" />
@@ -62,23 +70,31 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="DynamicDO.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/DynamicDO.java">
+      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/common-module-dynamic/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2525">
-              <caret line="135" column="0" selection-start-line="135" selection-start-column="0" selection-end-line="135" selection-end-column="0" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state relative-caret-position="250">
+              <caret line="34" column="34" selection-start-line="34" selection-start-column="34" selection-end-line="34" selection-end-column="34" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="NetFileServiceImpl.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenter/module/file/service/NetFileServiceImpl.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="800">
+              <caret line="32" column="13" selection-start-line="32" selection-start-column="13" selection-end-line="32" selection-end-column="13" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/common-module-dynamic/pom.xml">
+        <entry file="file://$PROJECT_DIR$/file-center-bll/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-5089">
-              <caret line="11" column="37" selection-start-line="11" selection-start-column="37" selection-end-line="11" selection-end-column="37" />
+            <state relative-caret-position="625">
+              <caret line="25" column="49" selection-start-line="25" selection-start-column="49" selection-end-line="25" selection-end-column="49" />
               <folding />
             </state>
           </provider>
@@ -87,85 +103,91 @@
       <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="350">
-              <caret line="14" column="37" selection-start-line="14" selection-start-column="37" selection-end-line="14" selection-end-column="37" />
+            <state relative-caret-position="275">
+              <caret line="22" column="14" selection-start-line="22" selection-start-column="14" selection-end-line="22" selection-end-column="14" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="NetFileType.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenter/constDefine/NetFileType.java">
+      <file leaf-file-name="AttachmentController.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/file-center/src/main/java/com/maoding/filecenter/module/file/AttachmentController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="125">
-              <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ProjectCostPaymentDetailEntity.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectCostPaymentDetailEntity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="175">
-              <caret line="9" column="37" selection-start-line="9" selection-start-column="37" selection-end-line="9" selection-end-column="37" />
+            <state relative-caret-position="75">
+              <caret line="3" column="45" selection-start-line="3" selection-start-column="45" selection-end-line="3" selection-end-column="45" />
               <folding>
-                <element signature="imports" expanded="true" />
+                <element signature="e#2255#2256#0" expanded="false" />
+                <element signature="e#2307#2308#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ProjectDynamicsDO.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectDynamicsDO.java">
+      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/file-center/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+            <state relative-caret-position="850">
+              <caret line="34" column="42" selection-start-line="34" selection-start-column="42" selection-end-line="34" selection-end-column="42" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ProjectCostPointEntity.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectCostPointEntity.java">
+      <file leaf-file-name="DeleteDTO.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenter/module/file/dto/DeleteDTO.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="125">
-              <caret line="5" column="35" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="35" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ProjectCostPointDetailEntity.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectCostPointDetailEntity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="125">
-              <caret line="5" column="41" selection-start-line="5" selection-start-column="41" selection-end-line="5" selection-end-column="41" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BaseEntity.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/basic-core/src/main/java/com/maoding/core/base/BaseEntity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1212">
-              <caret line="78" column="16" selection-start-line="78" selection-start-column="16" selection-end-line="78" selection-end-column="16" />
+            <state relative-caret-position="0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding>
-                <element signature="e#1072#1073#0" expanded="true" />
-                <element signature="e#1116#1117#0" expanded="true" />
-                <element signature="e#1612#1613#0" expanded="true" />
-                <element signature="e#1665#1666#0" expanded="true" />
+                <element signature="e#250#251#0" expanded="false" />
+                <element signature="e#276#277#0" expanded="false" />
+                <element signature="e#314#315#0" expanded="false" />
+                <element signature="e#344#345#0" expanded="false" />
+                <element signature="e#373#374#0" expanded="false" />
+                <element signature="e#398#399#0" expanded="false" />
+                <element signature="e#434#435#0" expanded="false" />
+                <element signature="e#462#463#0" expanded="false" />
+                <element signature="e#497#498#0" expanded="false" />
+                <element signature="e#528#529#0" expanded="false" />
+                <element signature="e#576#577#0" expanded="false" />
+                <element signature="e#616#617#0" expanded="false" />
+                <element signature="e#652#653#0" expanded="false" />
+                <element signature="e#684#685#0" expanded="false" />
+                <element signature="e#734#735#0" expanded="false" />
+                <element signature="e#776#777#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="NetFileDO.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenter/module/file/model/NetFileDO.java">
+      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/common-module-companyDisk/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="175">
-              <caret line="9" column="46" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="46" />
+            <state relative-caret-position="-5012">
+              <caret line="20" column="12" selection-start-line="20" selection-start-column="12" selection-end-line="20" selection-end-column="35" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DynamicMapper.xml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/resources/mapper/dynamic/DynamicMapper.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="75">
+              <caret line="3" column="78" selection-start-line="3" selection-start-column="78" selection-end-line="3" selection-end-column="78" />
+              <folding>
+                <marker date="1498532120169" expanded="true" signature="389:1223" ph="select ifnul... company_user_id" />
+                <marker date="1498532120169" expanded="true" signature="1685:1704" ph="SELECT found... " />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="QueryDynamicDTO.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/dto/QueryDynamicDTO.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="45" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="45" />
               <folding />
             </state>
           </provider>
@@ -189,22 +211,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenterbll/module/file/service/AttachmentService.java" />
-        <option value="$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenterbll/module/dynamic/model/ProjectDynamicsDO.java" />
-        <option value="$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenterbll/module/dynamic/dao/DynamicDAO.java" />
-        <option value="$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenterbll/module/dynamic/dto/DynamicDTO.java" />
-        <option value="$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenterbll/constDefine/DynamicType.java" />
-        <option value="$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenterbll/module/dynamic/dao/UserDAO.java" />
-        <option value="$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenterbll/module/dynamic/dao/TempUserDAOImpl.java" />
-        <option value="$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenterbll/module/dynamic/model/DynamicDO.java" />
-        <option value="$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenterbll/module/dynamic/service/DynamicService.java" />
-        <option value="$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenterbll/module/dynamic/dto/TempUserDTO.java" />
-        <option value="$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenterbll/module/dynamic/dto/QueryUserDTO.java" />
-        <option value="$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenterbll/module/dynamic/dto/ZQueryUserDTO.java" />
-        <option value="$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenterbll/module/dynamic/dao/TempUserDAO.java" />
-        <option value="$PROJECT_DIR$/file-center-bll/src/main/resources/mapper/file/NetFileMapper.xml" />
-        <option value="$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenterbll/module/dynamic/dao/ZUserDAOImpl.java" />
-        <option value="$PROJECT_DIR$/file-center/src/main/resources/mybatis-config.xml" />
         <option value="$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenterbll/module/dynamic/model/ZUserDO.java" />
         <option value="$PROJECT_DIR$/file-center/src/main/java/com/maoding/filecenter/GlobalExceptionHandler.java" />
         <option value="$PROJECT_DIR$/file-center/src/main/resources/application-dev.yml" />
@@ -226,8 +232,36 @@
         <option value="$PROJECT_DIR$/basic-core/src/main/java/com/maoding/core/base/BaseEntity.java" />
         <option value="$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenter/module/dynamic/model/DynamicDO.java" />
         <option value="$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenter/module/dynamic/model/ProjectCostPaymentDetailEntity.java" />
-        <option value="$PROJECT_DIR$/common-module-dynamic/pom.xml" />
+        <option value="$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/DynamicDO.java" />
+        <option value="$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectCostPointEntity.java" />
+        <option value="$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectCostPointDetailEntity.java" />
+        <option value="$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectCostPaymentDetailEntity.java" />
+        <option value="$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectDesignContentEntity.java" />
+        <option value="$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectDynamicsEntity.java" />
+        <option value="$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectProcessNodeEntity.java" />
+        <option value="$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectProcessTimeEntity.java" />
+        <option value="$PROJECT_DIR$/basic-core/src/main/java/com/maoding/constDefine/dynamic/DynamicConst.java" />
+        <option value="$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectEntity.java" />
+        <option value="$PROJECT_DIR$/basic-core/src/main/java/com/maoding/utils/DateUtils.java" />
+        <option value="$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectCostEntity.java" />
+        <option value="$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/CompanyUserEntity.java" />
+        <option value="$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectMemberEntity.java" />
+        <option value="$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/dto/ProjectDynamicDTO.java" />
+        <option value="$PROJECT_DIR$/basic-core/src/main/java/com/maoding/utils/BeanUtils.java" />
+        <option value="$PROJECT_DIR$/basic-core/src/main/java/com/maoding/utils/StringUtils.java" />
+        <option value="$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenter/module/file/service/NetFileServiceImpl.java" />
+        <option value="$PROJECT_DIR$/file-center/src/test/java/com/maoding/filecenter/module/dynamic/service/DynamicServiceImplTest.java" />
+        <option value="$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/dao/DynamicDAO.java" />
+        <option value="$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/dao/ZInfoDAO.java" />
+        <option value="$PROJECT_DIR$/common-module-dynamic/src/main/resources/mapper/dynamic/ZInfoMapper.xml" />
+        <option value="$PROJECT_DIR$/file-center-bll/pom.xml" />
+        <option value="$PROJECT_DIR$/file-center/pom.xml" />
+        <option value="$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/NetFileDO.java" />
+        <option value="$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/service/DynamicServiceImpl.java" />
+        <option value="$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/service/DynamicService.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/common-module-dynamic/pom.xml" />
+        <option value="$PROJECT_DIR$/common-module-dynamic/src/main/resources/mapper/dynamic/DynamicMapper.xml" />
       </list>
     </option>
   </component>
@@ -248,6 +282,13 @@
         <option name="importAutomatically" value="true" />
       </MavenImportingSettings>
     </option>
+  </component>
+  <component name="MavenProjectNavigator">
+    <option name="groupStructurally" value="true" />
+    <treeState />
+  </component>
+  <component name="MavenRunner">
+    <option name="skipTests" value="true" />
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="-8" />
@@ -280,8 +321,9 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="Scratches" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -335,14 +377,6 @@
               <option name="myItemId" value="main" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mapper" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -478,49 +512,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="model" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="maoding-bundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="maoding-bundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="file-center-bll" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="maoding" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="filecenter" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="constDefine" />
+              <option name="myItemId" value="dto" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -572,7 +564,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="common-module-dynamic" />
+              <option name="myItemId" value="file-center" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -589,10 +581,6 @@
               <option name="myItemId" value="common-module-dynamic" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -605,150 +593,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="common-module-dynamic" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mapper" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dynamic" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="maoding-bundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="maoding-bundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="common-module-dynamic" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="maoding" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="common" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="module" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dynamic" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="maoding-bundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="maoding-bundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="common-module-dynamic" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="maoding" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="common" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="module" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dynamic" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="model" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="maoding-bundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="maoding-bundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="common-module-companyDisk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="maoding-bundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="maoding-bundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="common-module-companyDisk" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -767,180 +611,17 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="common-module-companyDisk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="maoding-bundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="maoding-bundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="common-module-companyDisk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="maoding" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="common" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="module" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="companyDisk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="maoding-bundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="maoding-bundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="basic-core" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="maoding-bundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="maoding-bundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="basic-core" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="maoding-bundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="maoding-bundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="basic-core" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="maoding" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="maoding-bundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="maoding-bundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="basic-core" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="maoding" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="core" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="settings.editor.selected.configurable" value="SQL Dialects" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
-    <property name="project.structure.last.edited" value="Problems" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="aspect.path.notification.shown" value="true" />
@@ -950,13 +631,17 @@
     <property name="com.intellij.database.dataSource.DataSourceTemplate" value="MySQL" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.maoding.common.module.dynamic.model" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\work\maoding-bundle\common-module-dynamic\src\main\resources\mapper\dynamic" />
       <recent name="C:\work\maoding-bundle\common-module-dynamic" />
       <recent name="C:\work\maoding-bundle" />
       <recent name="C:\work\maoding-bundle\file-center-bll\src\main\resources\mapper\dynamic" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.file-center">
+  <component name="RunManager" selected="Spring Boot.Application">
     <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
       <module name="" />
       <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
@@ -1285,6 +970,28 @@
       <envs />
       <method />
     </configuration>
+    <configuration default="true" type="MavenRunConfiguration" factoryName="Maven">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list />
+            </option>
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method />
+    </configuration>
     <configuration default="true" type="NodeJSConfigurationType" factoryName="Node.js" path-to-node="project" working-dir="">
       <method />
     </configuration>
@@ -1410,8 +1117,8 @@
     </configuration>
     <configuration default="false" name="Application" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.maoding.corpclient.Application" />
-      <module name="corp-client" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.maoding.filecenter.Application" />
+      <module name="file-center" />
       <envs />
       <method />
     </configuration>
@@ -1459,10 +1166,6 @@
           <option name="myCopyRoot" value="C:\work\maoding-bundle\file-center" />
         </SvnCopyRootSimple>
         <SvnCopyRootSimple>
-          <option name="myVcsRoot" value="C:\work\maoding-bundle\file-center-bll" />
-          <option name="myCopyRoot" value="C:\work\maoding-bundle\file-center-bll" />
-        </SvnCopyRootSimple>
-        <SvnCopyRootSimple>
           <option name="myVcsRoot" value="C:\work\maoding-bundle\im-easemob" />
           <option name="myCopyRoot" value="C:\work\maoding-bundle\im-easemob" />
         </SvnCopyRootSimple>
@@ -1498,7 +1201,8 @@
       <workItem from="1496802061804" duration="732000" />
       <workItem from="1496819949086" duration="2660000" />
       <workItem from="1496892855435" duration="2849000" />
-      <workItem from="1498457749886" duration="4286000" />
+      <workItem from="1498457749886" duration="17725000" />
+      <workItem from="1498531507691" duration="622000" />
     </task>
     <task id="LOCAL-00001" summary="实现文档类项目动态">
       <created>1496739440127</created>
@@ -1511,7 +1215,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="55711000" />
+    <option name="totallyTimeSpent" value="69772000" />
   </component>
   <component name="TodoView" selected-index="2">
     <todo-panel id="selected-file">
@@ -1524,35 +1228,35 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32929516" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32900432" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32929516" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2675906" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5422078" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32900432" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Spring" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32900432" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33480176" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.38965884" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25159913" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Bean Validation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3295699" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32900432" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4790749" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.478355" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32929516" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32929516" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -1584,244 +1288,712 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenterbll/module/file/service/FastdfsServiceImpl.java" />
-    <entry file="file://$PROJECT_DIR$/basic-core/src/main/java/com/maoding/fastdfsClient/service/DefaultGenerateStorageClient.java">
+    <entry file="file://$PROJECT_DIR$/common-module-companyDisk/src/main/java/com/maoding/common/module/companyDisk/service/CompanyDiskService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2700">
-          <caret line="118" column="29" selection-start-line="118" selection-start-column="17" selection-end-line="118" selection-end-column="29" />
+        <state relative-caret-position="25">
+          <caret line="8" column="17" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/file-center/src/main/java/com/maoding/filecenter/module/upload/ImageUploadController.java">
+    <entry file="jar://$USER_HOME$/.m2/repository/tk/mybatis/mapper/3.4.0/mapper-3.4.0.jar!/tk/mybatis/mapper/common/base/update/UpdateByPrimaryKeySelectiveMapper.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4425">
-          <caret line="205" column="37" selection-start-line="205" selection-start-column="37" selection-end-line="205" selection-end-column="37" />
+        <state relative-caret-position="359">
+          <caret line="20" column="8" selection-start-line="20" selection-start-column="8" selection-end-line="20" selection-end-column="8" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenterbll/module/dynamic/dao/ZUserDAO.java" />
-    <entry file="file://$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenterbll/module/dynamic/dto/ZUserDTO.java" />
-    <entry file="file://$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenterbll/module/dynamic/service/DynamicServiceImpl.java" />
-    <entry file="file://$PROJECT_DIR$/file-center/src/main/java/com/maoding/filecenter/Application.java">
+    <entry file="file://$PROJECT_DIR$/corp-bll/src/main/java/com/maoding/corp/module/corpserver/dao/CollaborationDAO.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="22" column="13" selection-start-line="22" selection-start-column="13" selection-end-line="22" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#1120#1121#0" expanded="false" />
-            <element signature="e#1182#1183#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="-125">
+          <caret line="16" column="17" selection-start-line="16" selection-start-column="17" selection-end-line="16" selection-end-column="17" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/file-center/src/main/java/com/maoding/filecenter/GlobalExceptionHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1125">
-          <caret line="58" column="0" selection-start-line="58" selection-start-column="0" selection-end-line="58" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/file-center/src/main/java/com/maoding/filecenter/module/file/AttachmentController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="16" column="13" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/file-center/src/main/java/com/maoding/filecenter/module/file/NetFileController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="21" column="17" selection-start-line="21" selection-start-column="17" selection-end-line="21" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenterbll/module/file/service/NetFileServiceImpl.java" />
-    <entry file="file://$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenterbll/module/dynamic/model/ProjectDynamicsDO.java" />
-    <entry file="file://$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenterbll/module/dynamic/model/DynamicDO.java" />
-    <entry file="file://$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenterbll/module/dynamic/service/DynamicService.java" />
-    <entry file="file://$PROJECT_DIR$/file-center/src/main/java/com/maoding/filecenter/module/upload/FastUploadController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="31" column="13" selection-start-line="31" selection-start-column="13" selection-end-line="31" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/file-center/src/main/resources/application-dev.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1350">
-          <caret line="54" column="0" selection-start-line="54" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/file-center/src/main/resources/logback.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2175">
-          <caret line="87" column="0" selection-start-line="87" selection-start-column="0" selection-end-line="91" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/file-center/src/main/resources/mybatis-config.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="825">
-          <caret line="33" column="15" selection-start-line="33" selection-start-column="15" selection-end-line="33" selection-end-column="15" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/dto/ZUserDTO.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="975">
-          <caret line="55" column="1" selection-start-line="2" selection-start-column="0" selection-end-line="55" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/service/DynamicService.java">
+    <entry file="file://$PROJECT_DIR$/corp-bll/src/main/java/com/maoding/corp/module/corpserver/dao/MyTaskDAO.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="175">
           <caret line="8" column="17" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/corp-bll/src/main/java/com/maoding/corp/module/corpserver/dao/ProjectTaskDAO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="8" column="17" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/corp-bll/src/main/java/com/maoding/corp/module/corpserver/dao/SyncCompanyDAO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="12" column="17" selection-start-line="12" selection-start-column="17" selection-end-line="12" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/basic-core/src/main/java/com/maoding/core/base/BaseDao.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="10" column="42" selection-start-line="10" selection-start-column="36" selection-end-line="10" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/basic-core/src/main/java/com/maoding/utils/BeanUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="350">
+          <caret line="130" column="0" selection-start-line="130" selection-start-column="0" selection-end-line="130" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/basic-core/src/main/java/com/maoding/utils/StringUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="144" column="7" selection-start-line="144" selection-start-column="7" selection-end-line="144" selection-end-column="7" />
+          <folding>
+            <element signature="e#2513#2514#0" expanded="false" />
+            <element signature="e#2571#2572#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenter/module/file/model/NetFileDO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-39">
+          <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectCostEntity.java" />
+    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectCostPaymentDetailEntity.java" />
+    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectCostPointDetailEntity.java" />
+    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectCostPointEntity.java" />
+    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectDesignContentEntity.java" />
+    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectEntity.java" />
+    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectMemberEntity.java" />
+    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectProcessNodeEntity.java" />
+    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectProcessTimeEntity.java" />
+    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectTaskEntity.java" />
+    <entry file="file://$PROJECT_DIR$/file-center/src/test/java/com/maoding/filecenter/module/dynamic/service/DynamicServiceImplTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectDynamicsDO.java" />
+    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectDynamicsEntity.java" />
+    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/DynamicDO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="50" column="25" selection-start-line="50" selection-start-column="25" selection-end-line="50" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/CompanyUserEntity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-365">
+          <caret line="14" column="7" selection-start-line="14" selection-start-column="7" selection-end-line="14" selection-end-column="7" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenter/constDefine/DynamicConst.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="100">
-          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="34" selection-end-column="1" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/service/DynamicServiceImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3275">
-          <caret line="141" column="0" selection-start-line="124" selection-start-column="0" selection-end-line="141" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/resources/mapper/dynamic/DynamicMapper.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="765">
-          <caret line="44" column="13" selection-start-line="3" selection-start-column="0" selection-end-line="44" selection-end-column="13" />
-          <folding>
-            <marker date="1498466658698" expanded="true" signature="348:529" ph="SELECT id as... maoding_web_account" />
-            <marker date="1498466658698" expanded="true" signature="686:1145" ph="SELECT a.id id" />
-            <marker date="1498466658698" expanded="true" signature="882:1047" ph="SELECT id,us... maoding_web_company_user" />
-            <marker date="1498466658698" expanded="true" signature="1274:1763" ph="SELECT a.id id" />
-            <marker date="1498466658698" expanded="true" signature="1470:1665" ph="SELECT id,us... maoding_web_company_user" />
-            <marker date="1498466658698" expanded="true" signature="1682:1763" ph="SELECT a.id id" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/dto/ZTaskDTO.java" />
+    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/dto/ZProcessNodeDTO.java" />
+    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/resources/mapper/dynamic/CommonMapper.xml" />
+    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/dao/ZUserDAO.java" />
     <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/resources/mapper/dynamic/ZInfoMapper.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="550">
+          <caret line="22" column="0" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
           <folding>
-            <marker date="1498466658582" expanded="true" signature="348:529" ph="SELECT id as... maoding_web_account" />
-            <marker date="1498466658582" expanded="true" signature="686:1145" ph="SELECT a.id id" />
-            <marker date="1498466658582" expanded="true" signature="882:1047" ph="SELECT id,us... maoding_web_company_user" />
-            <marker date="1498466658582" expanded="true" signature="1274:1763" ph="SELECT a.id id" />
-            <marker date="1498466658582" expanded="true" signature="1470:1665" ph="SELECT id,us... maoding_web_company_user" />
+            <marker date="1498530126217" expanded="true" signature="377:757" ph="SELECT id, c... maoding_web_company_user" />
+            <marker date="1498530126217" expanded="true" signature="895:1048" ph="SELECT id FR... maoding_web_company_user" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenter/module/dynamic/dto/ZProject.java">
+    <entry file="file://$PROJECT_DIR$/common-module-companyDisk/src/main/java/com/maoding/common/module/companyDisk/service/CompanyDiskServiceImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="5" column="21" selection-start-line="5" selection-start-column="21" selection-end-line="5" selection-end-column="21" />
-          <folding />
+        <state relative-caret-position="849">
+          <caret line="67" column="39" selection-start-line="67" selection-start-column="39" selection-end-line="67" selection-end-column="39" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/dto/ZProcessNodeDTO.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="5" column="28" selection-start-line="5" selection-start-column="28" selection-end-line="5" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/dto/ZTaskDTO.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2425">
-          <caret line="141" column="0" selection-start-line="141" selection-start-column="0" selection-end-line="141" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectEntity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="5" column="26" selection-start-line="5" selection-start-column="26" selection-end-line="5" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectTaskEntity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="5" column="30" selection-start-line="5" selection-start-column="30" selection-end-line="5" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectDesignContentEntity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="5" column="39" selection-start-line="5" selection-start-column="39" selection-end-line="5" selection-end-column="39" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectProcessTimeEntity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="5" column="37" selection-start-line="5" selection-start-column="37" selection-end-line="5" selection-end-column="37" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectProcessNodeEntity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="5" column="37" selection-start-line="5" selection-start-column="37" selection-end-line="5" selection-end-column="37" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectDynamicsEntity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="5" column="34" selection-start-line="5" selection-start-column="34" selection-end-line="5" selection-end-column="34" />
-          <folding />
+    <entry file="uml://MAVEN/com.maoding:file-center-bll:1.0-SNAPSHOT">
+      <provider selected="true" editor-type-id="UmlEditorProvider">
+        <state>
+          <ID>MAVEN</ID>
+          <OriginalElement>com.maoding:file-center-bll:1.0-SNAPSHOT</OriginalElement>
+          <nodes>
+            <node x="265.0" y="1820.0">com.maoding:file-center-bll:1.0-SNAPSHOT</node>
+            <node x="531.5" y="0.0">com.maoding:basic-core:jar:1.0-SNAPSHOT</node>
+            <node x="470.5" y="70.0">com.maoding:common-module-companyDisk:jar:1.0-SNAPSHOT</node>
+            <node x="851.0" y="35.0">com.maoding:common-module-companyDisk:jar:1.0-SNAPSHOT/org.assertj:assertj-core:jar:2.6.0</node>
+            <node x="857.5" y="105.0">com.maoding:common-module-companyDisk:jar:1.0-SNAPSHOT/org.thymeleaf:thymeleaf:jar:3.0.6.RELEASE</node>
+            <node x="1169.5" y="31.80066287878708">com.maoding:common-module-companyDisk:jar:1.0-SNAPSHOT/org.thymeleaf:thymeleaf:jar:3.0.6.RELEASE/ognl:ognl:jar:3.1.12</node>
+            <node x="1152.0" y="101.80066287878708">com.maoding:common-module-companyDisk:jar:1.0-SNAPSHOT/org.thymeleaf:thymeleaf:jar:3.0.6.RELEASE/org.attoparser:attoparser:jar:2.0.4.RELEASE</node>
+            <node x="1151.0" y="180.85606060605983">com.maoding:common-module-companyDisk:jar:1.0-SNAPSHOT/org.thymeleaf:thymeleaf:jar:3.0.6.RELEASE/org.unbescape:unbescape:jar:1.1.4.RELEASE</node>
+            <node x="0.0" y="1820.0">com.maoding:common-module-dynamic:jar:1.0-SNAPSHOT</node>
+            <node x="517.5" y="175.0">ch.qos.logback:logback-classic:jar:1.2.3</node>
+            <node x="846.5" y="175.0">ch.qos.logback:logback-classic:jar:1.2.3/ch.qos.logback:logback-core:jar:1.2.3</node>
+            <node x="536.5" y="245.0">com.googlecode.log4jdbc:log4jdbc:jar:1.2</node>
+            <node x="539.0" y="315.0">org.slf4j:slf4j-api:jar:1.7.25</node>
+            <node x="518.0" y="385.0">org.slf4j:log4j-over-slf4j:jar:1.7.25</node>
+            <node x="526.5" y="455.0">org.slf4j:jcl-over-slf4j:jar:1.7.25</node>
+            <node x="533.0" y="525.0">org.slf4j:jul-to-slf4j:jar:1.7.25</node>
+            <node x="544.5" y="595.0">com.google.guava:guava:jar:22.0</node>
+            <node x="868.0" y="436.9848484848485">com.google.guava:guava:jar:22.0/com.google.code.findbugs:jsr305:jar:1.3.9</node>
+            <node x="814.0" y="558.0506628787871">com.google.guava:guava:jar:22.0/com.google.errorprone:error_prone_annotations:jar:2.0.18</node>
+            <node x="831.5" y="628.0506628787871">com.google.guava:guava:jar:22.0/com.google.j2objc:j2objc-annotations:jar:1.1</node>
+            <node x="809.5" y="698.0506628787871">com.google.guava:guava:jar:22.0/org.codehaus.mojo:animal-sniffer-annotations:jar:1.14</node>
+            <node x="538.0" y="685.4152462121212">org.javassist:javassist:jar:3.21.0-GA</node>
+            <node x="546.5" y="803.0506628787871">com.alibaba:druid:jar:1.0.31</node>
+            <node x="861.5" y="768.0506628787871">com.alibaba:druid:jar:1.0.31/com.alibaba:jconsole:jar:1.8.0</node>
+            <node x="871.0" y="838.0506628787871">com.alibaba:druid:jar:1.0.31/com.alibaba:tools:jar:1.8.0</node>
+            <node x="499.5" y="873.0506628787871">mysql:mysql-connector-java:jar:5.1.42</node>
+            <node x="518.5" y="943.0506628787871">org.mybatis:mybatis-spring:jar:1.3.1</node>
+            <node x="480.5" y="1013.0506628787871">org.mybatis.spring.boot:mybatis-spring-boot-starter:jar:1.3.0</node>
+            <node x="829.0" y="978.0506628787871">org.mybatis.spring.boot:mybatis-spring-boot-starter:jar:1.3.0/org.springframework.boot:spring-boot-starter:jar:1.5.4.RELEASE</node>
+            <node x="1147.5" y="759.4848484848485">org.mybatis.spring.boot:mybatis-spring-boot-starter:jar:1.3.0/org.springframework.boot:spring-boot-starter:jar:1.5.4.RELEASE/org.springframework.boot:spring-boot:jar:1.5.4.RELEASE</node>
+            <node x="1104.5" y="945.0">org.mybatis.spring.boot:mybatis-spring-boot-starter:jar:1.3.0/org.springframework.boot:spring-boot-starter:jar:1.5.4.RELEASE/org.springframework.boot:spring-boot-autoconfigure:jar:1.5.4.RELEASE</node>
+            <node x="1101.0" y="1015.0">org.mybatis.spring.boot:mybatis-spring-boot-starter:jar:1.3.0/org.springframework.boot:spring-boot-starter:jar:1.5.4.RELEASE/org.springframework.boot:spring-boot-starter-logging:jar:1.5.4.RELEASE</node>
+            <node x="1152.0" y="1185.8560606060598">org.mybatis.spring.boot:mybatis-spring-boot-starter:jar:1.3.0/org.springframework.boot:spring-boot-starter:jar:1.5.4.RELEASE/org.yaml:snakeyaml:jar:1.17</node>
+            <node x="782.5" y="1048.050662878787">org.mybatis.spring.boot:mybatis-spring-boot-starter:jar:1.3.0/org.mybatis.spring.boot:mybatis-spring-boot-autoconfigure:jar:1.3.0</node>
+            <node x="539.5" y="1083.050662878787">org.mybatis:mybatis:jar:3.4.4</node>
+            <node x="539.0" y="1153.050662878787">tk.mybatis:mapper:jar:3.4.0</node>
+            <node x="841.0" y="1153.050662878787">tk.mybatis:mapper:jar:3.4.0/javax.persistence:persistence-api:jar:1.0</node>
+            <node x="480.0" y="1223.050662878787">tk.mybatis:mapper-spring-boot-starter:jar:1.1.1</node>
+            <node x="782.0" y="1223.050662878787">tk.mybatis:mapper-spring-boot-starter:jar:1.1.1/tk.mybatis:mapper-spring-boot-autoconfigure:jar:1.1.1</node>
+            <node x="479.5" y="1293.050662878787">org.mybatis:mybatis-typehandlers-jsr310:jar:1.0.2</node>
+            <node x="515.5" y="1363.050662878787">javax.servlet:javax.servlet-api:jar:3.1.0</node>
+            <node x="454.0" y="1433.050662878787">org.springframework.boot:spring-boot-configuration-processor:jar:1.5.4.RELEASE</node>
+            <node x="848.0" y="1433.050662878787">org.springframework.boot:spring-boot-configuration-processor:jar:1.5.4.RELEASE/com.vaadin.external.google:android-json:jar:0.0.20131108.vaadin1</node>
+            <node x="491.5" y="1527.290246212121">org.springframework.boot:spring-boot-starter-aop:jar:1.5.4.RELEASE</node>
+            <node x="853.0" y="1503.050662878787">org.springframework.boot:spring-boot-starter-aop:jar:1.5.4.RELEASE/org.springframework:spring-aop:jar:4.3.9.RELEASE</node>
+            <node x="844.5" y="1573.050662878787">org.springframework.boot:spring-boot-starter-aop:jar:1.5.4.RELEASE/org.aspectj:aspectjweaver:jar:1.8.5</node>
+            <node x="491.0" y="1715.0">org.springframework.boot:spring-boot-starter-web:jar:1.5.4.RELEASE</node>
+            <node x="830.0" y="1643.050662878787">org.springframework.boot:spring-boot-starter-web:jar:1.5.4.RELEASE/org.hibernate:hibernate-validator:jar:5.3.5.Final</node>
+            <node x="1143.0" y="1519.4848484848485">org.springframework.boot:spring-boot-starter-web:jar:1.5.4.RELEASE/org.hibernate:hibernate-validator:jar:5.3.5.Final/javax.validation:validation-api:jar:1.1.0.Final</node>
+            <node x="1142.0" y="1645.0">org.springframework.boot:spring-boot-starter-web:jar:1.5.4.RELEASE/org.hibernate:hibernate-validator:jar:5.3.5.Final/org.jboss.logging:jboss-logging:jar:3.3.1.Final</node>
+            <node x="1154.0" y="1715.0">org.springframework.boot:spring-boot-starter-web:jar:1.5.4.RELEASE/org.hibernate:hibernate-validator:jar:5.3.5.Final/com.fasterxml:classmate:jar:1.3.3</node>
+            <node x="852.5" y="1713.050662878787">org.springframework.boot:spring-boot-starter-web:jar:1.5.4.RELEASE/org.springframework:spring-web:jar:4.3.9.RELEASE</node>
+            <node x="841.0" y="1785.0">org.springframework.boot:spring-boot-starter-web:jar:1.5.4.RELEASE/org.springframework:spring-webmvc:jar:4.3.9.RELEASE</node>
+            <node x="1130.0" y="1785.0">org.springframework.boot:spring-boot-starter-web:jar:1.5.4.RELEASE/org.springframework:spring-webmvc:jar:4.3.9.RELEASE/org.springframework:spring-expression:jar:4.3.9.RELEASE</node>
+            <node x="490.5" y="1820.0">org.springframework.boot:spring-boot-starter-jdbc:jar:1.5.4.RELEASE</node>
+            <node x="528.5" y="1935.8560606060598">org.springframework:spring-jdbc:jar:4.3.9.RELEASE</node>
+            <node x="847.0" y="1855.0">org.springframework:spring-jdbc:jar:4.3.9.RELEASE/org.springframework:spring-beans:jar:4.3.9.RELEASE</node>
+            <node x="851.5" y="1925.0">org.springframework:spring-jdbc:jar:4.3.9.RELEASE/org.springframework:spring-core:jar:4.3.9.RELEASE</node>
+            <node x="859.5" y="1995.0">org.springframework:spring-jdbc:jar:4.3.9.RELEASE/org.springframework:spring-tx:jar:4.3.9.RELEASE</node>
+            <node x="494.5" y="2065.0">org.springframework:spring-context-support:jar:4.3.9.RELEASE</node>
+            <node x="843.5" y="2065.0">org.springframework:spring-context-support:jar:4.3.9.RELEASE/org.springframework:spring-context:jar:4.3.9.RELEASE</node>
+            <node x="515.0" y="2135.0">org.apache.commons:commons-lang3:jar:3.4</node>
+            <node x="525.5" y="2205.0">commons-io:commons-io:jar:2.4</node>
+            <node x="513.5" y="2275.0">commons-codec:commons-codec:jar:1.10</node>
+            <node x="505.0" y="2345.0">commons-beanutils:commons-beanutils:jar:1.9.3</node>
+            <node x="832.0" y="2310.0">commons-beanutils:commons-beanutils:jar:1.9.3/commons-logging:commons-logging:jar:1.2</node>
+            <node x="824.0" y="2380.0">commons-beanutils:commons-beanutils:jar:1.9.3/commons-collections:commons-collections:jar:3.2.2</node>
+            <node x="502.0" y="2415.0">commons-fileupload:commons-fileupload:jar:1.3.2</node>
+            <node x="514.0" y="2485.0">org.apache.commons:commons-pool2:jar:2.4.2</node>
+            <node x="534.0" y="2555.0">joda-time:joda-time:jar:2.9.7</node>
+            <node x="503.5" y="2625.0">com.fasterxml.jackson.core:jackson-annotations:jar:2.8.8</node>
+            <node x="524.5" y="2695.0">com.fasterxml.jackson.core:jackson-core:jar:2.8.8</node>
+            <node x="511.5" y="2765.0">com.fasterxml.jackson.core:jackson-databind:jar:2.8.8</node>
+            <node x="464.5" y="2835.0">com.fasterxml.jackson.module:jackson-module-jaxb-annotations:jar:2.8.8</node>
+            <node x="496.5" y="2905.0">com.fasterxml.jackson.datatype:jackson-datatype-joda:jar:2.8.8</node>
+            <node x="461.0" y="2975.0">com.fasterxml.jackson.module:jackson-module-parameter-names:jar:2.8.8</node>
+            <node x="497.0" y="3045.0">com.fasterxml.jackson.datatype:jackson-datatype-jdk8:jar:2.8.8</node>
+            <node x="492.0" y="3115.0">com.fasterxml.jackson.datatype:jackson-datatype-jsr310:jar:2.8.8</node>
+            <node x="539.5" y="3185.0">com.alibaba:fastjson:jar:1.2.33</node>
+            <node x="521.5" y="3255.0">net.coobird:thumbnailator:jar:0.4.8</node>
+            <node x="522.5" y="3325.0">com.twelvemonkeys.imageio:imageio-bmp:jar:3.3.2</node>
+            <node x="846.5" y="3131.984848484848">com.twelvemonkeys.imageio:imageio-bmp:jar:3.3.2/com.twelvemonkeys.imageio:imageio-core:jar:3.3.2</node>
+            <node x="845.0" y="3290.0">com.twelvemonkeys.imageio:imageio-bmp:jar:3.3.2/com.twelvemonkeys.common:common-lang:jar:3.3.2</node>
+            <node x="852.0" y="3360.0">com.twelvemonkeys.imageio:imageio-bmp:jar:3.3.2/com.twelvemonkeys.common:common-io:jar:3.3.2</node>
+            <node x="839.5" y="3430.0">com.twelvemonkeys.imageio:imageio-bmp:jar:3.3.2/com.twelvemonkeys.common:common-image:jar:3.3.2</node>
+            <node x="523.0" y="3500.0">com.twelvemonkeys.imageio:imageio-jpeg:jar:3.3.2</node>
+            <node x="832.0" y="3500.0">com.twelvemonkeys.imageio:imageio-jpeg:jar:3.3.2/com.twelvemonkeys.imageio:imageio-metadata:jar:3.3.2</node>
+            <node x="528.5" y="3570.0">com.twelvemonkeys.imageio:imageio-tiff:jar:3.3.2</node>
+          </nodes>
+          <notes />
+          <edges>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="org.springframework.boot:spring-boot-starter-aop:jar:1.5.4.RELEASE">
+              <point x="54.5" y="-1.3333333333332575" />
+              <point x="454.0" y="1542.290246212121" />
+              <point x="-86.5" y="-0.0" />
+            </edge>
+            <edge source="com.google.guava:guava:jar:22.0" target="com.google.guava:guava:jar:22.0/org.codehaus.mojo:animal-sniffer-annotations:jar:1.14">
+              <point x="33.5" y="11.25" />
+              <point x="702.0" y="621.25" />
+              <point x="782.0" y="713.0506628787871" />
+              <point x="-92.0" y="-0.0" />
+            </edge>
+            <edge source="org.springframework:spring-jdbc:jar:4.3.9.RELEASE" target="org.springframework:spring-jdbc:jar:4.3.9.RELEASE/org.springframework:spring-tx:jar:4.3.9.RELEASE">
+              <point x="49.5" y="10.0" />
+              <point x="702.0" y="1960.8560606060598" />
+              <point x="782.0" y="2010.0" />
+              <point x="-42.0" y="-0.0" />
+            </edge>
+            <edge source="com.alibaba:druid:jar:1.0.31" target="com.alibaba:druid:jar:1.0.31/com.alibaba:tools:jar:1.8.0">
+              <point x="31.5" y="7.5" />
+              <point x="702.0" y="825.5506628787871" />
+              <point x="782.0" y="853.0506628787871" />
+              <point x="-30.5" y="-0.0" />
+            </edge>
+            <edge source="commons-beanutils:commons-beanutils:jar:1.9.3" target="commons-beanutils:commons-beanutils:jar:1.9.3/commons-logging:commons-logging:jar:1.2">
+              <point x="73.0" y="-7.5" />
+              <point x="702.0" y="2352.5" />
+              <point x="782.0" y="2325.0" />
+              <point x="-69.5" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="com.fasterxml.jackson.core:jackson-annotations:jar:2.8.8">
+              <point x="54.5" y="6.6666666666667425" />
+              <point x="454.0" y="2640.0" />
+              <point x="-74.5" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:common-module-dynamic:jar:1.0-SNAPSHOT" target="com.maoding:file-center-bll:1.0-SNAPSHOT">
+              <point x="92.5" y="7.5" />
+              <point x="-54.5" y="7.5" />
+            </edge>
+            <edge source="org.springframework.boot:spring-boot-configuration-processor:jar:1.5.4.RELEASE" target="org.springframework.boot:spring-boot-configuration-processor:jar:1.5.4.RELEASE/com.vaadin.external.google:android-json:jar:0.0.20131108.vaadin1">
+              <point x="124.0" y="-0.0" />
+              <point x="-53.5" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="org.slf4j:slf4j-api:jar:1.7.25">
+              <point x="54.5" y="-12.0" />
+              <point x="454.0" y="330.0" />
+              <point x="-39.0" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="commons-codec:commons-codec:jar:1.10">
+              <point x="54.5" y="3.3333333333332575" />
+              <point x="454.0" y="2290.0" />
+              <point x="-64.5" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="commons-beanutils:commons-beanutils:jar:1.9.3">
+              <point x="54.5" y="4.0" />
+              <point x="454.0" y="2360.0" />
+              <point x="-73.0" y="-0.0" />
+            </edge>
+            <edge source="org.springframework:spring-jdbc:jar:4.3.9.RELEASE" target="org.springframework:spring-jdbc:jar:4.3.9.RELEASE/org.springframework:spring-core:jar:4.3.9.RELEASE">
+              <point x="49.5" y="-0.0" />
+              <point x="702.0" y="1950.8560606060598" />
+              <point x="782.0" y="1940.0" />
+              <point x="-50.0" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="mysql:mysql-connector-java:jar:5.1.42">
+              <point x="54.5" y="-7.3333333333332575" />
+              <point x="454.0" y="888.0506628787871" />
+              <point x="-78.5" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="com.googlecode.log4jdbc:log4jdbc:jar:1.2">
+              <point x="54.5" y="-12.666666666666742" />
+              <point x="454.0" y="260.0" />
+              <point x="-41.5" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="com.fasterxml.jackson.module:jackson-module-parameter-names:jar:2.8.8">
+              <point x="54.5" y="10.0" />
+              <point x="-117.0" y="-0.0" />
+            </edge>
+            <edge source="tk.mybatis:mapper-spring-boot-starter:jar:1.1.1" target="tk.mybatis:mapper-spring-boot-starter:jar:1.1.1/tk.mybatis:mapper-spring-boot-autoconfigure:jar:1.1.1">
+              <point x="98.0" y="-0.0" />
+              <point x="-119.5" y="-0.0" />
+            </edge>
+            <edge source="org.springframework.boot:spring-boot-starter-web:jar:1.5.4.RELEASE/org.springframework:spring-webmvc:jar:4.3.9.RELEASE" target="org.springframework.boot:spring-boot-starter-web:jar:1.5.4.RELEASE/org.springframework:spring-webmvc:jar:4.3.9.RELEASE/org.springframework:spring-expression:jar:4.3.9.RELEASE">
+              <point x="60.5" y="-0.0" />
+              <point x="-68.5" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="com.maoding:basic-core:jar:1.0-SNAPSHOT">
+              <point x="54.5" y="-14.666666666666742" />
+              <point x="454.0" y="15.0" />
+              <point x="-46.5" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="com.fasterxml.jackson.core:jackson-databind:jar:2.8.8">
+              <point x="54.5" y="8.0" />
+              <point x="454.0" y="2780.0" />
+              <point x="-66.5" y="-0.0" />
+            </edge>
+            <edge source="org.springframework:spring-jdbc:jar:4.3.9.RELEASE" target="org.springframework:spring-jdbc:jar:4.3.9.RELEASE/org.springframework:spring-beans:jar:4.3.9.RELEASE">
+              <point x="49.5" y="-10.0" />
+              <point x="702.0" y="1940.8560606060598" />
+              <point x="782.0" y="1870.0" />
+              <point x="-54.5" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="org.javassist:javassist:jar:3.21.0-GA">
+              <point x="54.5" y="-8.666666666666742" />
+              <point x="454.0" y="700.4152462121212" />
+              <point x="-40.0" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="org.slf4j:jcl-over-slf4j:jar:1.7.25">
+              <point x="54.5" y="-10.666666666666742" />
+              <point x="454.0" y="470.0" />
+              <point x="-51.5" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="commons-fileupload:commons-fileupload:jar:1.3.2">
+              <point x="54.5" y="4.6666666666667425" />
+              <point x="454.0" y="2430.0" />
+              <point x="-76.0" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="org.mybatis:mybatis-spring:jar:1.3.1">
+              <point x="54.5" y="-6.6666666666667425" />
+              <point x="454.0" y="958.0506628787871" />
+              <point x="-59.5" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="com.fasterxml.jackson.core:jackson-core:jar:2.8.8">
+              <point x="54.5" y="7.3333333333332575" />
+              <point x="454.0" y="2710.0" />
+              <point x="-53.5" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="com.twelvemonkeys.imageio:imageio-bmp:jar:3.3.2">
+              <point x="54.5" y="13.333333333333258" />
+              <point x="454.0" y="3340.0" />
+              <point x="-55.5" y="-0.0" />
+            </edge>
+            <edge source="org.mybatis.spring.boot:mybatis-spring-boot-starter:jar:1.3.0" target="org.mybatis.spring.boot:mybatis-spring-boot-starter:jar:1.3.0/org.mybatis.spring.boot:mybatis-spring-boot-autoconfigure:jar:1.3.0">
+              <point x="97.5" y="7.5" />
+              <point x="702.0" y="1035.550662878787" />
+              <point x="-119.0" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:common-module-companyDisk:jar:1.0-SNAPSHOT/org.thymeleaf:thymeleaf:jar:3.0.6.RELEASE" target="com.maoding:common-module-companyDisk:jar:1.0-SNAPSHOT/org.thymeleaf:thymeleaf:jar:3.0.6.RELEASE/org.attoparser:attoparser:jar:2.0.4.RELEASE">
+              <point x="44.0" y="-0.0" />
+              <point x="1021.0" y="120.0" />
+              <point x="1101.0" y="116.80066287878708" />
+              <point x="-46.5" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="org.springframework.boot:spring-boot-configuration-processor:jar:1.5.4.RELEASE">
+              <point x="54.5" y="-2.0" />
+              <point x="-124.0" y="-0.0" />
+            </edge>
+            <edge source="org.mybatis.spring.boot:mybatis-spring-boot-starter:jar:1.3.0/org.springframework.boot:spring-boot-starter:jar:1.5.4.RELEASE" target="org.mybatis.spring.boot:mybatis-spring-boot-starter:jar:1.3.0/org.springframework.boot:spring-boot-starter:jar:1.5.4.RELEASE/org.springframework.boot:spring-boot:jar:1.5.4.RELEASE">
+              <point x="72.5" y="-11.25" />
+              <point x="1021.0" y="981.8006628787871" />
+              <point x="1101.0" y="774.4848484848485" />
+              <point x="-51.0" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="commons-io:commons-io:jar:2.4">
+              <point x="54.5" y="2.6666666666667425" />
+              <point x="454.0" y="2220.0" />
+              <point x="-52.5" y="-0.0" />
+            </edge>
+            <edge source="org.springframework.boot:spring-boot-starter-web:jar:1.5.4.RELEASE" target="org.springframework.boot:spring-boot-starter-web:jar:1.5.4.RELEASE/org.springframework:spring-web:jar:4.3.9.RELEASE">
+              <point x="87.0" y="-0.0" />
+              <point x="-49.0" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="org.springframework.boot:spring-boot-starter-web:jar:1.5.4.RELEASE">
+              <point x="54.5" y="-0.6666666666667425" />
+              <point x="454.0" y="1730.0" />
+              <point x="-87.0" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="org.mybatis.spring.boot:mybatis-spring-boot-starter:jar:1.3.0">
+              <point x="54.5" y="-6.0" />
+              <point x="454.0" y="1028.050662878787" />
+              <point x="-97.5" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="com.maoding:common-module-companyDisk:jar:1.0-SNAPSHOT">
+              <point x="54.5" y="-14.0" />
+              <point x="454.0" y="85.0" />
+              <point x="-107.5" y="-0.0" />
+            </edge>
+            <edge source="org.springframework.boot:spring-boot-starter-aop:jar:1.5.4.RELEASE" target="org.springframework.boot:spring-boot-starter-aop:jar:1.5.4.RELEASE/org.springframework:spring-aop:jar:4.3.9.RELEASE">
+              <point x="86.5" y="-7.5" />
+              <point x="702.0" y="1534.790246212121" />
+              <point x="782.0" y="1518.050662878787" />
+              <point x="-48.5" y="-0.0" />
+            </edge>
+            <edge source="commons-beanutils:commons-beanutils:jar:1.9.3" target="commons-beanutils:commons-beanutils:jar:1.9.3/commons-collections:commons-collections:jar:3.2.2">
+              <point x="73.0" y="7.5" />
+              <point x="702.0" y="2367.5" />
+              <point x="782.0" y="2395.0" />
+              <point x="-77.5" y="-0.0" />
+            </edge>
+            <edge source="tk.mybatis:mapper:jar:3.4.0" target="tk.mybatis:mapper:jar:3.4.0/javax.persistence:persistence-api:jar:1.0">
+              <point x="39.0" y="-0.0" />
+              <point x="-60.5" y="-0.0" />
+            </edge>
+            <edge source="com.twelvemonkeys.imageio:imageio-bmp:jar:3.3.2" target="com.twelvemonkeys.imageio:imageio-bmp:jar:3.3.2/com.twelvemonkeys.imageio:imageio-core:jar:3.3.2">
+              <point x="55.5" y="-11.25" />
+              <point x="702.0" y="3328.75" />
+              <point x="782.0" y="3146.984848484848" />
+              <point x="-55.0" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="org.springframework.boot:spring-boot-starter-jdbc:jar:1.5.4.RELEASE">
+              <point x="54.5" y="-0.0" />
+              <point x="-87.5" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="com.maoding:common-module-dynamic:jar:1.0-SNAPSHOT">
+              <point x="-54.5" y="-7.5" />
+              <point x="92.5" y="-7.5" />
+            </edge>
+            <edge source="com.twelvemonkeys.imageio:imageio-bmp:jar:3.3.2" target="com.twelvemonkeys.imageio:imageio-bmp:jar:3.3.2/com.twelvemonkeys.common:common-io:jar:3.3.2">
+              <point x="55.5" y="3.75" />
+              <point x="702.0" y="3343.75" />
+              <point x="782.0" y="3375.0" />
+              <point x="-49.5" y="-0.0" />
+            </edge>
+            <edge source="org.mybatis.spring.boot:mybatis-spring-boot-starter:jar:1.3.0/org.springframework.boot:spring-boot-starter:jar:1.5.4.RELEASE" target="org.mybatis.spring.boot:mybatis-spring-boot-starter:jar:1.3.0/org.springframework.boot:spring-boot-starter:jar:1.5.4.RELEASE/org.springframework.boot:spring-boot-autoconfigure:jar:1.5.4.RELEASE">
+              <point x="72.5" y="-3.75" />
+              <point x="1021.0" y="989.3006628787871" />
+              <point x="-94.0" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="joda-time:joda-time:jar:2.9.7">
+              <point x="54.5" y="6.0" />
+              <point x="454.0" y="2570.0" />
+              <point x="-44.0" y="-0.0" />
+            </edge>
+            <edge source="org.mybatis.spring.boot:mybatis-spring-boot-starter:jar:1.3.0" target="org.mybatis.spring.boot:mybatis-spring-boot-starter:jar:1.3.0/org.springframework.boot:spring-boot-starter:jar:1.5.4.RELEASE">
+              <point x="97.5" y="-7.5" />
+              <point x="702.0" y="1020.5506628787871" />
+              <point x="782.0" y="993.0506628787871" />
+              <point x="-72.5" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="com.twelvemonkeys.imageio:imageio-tiff:jar:3.3.2">
+              <point x="54.5" y="14.666666666666742" />
+              <point x="454.0" y="3585.0" />
+              <point x="-49.5" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="com.fasterxml.jackson.module:jackson-module-jaxb-annotations:jar:2.8.8">
+              <point x="54.5" y="8.666666666666742" />
+              <point x="-113.5" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="org.springframework:spring-context-support:jar:4.3.9.RELEASE">
+              <point x="54.5" y="1.3333333333332575" />
+              <point x="454.0" y="2080.0" />
+              <point x="-83.5" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="com.alibaba:druid:jar:1.0.31">
+              <point x="54.5" y="-8.0" />
+              <point x="454.0" y="818.0506628787871" />
+              <point x="-31.5" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="com.alibaba:fastjson:jar:1.2.33">
+              <point x="54.5" y="12.0" />
+              <point x="454.0" y="3200.0" />
+              <point x="-38.5" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:common-module-companyDisk:jar:1.0-SNAPSHOT/org.thymeleaf:thymeleaf:jar:3.0.6.RELEASE" target="com.maoding:common-module-companyDisk:jar:1.0-SNAPSHOT/org.thymeleaf:thymeleaf:jar:3.0.6.RELEASE/org.unbescape:unbescape:jar:1.1.4.RELEASE">
+              <point x="44.0" y="10.0" />
+              <point x="1021.0" y="130.0" />
+              <point x="1101.0" y="195.85606060605983" />
+              <point x="-47.5" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="com.fasterxml.jackson.datatype:jackson-datatype-jsr310:jar:2.8.8">
+              <point x="54.5" y="11.333333333333258" />
+              <point x="454.0" y="3130.0" />
+              <point x="-86.0" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="org.apache.commons:commons-lang3:jar:3.4">
+              <point x="54.5" y="2.0" />
+              <point x="454.0" y="2150.0" />
+              <point x="-63.0" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="org.apache.commons:commons-pool2:jar:2.4.2">
+              <point x="54.5" y="5.3333333333332575" />
+              <point x="454.0" y="2500.0" />
+              <point x="-64.0" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:common-module-companyDisk:jar:1.0-SNAPSHOT" target="com.maoding:common-module-companyDisk:jar:1.0-SNAPSHOT/org.assertj:assertj-core:jar:2.6.0">
+              <point x="107.5" y="-7.5" />
+              <point x="702.0" y="77.5" />
+              <point x="782.0" y="50.0" />
+              <point x="-50.5" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="com.twelvemonkeys.imageio:imageio-jpeg:jar:3.3.2">
+              <point x="54.5" y="14.0" />
+              <point x="454.0" y="3515.0" />
+              <point x="-55.0" y="-0.0" />
+            </edge>
+            <edge source="ch.qos.logback:logback-classic:jar:1.2.3" target="ch.qos.logback:logback-classic:jar:1.2.3/ch.qos.logback:logback-core:jar:1.2.3">
+              <point x="60.5" y="-0.0" />
+              <point x="-55.0" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="com.fasterxml.jackson.datatype:jackson-datatype-joda:jar:2.8.8">
+              <point x="54.5" y="9.333333333333258" />
+              <point x="454.0" y="2920.0" />
+              <point x="-81.5" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="ch.qos.logback:logback-classic:jar:1.2.3">
+              <point x="54.5" y="-13.333333333333258" />
+              <point x="454.0" y="190.0" />
+              <point x="-60.5" y="-0.0" />
+            </edge>
+            <edge source="org.springframework.boot:spring-boot-starter-aop:jar:1.5.4.RELEASE" target="org.springframework.boot:spring-boot-starter-aop:jar:1.5.4.RELEASE/org.aspectj:aspectjweaver:jar:1.8.5">
+              <point x="86.5" y="7.5" />
+              <point x="702.0" y="1549.790246212121" />
+              <point x="782.0" y="1588.050662878787" />
+              <point x="-57.0" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="tk.mybatis:mapper-spring-boot-starter:jar:1.1.1">
+              <point x="54.5" y="-4.0" />
+              <point x="454.0" y="1238.050662878787" />
+              <point x="-98.0" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="com.fasterxml.jackson.datatype:jackson-datatype-jdk8:jar:2.8.8">
+              <point x="54.5" y="10.666666666666742" />
+              <point x="454.0" y="3060.0" />
+              <point x="-81.0" y="-0.0" />
+            </edge>
+            <edge source="com.google.guava:guava:jar:22.0" target="com.google.guava:guava:jar:22.0/com.google.j2objc:j2objc-annotations:jar:1.1">
+              <point x="33.5" y="3.75" />
+              <point x="702.0" y="613.75" />
+              <point x="782.0" y="643.0506628787871" />
+              <point x="-70.0" y="-0.0" />
+            </edge>
+            <edge source="org.mybatis.spring.boot:mybatis-spring-boot-starter:jar:1.3.0/org.springframework.boot:spring-boot-starter:jar:1.5.4.RELEASE" target="org.mybatis.spring.boot:mybatis-spring-boot-starter:jar:1.3.0/org.springframework.boot:spring-boot-starter:jar:1.5.4.RELEASE/org.springframework.boot:spring-boot-starter-logging:jar:1.5.4.RELEASE">
+              <point x="72.5" y="3.75" />
+              <point x="1021.0" y="996.8006628787871" />
+              <point x="-97.5" y="-0.0" />
+            </edge>
+            <edge source="com.alibaba:druid:jar:1.0.31" target="com.alibaba:druid:jar:1.0.31/com.alibaba:jconsole:jar:1.8.0">
+              <point x="31.5" y="-7.5" />
+              <point x="702.0" y="810.5506628787871" />
+              <point x="782.0" y="783.0506628787871" />
+              <point x="-40.0" y="-0.0" />
+            </edge>
+            <edge source="org.springframework.boot:spring-boot-starter-web:jar:1.5.4.RELEASE/org.hibernate:hibernate-validator:jar:5.3.5.Final" target="org.springframework.boot:spring-boot-starter-web:jar:1.5.4.RELEASE/org.hibernate:hibernate-validator:jar:5.3.5.Final/javax.validation:validation-api:jar:1.1.0.Final">
+              <point x="71.5" y="-10.0" />
+              <point x="1021.0" y="1648.050662878787" />
+              <point x="1101.0" y="1534.4848484848485" />
+              <point x="-55.5" y="-0.0" />
+            </edge>
+            <edge source="org.springframework.boot:spring-boot-starter-web:jar:1.5.4.RELEASE" target="org.springframework.boot:spring-boot-starter-web:jar:1.5.4.RELEASE/org.hibernate:hibernate-validator:jar:5.3.5.Final">
+              <point x="87.0" y="-10.0" />
+              <point x="702.0" y="1720.0" />
+              <point x="782.0" y="1658.050662878787" />
+              <point x="-71.5" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="javax.servlet:javax.servlet-api:jar:3.1.0">
+              <point x="54.5" y="-2.6666666666667425" />
+              <point x="454.0" y="1378.050662878787" />
+              <point x="-62.5" y="-0.0" />
+            </edge>
+            <edge source="com.twelvemonkeys.imageio:imageio-bmp:jar:3.3.2" target="com.twelvemonkeys.imageio:imageio-bmp:jar:3.3.2/com.twelvemonkeys.common:common-lang:jar:3.3.2">
+              <point x="55.5" y="-3.75" />
+              <point x="702.0" y="3336.25" />
+              <point x="782.0" y="3305.0" />
+              <point x="-56.5" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="tk.mybatis:mapper:jar:3.4.0">
+              <point x="54.5" y="-4.6666666666667425" />
+              <point x="454.0" y="1168.050662878787" />
+              <point x="-39.0" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="net.coobird:thumbnailator:jar:0.4.8">
+              <point x="54.5" y="12.666666666666742" />
+              <point x="454.0" y="3270.0" />
+              <point x="-56.5" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="org.slf4j:jul-to-slf4j:jar:1.7.25">
+              <point x="54.5" y="-10.0" />
+              <point x="454.0" y="540.0" />
+              <point x="-45.0" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="com.google.guava:guava:jar:22.0">
+              <point x="54.5" y="-9.333333333333258" />
+              <point x="454.0" y="610.0" />
+              <point x="-33.5" y="-0.0" />
+            </edge>
+            <edge source="org.springframework.boot:spring-boot-starter-web:jar:1.5.4.RELEASE" target="org.springframework.boot:spring-boot-starter-web:jar:1.5.4.RELEASE/org.springframework:spring-webmvc:jar:4.3.9.RELEASE">
+              <point x="87.0" y="10.0" />
+              <point x="702.0" y="1740.0" />
+              <point x="782.0" y="1800.0" />
+              <point x="-60.5" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="org.springframework:spring-jdbc:jar:4.3.9.RELEASE">
+              <point x="54.5" y="0.6666666666667425" />
+              <point x="454.0" y="1950.8560606060598" />
+              <point x="-49.5" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:common-module-companyDisk:jar:1.0-SNAPSHOT" target="com.maoding:common-module-companyDisk:jar:1.0-SNAPSHOT/org.thymeleaf:thymeleaf:jar:3.0.6.RELEASE">
+              <point x="107.5" y="7.5" />
+              <point x="702.0" y="92.5" />
+              <point x="782.0" y="120.0" />
+              <point x="-44.0" y="-0.0" />
+            </edge>
+            <edge source="com.google.guava:guava:jar:22.0" target="com.google.guava:guava:jar:22.0/com.google.code.findbugs:jsr305:jar:1.3.9">
+              <point x="33.5" y="-11.25" />
+              <point x="702.0" y="598.75" />
+              <point x="782.0" y="451.9848484848485" />
+              <point x="-33.5" y="-0.0" />
+            </edge>
+            <edge source="org.springframework.boot:spring-boot-starter-web:jar:1.5.4.RELEASE/org.hibernate:hibernate-validator:jar:5.3.5.Final" target="org.springframework.boot:spring-boot-starter-web:jar:1.5.4.RELEASE/org.hibernate:hibernate-validator:jar:5.3.5.Final/org.jboss.logging:jboss-logging:jar:3.3.1.Final">
+              <point x="71.5" y="-0.0" />
+              <point x="-56.5" y="-0.0" />
+            </edge>
+            <edge source="org.springframework.boot:spring-boot-starter-web:jar:1.5.4.RELEASE/org.hibernate:hibernate-validator:jar:5.3.5.Final" target="org.springframework.boot:spring-boot-starter-web:jar:1.5.4.RELEASE/org.hibernate:hibernate-validator:jar:5.3.5.Final/com.fasterxml:classmate:jar:1.3.3">
+              <point x="71.5" y="10.0" />
+              <point x="1021.0" y="1668.050662878787" />
+              <point x="1101.0" y="1730.0" />
+              <point x="-44.5" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:common-module-companyDisk:jar:1.0-SNAPSHOT/org.thymeleaf:thymeleaf:jar:3.0.6.RELEASE" target="com.maoding:common-module-companyDisk:jar:1.0-SNAPSHOT/org.thymeleaf:thymeleaf:jar:3.0.6.RELEASE/ognl:ognl:jar:3.1.12">
+              <point x="44.0" y="-10.0" />
+              <point x="1021.0" y="110.0" />
+              <point x="1101.0" y="46.80066287878708" />
+              <point x="-29.0" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="org.slf4j:log4j-over-slf4j:jar:1.7.25">
+              <point x="54.5" y="-11.333333333333258" />
+              <point x="454.0" y="400.0" />
+              <point x="-60.0" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="org.mybatis:mybatis-typehandlers-jsr310:jar:1.0.2">
+              <point x="54.5" y="-3.3333333333332575" />
+              <point x="454.0" y="1308.050662878787" />
+              <point x="-98.5" y="-0.0" />
+            </edge>
+            <edge source="com.google.guava:guava:jar:22.0" target="com.google.guava:guava:jar:22.0/com.google.errorprone:error_prone_annotations:jar:2.0.18">
+              <point x="33.5" y="-3.75" />
+              <point x="702.0" y="606.25" />
+              <point x="782.0" y="573.0506628787871" />
+              <point x="-87.5" y="-0.0" />
+            </edge>
+            <edge source="com.twelvemonkeys.imageio:imageio-bmp:jar:3.3.2" target="com.twelvemonkeys.imageio:imageio-bmp:jar:3.3.2/com.twelvemonkeys.common:common-image:jar:3.3.2">
+              <point x="55.5" y="11.25" />
+              <point x="702.0" y="3351.25" />
+              <point x="782.0" y="3445.0" />
+              <point x="-62.0" y="-0.0" />
+            </edge>
+            <edge source="com.twelvemonkeys.imageio:imageio-jpeg:jar:3.3.2" target="com.twelvemonkeys.imageio:imageio-jpeg:jar:3.3.2/com.twelvemonkeys.imageio:imageio-metadata:jar:3.3.2">
+              <point x="55.0" y="-0.0" />
+              <point x="-69.5" y="-0.0" />
+            </edge>
+            <edge source="com.maoding:file-center-bll:1.0-SNAPSHOT" target="org.mybatis:mybatis:jar:3.4.4">
+              <point x="54.5" y="-5.3333333333332575" />
+              <point x="454.0" y="1098.050662878787" />
+              <point x="-38.5" y="-0.0" />
+            </edge>
+            <edge source="org.springframework:spring-context-support:jar:4.3.9.RELEASE" target="org.springframework:spring-context-support:jar:4.3.9.RELEASE/org.springframework:spring-context:jar:4.3.9.RELEASE">
+              <point x="83.5" y="-0.0" />
+              <point x="-58.0" y="-0.0" />
+            </edge>
+            <edge source="org.mybatis.spring.boot:mybatis-spring-boot-starter:jar:1.3.0/org.springframework.boot:spring-boot-starter:jar:1.5.4.RELEASE" target="org.mybatis.spring.boot:mybatis-spring-boot-starter:jar:1.3.0/org.springframework.boot:spring-boot-starter:jar:1.5.4.RELEASE/org.yaml:snakeyaml:jar:1.17">
+              <point x="72.5" y="11.25" />
+              <point x="1021.0" y="1004.3006628787871" />
+              <point x="1101.0" y="1200.8560606060598" />
+              <point x="-46.5" y="-0.0" />
+            </edge>
+          </edges>
+          <settings layout="Hierarchic Group" zoom="0.740331491712707" x="287.0" y="2014.0" />
+          <SelectedNodes>
+            <node>com.twelvemonkeys.imageio:imageio-tiff:jar:3.3.2</node>
+          </SelectedNodes>
+          <Categories />
+          <SCOPE>All</SCOPE>
+          <VISIBILITY>All</VISIBILITY>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/dao/DynamicDAO.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="500">
-          <caret line="26" column="0" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="265">
+          <caret line="12" column="17" selection-start-line="12" selection-start-column="17" selection-end-line="12" selection-end-column="17" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/dao/ZInfoDAO.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="528">
-          <caret line="56" column="4" selection-start-line="56" selection-start-column="4" selection-end-line="56" selection-end-column="4" />
+        <state relative-caret-position="225">
+          <caret line="9" column="11" selection-start-line="9" selection-start-column="11" selection-end-line="9" selection-end-column="11" />
           <folding>
             <element signature="imports" expanded="false" />
           </folding>
@@ -1830,147 +2002,169 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/dto/DynamicDTO.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="678">
+        <state relative-caret-position="1500">
           <caret line="86" column="0" selection-start-line="86" selection-start-column="0" selection-end-line="86" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/dto/ProjectDynamicDTO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="476">
+          <caret line="32" column="1" selection-start-line="32" selection-start-column="1" selection-end-line="32" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/dto/ZUserDTO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/NetFileDO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/service/DynamicService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="98">
+          <caret line="4" column="57" selection-start-line="4" selection-start-column="57" selection-end-line="4" selection-end-column="57" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/service/DynamicServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="625">
+          <caret line="25" column="13" selection-start-line="25" selection-start-column="13" selection-end-line="25" selection-end-column="13" />
+          <folding>
+            <element signature="e#7998#7999#0" expanded="false" />
+            <element signature="e#8051#8052#0" expanded="false" />
+            <element signature="e#8682#8683#0" expanded="false" />
+            <element signature="e#8743#8744#0" expanded="false" />
+            <element signature="e#9714#9715#0" expanded="false" />
+            <element signature="e#9773#9774#0" expanded="false" />
+            <element signature="e#10555#10556#0" expanded="false" />
+            <element signature="e#10614#10615#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenter/module/file/service/NetFileService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="325">
+          <caret line="13" column="17" selection-start-line="13" selection-start-column="17" selection-end-line="13" selection-end-column="17" />
           <folding>
             <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/dto/QueryDynamicDTO.java">
+    <entry file="file://$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenter/module/file/service/NetFileServiceImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="678">
-          <caret line="78" column="0" selection-start-line="78" selection-start-column="0" selection-end-line="78" selection-end-column="0" />
+        <state relative-caret-position="800">
+          <caret line="32" column="13" selection-start-line="32" selection-start-column="13" selection-end-line="32" selection-end-column="13" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/dto/ZCostDTO.java">
+    <entry file="file://$PROJECT_DIR$/file-center-bll/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="678">
-          <caret line="178" column="0" selection-start-line="178" selection-start-column="0" selection-end-line="178" selection-end-column="0" />
+        <state relative-caret-position="625">
+          <caret line="25" column="49" selection-start-line="25" selection-start-column="49" selection-end-line="25" selection-end-column="49" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/file-center/src/main/java/com/maoding/filecenter/module/file/AttachmentController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="3" column="45" selection-start-line="3" selection-start-column="45" selection-end-line="3" selection-end-column="45" />
           <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#3114#3115#0" expanded="false" />
-            <element signature="e#3154#3155#0" expanded="false" />
+            <element signature="e#2255#2256#0" expanded="false" />
+            <element signature="e#2307#2308#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/dto/ZProjectDTO.java">
+    <entry file="file://$PROJECT_DIR$/file-center/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="702">
-          <caret line="57" column="0" selection-start-line="57" selection-start-column="0" selection-end-line="57" selection-end-column="0" />
+        <state relative-caret-position="850">
+          <caret line="34" column="42" selection-start-line="34" selection-start-column="42" selection-end-line="34" selection-end-column="42" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_71/src.zip!/java/lang/String.java">
+    <entry file="file://$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenter/module/file/dto/DeleteDTO.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="399">
-          <caret line="2871" column="18" selection-start-line="2871" selection-start-column="18" selection-end-line="2871" selection-end-column="18" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#23072#23073#0" expanded="false" />
-            <element signature="e#23112#23113#0" expanded="false" />
+            <element signature="e#250#251#0" expanded="false" />
+            <element signature="e#276#277#0" expanded="false" />
+            <element signature="e#314#315#0" expanded="false" />
+            <element signature="e#344#345#0" expanded="false" />
+            <element signature="e#373#374#0" expanded="false" />
+            <element signature="e#398#399#0" expanded="false" />
+            <element signature="e#434#435#0" expanded="false" />
+            <element signature="e#462#463#0" expanded="false" />
+            <element signature="e#497#498#0" expanded="false" />
+            <element signature="e#528#529#0" expanded="false" />
+            <element signature="e#576#577#0" expanded="false" />
+            <element signature="e#616#617#0" expanded="false" />
+            <element signature="e#652#653#0" expanded="false" />
+            <element signature="e#684#685#0" expanded="false" />
+            <element signature="e#734#735#0" expanded="false" />
+            <element signature="e#776#777#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/dao/ZUserDAO.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="100">
-          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="13" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenter/module/file/model/NetFileDO.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="9" column="46" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="46" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/basic-core/src/main/java/com/maoding/core/base/BaseEntity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1212">
-          <caret line="78" column="16" selection-start-line="78" selection-start-column="16" selection-end-line="78" selection-end-column="16" />
-          <folding>
-            <element signature="e#1072#1073#0" expanded="true" />
-            <element signature="e#1116#1117#0" expanded="true" />
-            <element signature="e#1612#1613#0" expanded="true" />
-            <element signature="e#1665#1666#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectCostPointEntity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="5" column="35" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectCostPointDetailEntity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="5" column="41" selection-start-line="5" selection-start-column="41" selection-end-line="5" selection-end-column="41" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectCostPaymentDetailEntity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="9" column="37" selection-start-line="9" selection-start-column="37" selection-end-line="9" selection-end-column="37" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/ProjectDynamicsDO.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/model/DynamicDO.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2525">
-          <caret line="135" column="0" selection-start-line="135" selection-start-column="0" selection-end-line="135" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common-module-dynamic/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-5089">
-          <caret line="11" column="37" selection-start-line="11" selection-start-column="37" selection-end-line="11" selection-end-column="37" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="350">
-          <caret line="14" column="37" selection-start-line="14" selection-start-column="37" selection-end-line="14" selection-end-column="37" />
+        <state relative-caret-position="275">
+          <caret line="22" column="14" selection-start-line="22" selection-start-column="14" selection-end-line="22" selection-end-column="14" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/file-center-bll/src/main/java/com/maoding/filecenter/constDefine/NetFileType.java">
+    <entry file="file://$PROJECT_DIR$/common-module-companyDisk/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+        <state relative-caret-position="-5012">
+          <caret line="20" column="12" selection-start-line="20" selection-start-column="12" selection-end-line="20" selection-end-column="35" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common-module-dynamic/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="250">
+          <caret line="34" column="34" selection-start-line="34" selection-start-column="34" selection-end-line="34" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/java/com/maoding/common/module/dynamic/dto/QueryDynamicDTO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="45" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common-module-dynamic/src/main/resources/mapper/dynamic/DynamicMapper.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="3" column="78" selection-start-line="3" selection-start-column="78" selection-end-line="3" selection-end-column="78" />
+          <folding>
+            <marker date="1498532120169" expanded="true" signature="389:1223" ph="select ifnul... company_user_id" />
+            <marker date="1498532120169" expanded="true" signature="1685:1704" ph="SELECT found... " />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -2026,7 +2220,7 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>basic-core</last-edited>
+          <last-edited>common-module-dynamic</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
