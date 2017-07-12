@@ -25,7 +25,7 @@ public class ProjectProcessNodeDO extends BaseEntity {
     private int status;//2:未完成，1：完成
 
     /**
-     *完成时间
+     * 完成时间
      */
     private String completeTime;
 

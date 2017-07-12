@@ -28,9 +28,17 @@ public class ApiResult<T> implements Serializable {
         return new ApiResult<>(code.getCode(), msg == null ? code.getComment() : msg, data);
     }
 
+    public static <E> ApiResult<E> success(E data) {
+        return success(null,data);
+    }
+
     public static <E> ApiResult<E> failed(String msg, E data) {
         ApiResultCode code = ApiResultCode.Failed;
         return new ApiResult<>(code.getCode(), msg == null ? code.getComment() : msg, data);
+    }
+
+    public static <E> ApiResult<E> failed(String msg) {
+        return failed(msg,null);
     }
 
     public static <E> ApiResult<E> error(String msg, E data) {

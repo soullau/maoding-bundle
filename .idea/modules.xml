@@ -13,6 +13,8 @@
       <module fileurl="file://$PROJECT_DIR$/im-easemob/im-easemob.iml" filepath="$PROJECT_DIR$/im-easemob/im-easemob.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/maoding-bundle.iml" filepath="$PROJECT_DIR$/.idea/maoding-bundle.iml" />
       <module fileurl="file://$PROJECT_DIR$/notify-endpoint/notify-endpoint.iml" filepath="$PROJECT_DIR$/notify-endpoint/notify-endpoint.iml" />
+      <module fileurl="file://$PROJECT_DIR$/web-admin/web-admin.iml" filepath="$PROJECT_DIR$/web-admin/web-admin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/web-admin-bll/web-admin-bll.iml" filepath="$PROJECT_DIR$/web-admin-bll/web-admin-bll.iml" />
     </modules>
   </component>
 </project>

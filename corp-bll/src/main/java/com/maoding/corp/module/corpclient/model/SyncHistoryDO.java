@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
  * Created by Wuwq on 2017/2/9.
  * 同步记录
  */
-@Table(name = "sync_history")
+@Table(name = "maoding_corp_sync_history")
 public class SyncHistoryDO extends BaseEntity {
     /*协同端id*/
     private String corpEndpoint;

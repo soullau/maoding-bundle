@@ -20,6 +20,4 @@ public interface SyncCompanyServise {
     ApiResult select(String corpEndpoint);
 
     ApiResult syncToRedis();
-
-    ApiResult pushSyncCmd(String syncCompanyId);
 }

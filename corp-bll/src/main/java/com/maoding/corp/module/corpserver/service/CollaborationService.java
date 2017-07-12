@@ -31,7 +31,7 @@ public interface CollaborationService {
     /**
      * 获取项目节点（含任务成员状态信息）
      */
-    List<CoProjectPhaseDTO> listNode(String companyId, String projectId) throws Exception;
+    List<CoProjectPhaseDTO> listNode(String projectId) throws Exception;
 
 
     /**
@@ -40,9 +40,19 @@ public interface CollaborationService {
     ApiResult login(Map<String, Object> map) throws Exception;
 
     /**
-     * 协同同步通知
+     * 推送同步指令强制同步一个组织下面的所有
      */
-    void pushChanges(String companyId, String type, String projectId);
+    void pushSyncCMD_SyncAllByCompany(String syncCompanyId);
+
+    /**
+     * 推送同步指令强制同步一个Endpoint下面的所有
+     */
+    void pushSyncCMD_SyncAllByEndpoint(String endpoint);
+
+    /**
+     * 推送同步指令PT（触发条件：阶段变动（PT0）、签发变动（PT1）、生产变动（PT2））
+     */
+    void pushSyncCMD_PT(String projectId, String taskPath, String syncCmd);
 
     /**
      * 完成我的任务

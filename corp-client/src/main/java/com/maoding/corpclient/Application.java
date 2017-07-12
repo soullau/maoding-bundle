@@ -77,4 +77,13 @@ public class Application extends SpringBootServletInitializer {
     public ApiResult updateCorpSizeOnCompanyDisk(@RequestBody Map<String, Object> param) throws Exception {
         return coService.updateCorpSizeOnCompanyDisk(param);
     }
+
+    /**
+     * 根据Endpoint同步所有内容
+     */
+    @RequestMapping(value = "/system/syncAllByEndpoint", method = RequestMethod.GET)
+    @ResponseBody
+    public ApiResult syncAllByEndpoint() throws Exception {
+        return coService.syncAllByEndpoint(CorpClientConfig.EndPoint);
+    }
 }

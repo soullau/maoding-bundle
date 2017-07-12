@@ -24,4 +24,6 @@ public class CorpServer {
     public static final String URL_HANDLE_MY_TASK_BY_PROJECT_NODE_ID = "/collaboration/handleMyTaskByProjectNodeId";
 
     public static final String URL_GET_SYNC_COMPANY="/syncCompany/select";
+
+    public static final String URL_SYNC_ALL_BY_ENDPOINT="/collaboration/syncAllByEndpoint";
 }

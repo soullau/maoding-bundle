@@ -10,14 +10,19 @@ import java.util.Map;
  */
 public interface SyncService {
     /**
+     * 根据端点拉取组织变更
+     */
+    void pullChanges_C(String endpoint);
+
+    /**
+     * 根据端点和项目ID拉取变更
+     */
+    void pullChanges_P_ID(String endpoint, String projectId);
+
+    /**
      * 拉取变更
      */
     void pullChanges(String corpEndpoint) throws Exception;
-
-    /**
-     * 拉取指定组织的变更
-     */
-    void pullChangesByCompany(String corpEndpoint, String companyId);
 
     /**
      * 从业务系统拉取数据（GET）

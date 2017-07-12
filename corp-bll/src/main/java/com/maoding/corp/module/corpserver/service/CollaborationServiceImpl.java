@@ -6,14 +6,9 @@ import com.maoding.constDefine.corp.RKey;
 import com.maoding.constDefine.corp.SyncCmd;
 import com.maoding.core.base.BaseService;
 import com.maoding.core.bean.ApiResult;
-import com.maoding.corp.module.corpserver.dao.CollaborationDAO;
-import com.maoding.corp.module.corpserver.dao.MyTaskDAO;
-import com.maoding.corp.module.corpserver.dao.ProcessNodeDAO;
-import com.maoding.corp.module.corpserver.dao.ProjectTaskDAO;
+import com.maoding.corp.module.corpserver.dao.*;
 import com.maoding.corp.module.corpserver.dto.*;
-import com.maoding.corp.module.corpserver.model.AccountDO;
-import com.maoding.corp.module.corpserver.model.MyTaskDO;
-import com.maoding.corp.module.corpserver.model.ProjectTaskDO;
+import com.maoding.corp.module.corpserver.model.*;
 import com.maoding.utils.MD5Helper;
 import com.maoding.utils.StringUtils;
 import org.redisson.api.RLock;
@@ -24,12 +19,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import java.sql.Timestamp;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -46,6 +39,9 @@ public class CollaborationServiceImpl extends BaseService implements Collaborati
     private CollaborationDAO collaborationDao;
 
     @Autowired
+    private ProjectMemberDAO projectMemberDAO;
+
+    @Autowired
     private MyTaskDAO myTaskDao;
 
     @Autowired
@@ -56,6 +52,9 @@ public class CollaborationServiceImpl extends BaseService implements Collaborati
 
     @Autowired
     private ProjectTaskDAO projectTaskDao;
+
+    @Autowired
+    private SyncCompanyDAO syncCompanyDao;
 
     @Override
     public List<CoCompanyDTO> listCompanyByIds(List<String> companyIds) {
@@ -85,15 +84,15 @@ public class CollaborationServiceImpl extends BaseService implements Collaborati
      * 获取项目节点（含任务成员状态信息）
      */
     @Override
-    public List<CoProjectPhaseDTO> listNode(String companyId, String projectId) throws Exception {
+    public List<CoProjectPhaseDTO> listNode(String projectId) throws Exception {
 
         //读取协同组织
         Set<String> syncCompanies = Sets.newHashSet();
         try {
-            RReadWriteLock cLock = redissonClient.getReadWriteLock("Lock_" + RKey.CorpCompanies);
+            RReadWriteLock cLock = redissonClient.getReadWriteLock(RKey.LOCK_CORP_EP_C);
             RLock r = cLock.readLock();
             r.lock(5, TimeUnit.SECONDS);
-            RSet<String> set_companies = redissonClient.getSet(RKey.CorpCompanies);
+            RSet<String> set_companies = redissonClient.getSet(RKey.CORP_EP_C);
             syncCompanies = set_companies.readAll();
             r.unlock();
         } catch (Exception e) {
@@ -120,7 +119,10 @@ public class CollaborationServiceImpl extends BaseService implements Collaborati
                 result.add(coPhase);
 
                 //根据路径筛选阶段子任务(按层级排序）
-                List<ProjectTaskDO> childTasks = tasks.stream().filter(t -> t.getTaskType() != 1 && StringUtils.startsWithIgnoreCase(t.getTaskPath(), phase.getId())).sorted(Comparator.comparingLong(c -> c.getTaskLevel() * 100000L + Timestamp.valueOf(c.getCreateDate()).getTime())).collect(Collectors.toList());
+                /*List<ProjectTaskDO> childTasks = tasks.stream().filter(t -> t.getTaskType() != 1 && StringUtils.startsWithIgnoreCase(t.getTaskPath(), phase.getId())).sorted(Comparator.comparingLong(c -> c.getTaskLevel() * 100000L + Timestamp.valueOf(c.getCreateDate()).getTime())).collect(Collectors.toList());*/
+
+                //根据路径筛选阶段子任务(按层级排序）
+                List<ProjectTaskDO> childTasks = tasks.stream().filter(t -> t.getTaskType() != 1 && StringUtils.startsWithIgnoreCase(t.getTaskPath(), phase.getId())).sorted(Comparator.comparingLong(c -> c.getTaskLevel() * 100000L + (c.getSeq() == 0 ? Timestamp.valueOf(c.getCreateDate()).getTime() : c.getSeq()))).collect(Collectors.toList());
 
                 if (childTasks.size() <= 0)
                     continue;
@@ -143,7 +145,7 @@ public class CollaborationServiceImpl extends BaseService implements Collaborati
                     coPhase.addTask(coTask);
 
                     //填充同步组织任务成员
-                    if (companyId.equalsIgnoreCase(ct.getCompanyId()) || syncCompanies.stream().anyMatch(c -> StringUtils.endsWithIgnoreCase(c, ":" + ct.getCompanyId())))
+                    if (syncCompanies.stream().anyMatch(c -> StringUtils.endsWithIgnoreCase(c, ":" + ct.getCompanyId())))
                         fillMember(coTask);
                 }
             }
@@ -154,34 +156,29 @@ public class CollaborationServiceImpl extends BaseService implements Collaborati
 
     //填充任务成员
     private void fillMember(CoTaskDTO coTask) {
-        //获取所有的流程节点
-        List<CoProjectProcessDTO> processes = collaborationDao.listProjectProcessByTaskId(coTask.getId(), null);
-        for (CoProjectProcessDTO process : processes) {
+        //处理设计人员
+        List<CoProjectProcessNodeDTO> ppNodes = processNodeDao.listProcessNodeByTaskId(coTask.getId());
+        for (CoProjectProcessNodeDTO node : ppNodes) {
 
-            //处理设计人员
-            List<CoProjectProcessNodeDTO> ppNodes = processNodeDao.listProcessNodeByProcessId(process.getId(), null);
-            for (CoProjectProcessNodeDTO node : ppNodes) {
+            CoTaskMemberDTO coMember = new CoTaskMemberDTO();
+            coMember.setId(node.getAccountId());
+            coMember.setRole(node.getNodeName());
+            coMember.setPeerID(node.getId());
+            coMember.setState(StringUtils.isBlank(node.getCompleteTime()) ? 0 : 1);
 
-                CoTaskMemberDTO coMember = new CoTaskMemberDTO();
-                coMember.setId(node.getAccountId());
-                coMember.setRole(node.getNodeName());
-                coMember.setPeerID(node.getId());
-                coMember.setState(StringUtils.isBlank(node.getCompleteTime()) ? 0 : 1);
+            coTask.addMember(coMember);
+        }
 
-                coTask.addMember(coMember);
-            }
+        //处理任务负责人
+        ProjectMemberDO taskPrincipal = projectMemberDAO.getTaskPrincipal(coTask.getId());
+        if (taskPrincipal != null) {
+            CoTaskMemberDTO coMember = new CoTaskMemberDTO();
+            coMember.setId(taskPrincipal.getAccountId());
+            coMember.setRole("任务负责人");
+            coMember.setPeerID("");
+            coMember.setState(0);
 
-            //处理任务负责人
-            CoUserDTO user = collaborationDao.getTaskPrincipal(coTask.getId());
-            if (user != null) {
-                CoTaskMemberDTO coMember = new CoTaskMemberDTO();
-                coMember.setId(user.getAccountId());
-                coMember.setRole("任务负责人");
-                coMember.setPeerID("");
-                coMember.setState(0);
-
-                coTask.addMember(coMember);
-            }
+            coTask.addMember(coMember);
         }
     }
 
@@ -254,7 +251,7 @@ public class CollaborationServiceImpl extends BaseService implements Collaborati
             return ApiResult.failed("父生产节点已处于已完成状态，不允许激活！", null);
 
         //任务务负责人
-        CoUserDTO taskPrincipal = collaborationDao.getTaskPrincipal(pTask.getId());
+        ProjectMemberDO taskPrincipal = projectMemberDAO.getTaskPrincipal(pTask.getId());
 
         //是否任务负责人
         if (taskPrincipal != null && taskPrincipal.getAccountId().equals(node.getAccountId())) {
@@ -302,63 +299,190 @@ public class CollaborationServiceImpl extends BaseService implements Collaborati
         }
 
         //推送同步指令
-        pushChanges(pTask.getCompanyId(), SyncCmd.PT, pTask.getProjectId());
+        pushSyncCMD_PT(pTask.getProjectId(), pTask.getTaskPath(), SyncCmd.PT2);
         return ApiResult.success("节点成功设为未完成！", null);
     }
 
-    //推送同步指令
+    private List<String> listMatchEndpoint(String[] companyIds) {
+        Set<String> endpoints = Sets.newHashSet();
+        //读取协同团队
+        RReadWriteLock cLock = redissonClient.getReadWriteLock(RKey.LOCK_CORP_EP_C);
+        try {
+
+            RLock r = cLock.readLock();
+            r.lock(5, TimeUnit.SECONDS);
+            RSet<String> set_companies = redissonClient.getSet(RKey.CORP_EP_C);
+            Set<String> companies = set_companies.readAll();
+            r.unlock();
+
+            //匹配团队
+            companies.forEach(c -> {
+                String[] splits = StringUtils.split(c, ":");
+                if (splits.length == 2 && Arrays.stream(companyIds).anyMatch(id -> id.equalsIgnoreCase(splits[1]))) {
+                    endpoints.add(splits[0]);
+                }
+            });
+        } catch (Exception ex) {
+            log.error("getMatchesByCompanyId 发生异常", ex);
+        }
+
+        return Lists.newArrayList(endpoints);
+    }
+
+    private List<String> listCompanyIdByProjectId(String projectId) {
+        List<String> companyIds = collaborationDao.listCompanyIdByProjectId(projectId);
+        return companyIds;
+    }
+
+    /**
+     * 推送同步指令强制同步一个Endpoint下面的所有
+     */
     @Override
-    public void pushChanges(String companyId, String syncCmd, String projectId) {
-        CompletableFuture.runAsync(() -> {
+    public void pushSyncCMD_SyncAllByEndpoint(String endpoint) {
+        if (StringUtils.isBlank(endpoint)) {
+            log.error("参数 endpoint 不能为空");
+            return;
+        }
+
+        Example example = new Example(SyncCompanyDO.class);
+        example.createCriteria()
+                .andCondition("corp_endpoint = ", endpoint);
+
+        List<SyncCompanyDO> scs = syncCompanyDao.selectByExample(example);
+        if (scs != null && scs.size() > 0) {
+            scs.forEach(sc -> {
+                syncAll(sc.getCorpEndpoint(), sc.getCompanyId());
+            });
+        }
+    }
+
+    /**
+     * 推送同步指令强制同步一个组织下面的所有
+     */
+    @Override
+    public void pushSyncCMD_SyncAllByCompany(String syncCompanyId) {
+        if (StringUtils.isBlank(syncCompanyId)) {
+            log.error("参数 syncCompanyId 不能为空");
+            return;
+        }
+
+        SyncCompanyDO sc = syncCompanyDao.selectByPrimaryKey(syncCompanyId);
+        if (sc == null)
+            return;
+
+        syncAll(sc.getCorpEndpoint(), sc.getCompanyId());
+    }
+
+    private void syncAll(String endpoint, String companyId) {
+
+        String lockKey = String.format(RKey.LOCK_CORP_EP_SYNC_C_PATTERN, endpoint).toUpperCase();
+        String key = String.format(RKey.CORP_EP_SYNC_C_PATTERN, endpoint).toUpperCase();
+        try {
+            RReadWriteLock cLock = redissonClient.getReadWriteLock(lockKey);
+            RLock r = cLock.readLock();
+            r.lock(5, TimeUnit.SECONDS);
+
+            RSet<String> changes = redissonClient.getSet(key);
+            changes.add(SyncCmd.CU + ":" + companyId);
+            changes.add(SyncCmd.CD + ":" + companyId);
+            r.unlock();
+            log.info("端点 {} 添加协同变更: {}", endpoint, SyncCmd.CU + ":" + companyId);
+            log.info("端点 {} 添加协同变更: {}", endpoint, SyncCmd.CD + ":" + companyId);
+        } catch (Exception ex) {
+            log.error("syncAll 发生异常#1", ex);
+        }
+
+        List<String> projectIds = collaborationDao.listProjectIdByCompanyId(companyId);
+        projectIds.forEach(projectId -> {
+            String lockKey2 = String.format(RKey.LOCK_CORP_EP_SYNC_P_ID_PATTERN, endpoint, projectId).toUpperCase();
+            String key2 = String.format(RKey.CORP_EP_SYNC_P_ID_PATTERN, endpoint, projectId).toUpperCase();
             try {
-                //读取协同组织
-                RReadWriteLock cLock = redissonClient.getReadWriteLock("Lock_" + RKey.CorpCompanies);
+                RReadWriteLock cLock = redissonClient.getReadWriteLock(lockKey2);
                 RLock r = cLock.readLock();
                 r.lock(5, TimeUnit.SECONDS);
-                RSet<String> set_companies = redissonClient.getSet(RKey.CorpCompanies);
-                Set<String> companies = set_companies.readAll();
+                RSet<String> changes = redissonClient.getSet(key2);
+                changes.add(SyncCmd.PALL);
                 r.unlock();
+                log.info("端点 {} 项目 {} 添加协同变更: {}", endpoint, projectId, SyncCmd.PALL);
+            } catch (Exception ex) {
+                log.error("syncAll 发生异常#2", ex);
+            }
 
-                if (companies.size() == 0)
-                    return;
-
-                //匹配组织
-                List<String> matches = Lists.newArrayList();
-                companies.forEach(c -> {
-                    if (StringUtils.endsWithIgnoreCase(c, ":" + companyId))
-                        matches.add(c);
-                });
-
-                if (matches.size() == 0)
-                    return;
-
-                //写入变更
-                matches.forEach(sc -> {
-
-                    String setName = RKey.CorpChanges + ":" + sc;
-                    RLock sLock = redissonClient.getLock("Lock_" + setName);
-                    sLock.lock(5, TimeUnit.SECONDS);
-
-                    RSet<Object> changes = redissonClient.getSet(setName);
-
-                    String change;
-                    if (StringUtils.equalsIgnoreCase(syncCmd, SyncCmd.ALL) || StringUtils.equalsIgnoreCase(syncCmd, SyncCmd.CU))
-                        change = syncCmd;
-                    else
-                        change = syncCmd + ":" + projectId;
-
-                    changes.add(change);
-
-                    log.debug("{} 添加协同变更: {}", setName, change);
-
-                    sLock.unlock();
-
-                });
-
-            } catch (Exception e) {
-                log.error("推送协同变更发生异常", e);
-                //TODO 考虑失败重试
+            try {
+                lockKey2 = String.format(RKey.LOCK_CORP_EP_SYNC_P_PATTERN, endpoint).toUpperCase();
+                key2 = String.format(RKey.CORP_EP_SYNC_P_PATTERN, endpoint).toUpperCase();
+                RReadWriteLock cLock = redissonClient.getReadWriteLock(lockKey2);
+                RLock r = cLock.readLock();
+                r.lock(5, TimeUnit.SECONDS);
+                RSet<String> changes = redissonClient.getSet(key2);
+                changes.add(projectId);
+                r.unlock();
+            } catch (Exception ex) {
+                log.error("syncAll 发生异常#3", ex);
             }
         });
+    }
+
+
+    /**
+     * 推送同步指令PT（触发条件：阶段变动（PT0）、签发变动（PT1）、生产变动（PT2））
+     */
+    @Override
+    public void pushSyncCMD_PT(String projectId, String taskPath, String syncCmd) {
+        if (StringUtils.isBlank(projectId) || StringUtils.isBlank(taskPath)) {
+            log.error("pushSyncCMD_PT 的参数 projectId 和 taskPath 不能为空");
+            return;
+        }
+
+        List<String> companyIds = listCompanyIdByProjectId(projectId);
+
+        String rootNodeId = getRootNodeIdByTaskPath(taskPath);
+
+        CompletableFuture.runAsync(() -> {
+            List<String> endpoints = listMatchEndpoint(companyIds.toArray(new String[companyIds.size()]));
+            if (endpoints == null || endpoints.size() == 0)
+                return;
+
+            //写入变更
+            endpoints.forEach(ep -> {
+                try {
+                    String lockKey = String.format(RKey.LOCK_CORP_EP_SYNC_P_ID_PATTERN, ep, projectId).toUpperCase();
+                    String key = String.format(RKey.CORP_EP_SYNC_P_ID_PATTERN, ep, projectId).toUpperCase();
+                    RReadWriteLock cLock = redissonClient.getReadWriteLock(lockKey);
+                    RLock r = cLock.readLock();
+                    r.lock(5, TimeUnit.SECONDS);
+                    RSet<String> changes = redissonClient.getSet(key);
+                    changes.add(syncCmd + ":" + rootNodeId);
+
+                    r.unlock();
+                    log.info("端点 {} 项目 {} 添加协同变更: {}", ep, projectId, syncCmd + ":" + rootNodeId);
+                } catch (Exception ex) {
+                    log.error("pushSyncCMD_PT 发生异常#1", ex);
+                }
+
+                try {
+                    String lockKey = String.format(RKey.LOCK_CORP_EP_SYNC_P_PATTERN, ep).toUpperCase();
+                    String key = String.format(RKey.CORP_EP_SYNC_P_PATTERN, ep).toUpperCase();
+                    RReadWriteLock cLock = redissonClient.getReadWriteLock(lockKey);
+                    RLock r = cLock.readLock();
+                    r.lock(5, TimeUnit.SECONDS);
+                    RSet<String> changes = redissonClient.getSet(key);
+                    changes.add(projectId);
+                    r.unlock();
+                } catch (Exception ex) {
+                    log.error("pushSyncCMD_PT 发生异常#2", ex);
+                }
+            });
+        });
+    }
+
+    /**
+     * 根据TaskPath截取根节点ID
+     */
+    private String getRootNodeIdByTaskPath(String taskPath) {
+        int index = taskPath.indexOf("-");
+        if (index == -1)
+            return taskPath;
+        return taskPath.substring(0, index);
     }
 }

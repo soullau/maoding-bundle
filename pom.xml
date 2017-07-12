@@ -20,6 +20,8 @@
         <module>file-center</module>
         <module>notify-endpoint</module>
         <module>im-easemob</module>
+        <module>web-admin</module>
+        <module>web-admin-bll</module>
     </modules>
 
     <repositories>

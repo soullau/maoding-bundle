@@ -2,7 +2,6 @@ package com.maoding.corp.module.corpclient.dao;
 
 import com.maoding.core.base.BaseDao;
 import com.maoding.corp.module.corpclient.model.SyncTaskDO;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -12,9 +11,21 @@ import java.util.List;
 public interface SyncTaskDAO extends BaseDao<SyncTaskDO> {
 
     /**
-     * 查询未完成的任务
+     * 查询未完成的任务（待执行、执行中）
      */
-    List<SyncTaskDO> selectUnfinishedTasks(@Param("groupId") String groupId, @Param("count") int count);
+    List<SyncTaskDO> listUnfinishedTask(String endpoint);
 
+    /**
+     * 查询待执行的任务
+     */
+    List<SyncTaskDO> listWaitRuningTask(String endpoint);
 
+    /**
+     * 查询执行中的任务
+     */
+    List<SyncTaskDO> listRuningTask(String endpoint);
+
+    int updateRunngingAsWaitRunningStatus();
+
+    int updateWithOptimisticLock(SyncTaskDO o);
 }

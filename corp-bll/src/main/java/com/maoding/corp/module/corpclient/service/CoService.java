@@ -2,7 +2,6 @@ package com.maoding.corp.module.corpclient.service;
 
 import com.maoding.core.bean.ApiResult;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 
 /**
@@ -29,5 +28,9 @@ public interface CoService {
      */
     ApiResult handleMyTaskByProjectNodeId(Map<String, Object> param) throws Exception;
 
+    /**
+     * 同步端点下所有内容
+     */
+    ApiResult syncAllByEndpoint(String endpoint) throws Exception;
 
 }

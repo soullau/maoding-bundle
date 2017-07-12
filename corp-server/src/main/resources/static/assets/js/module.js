@@ -979,8 +979,8 @@ $out+='" class="btn btn-success btn-xs">重新统计文档库和其他</a><br/> 
 $out+=$escape(o.remarks);
 $out+='</td> <td> <a name="btnRemove" href="javacript:void(0)" data-id="';
 $out+=$escape(o.id);
-$out+='" class="btn btn-danger btn-sm ">删除</a>&nbsp;<a name="btnSync" href="javacript:void(0)" data-company-id="';
-$out+=$escape(o.companyId);
+$out+='" class="btn btn-danger btn-sm ">删除</a>&nbsp;<a name="btnSync" href="javacript:void(0)" data-id="';
+$out+=$escape(o.id);
 $out+='" class="btn btn-success btn-sm ">立即同步</a> </td> </tr> ';
 });
 return new String($out);
@@ -1177,7 +1177,7 @@ var corpserver_setting = {
         });
 
         $('a[name="btnSync"]').click(function () {
-            var id = $(this).attr('data-company-id');
+            var id = $(this).attr('data-id');
             var ajaxOpts = {
                 url: restApi.url_syncCompany_pushSyncAllCmd + '/' + id
             };

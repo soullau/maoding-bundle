@@ -214,10 +214,7 @@ public class NetFileServiceImpl extends BaseService implements NetFileService {
                 return ApiResult.failed("你没有权限进行该操作", null);
         }
 
-        //TODO  因为是逻辑删除，需要定时任务清理
-        /*ApiResult ar=fastdfsService.delete(netFileDO.getFileGroup(),netFileDO.getFilePath());
-        if(!ar.isSuccessful())
-            return ar;*/
+        //TODO  逻辑删除，需要定时任务清理
 
         NetFileDO updateObj = new NetFileDO();
         updateObj.setId(dto.getId());

@@ -151,7 +151,7 @@ public class CompanyDiskServiceImpl extends BaseService implements CompanyDiskSe
     /**
      * 当文档库变更时重新计算容量（非线程安全）
      */
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW,rollbackFor = Exception.class)
     @Override
     public ApiResult recalcSizeOnFileChangedUnsafely(String companyId, FileSizeSumType sumType, FileChangeType changeType, Long fileSize) {
         if (StringUtils.isBlank(companyId))
@@ -198,7 +198,7 @@ public class CompanyDiskServiceImpl extends BaseService implements CompanyDiskSe
     /**
      * 根据组织ID重新统计指定类型文件大小（非线程安全）
      */
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW,rollbackFor = Exception.class)
     @Override
     public ApiResult recalcSizeUnsafely(String companyId, FileSizeSumType sumType) {
         if (StringUtils.isBlank(companyId))
@@ -252,7 +252,7 @@ public class CompanyDiskServiceImpl extends BaseService implements CompanyDiskSe
     /**
      * 根据组织ID更新协同占用空间（非线程安全）
      */
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW,rollbackFor = Exception.class)
     @Override
     public ApiResult updateCorpSizeUnsafely(String companyId, Long corpSize) {
         if (StringUtils.isBlank(companyId))

@@ -1,9 +1,9 @@
 package com.maoding.corp.module.corpserver.service;
 
 import com.google.common.collect.Lists;
+import com.maoding.constDefine.corp.RKey;
 import com.maoding.core.base.BaseService;
 import com.maoding.core.bean.ApiResult;
-import com.maoding.constDefine.corp.RKey;
 import com.maoding.corp.module.corpserver.dao.SyncCompanyDAO;
 import com.maoding.corp.module.corpserver.dto.SyncCompanyDTO_Create;
 import com.maoding.corp.module.corpserver.dto.SyncCompanyDTO_Select;
@@ -39,25 +39,27 @@ public class SyncCompanyServiseImpl extends BaseService implements SyncCompanySe
     private RedissonClient redissonClient;
 
     //增加redis记录（读写锁）
-    private void redisAdd(SyncCompanyDO obj) {
-        RReadWriteLock lock = redissonClient.getReadWriteLock("Lock_" + RKey.CorpCompanies);
+    private void redisAdd(SyncCompanyDO sc) {
+        RReadWriteLock lock = redissonClient.getReadWriteLock(RKey.LOCK_CORP_EP_C);
         RLock r = lock.writeLock();
         r.lock(5, TimeUnit.SECONDS);
 
-        RSet<String> set = redissonClient.getSet(RKey.CorpCompanies);
-        set.add(obj.getCorpEndpoint() + ':' + obj.getCompanyId());
+        RSet<String> set = redissonClient.getSet(RKey.CORP_EP_C);
+        String item = String.format("%s:%s", sc.getCorpEndpoint(), sc.getCompanyId());
+        set.add(item);
 
         r.unlock();
     }
 
     //删除redis记录（读写锁）
     private void redisDelete(String corpEndpoint, String companyId) {
-        RReadWriteLock lock = redissonClient.getReadWriteLock("Lock_" + RKey.CorpCompanies);
+        RReadWriteLock lock = redissonClient.getReadWriteLock(RKey.LOCK_CORP_EP_C);
         RLock r = lock.writeLock();
         r.lock(5, TimeUnit.SECONDS);
 
-        RSet<String> set = redissonClient.getSet(RKey.CorpCompanies);
-        set.remove(corpEndpoint + ':' + companyId);
+        RSet<String> set = redissonClient.getSet(RKey.CORP_EP_C);
+        String item = String.format("%s:%s", corpEndpoint, companyId);
+        set.remove(item);
 
         r.unlock();
     }
@@ -149,24 +151,16 @@ public class SyncCompanyServiseImpl extends BaseService implements SyncCompanySe
         List<String> vals = Lists.newArrayList();
         dtos.forEach(sc -> vals.add(sc.getCorpEndpoint() + ":" + sc.getCompanyId()));
 
-        RReadWriteLock lock = redissonClient.getReadWriteLock("Lock_" + RKey.CorpCompanies);
+        RReadWriteLock lock = redissonClient.getReadWriteLock(RKey.LOCK_CORP_EP_C);
         RLock r = lock.readLock();
         r.lock(5, TimeUnit.SECONDS);
 
-        RSet<String> set = redissonClient.getSet(RKey.CorpCompanies);
+        RSet<String> set = redissonClient.getSet(RKey.CORP_EP_C);
         set.clear();
         set.addAll(vals);
 
         r.unlock();
 
         return ApiResult.success(null, dtos);
-    }
-
-    /**
-     * 推送组织同步指令
-     */
-    @Override
-    public ApiResult pushSyncCmd(String syncCompanyId) {
-        return null;
     }
 }

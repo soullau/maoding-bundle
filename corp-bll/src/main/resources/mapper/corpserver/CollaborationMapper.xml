@@ -48,13 +48,24 @@
         ORDER BY p.create_date desc
     </select>
 
+    <select id="listProjectIdByCompanyId" resultType="java.lang.String"
+            parameterType="java.lang.String">
+        SELECT p.id
+        FROM maoding_web_project p
+        LEFT JOIN maoding_web_project_task t ON p.id = t.project_id AND t.task_status = '0'
+        WHERE
+            p.company_id = #{companyId} OR p.company_bid = #{companyId} OR t.company_id = #{companyId}
+        GROUP BY p.id
+        ORDER BY p.create_date DESC
+    </select>
+
     <select id="listProjectTask" resultType="com.maoding.corp.module.corpserver.model.ProjectTaskDO"
             parameterType="java.util.Map">
         SELECT
         t.*
         FROM
         maoding_web_project_task t
-        WHERE (t.task_type=0 OR t.task_type=1 OR t.task_type=2)
+        WHERE (t.task_type=0 OR t.task_type=1 OR t.task_type=2) AND (t.task_status='0' OR t.task_status='1')
         <if test="projectId != null">
             AND t.project_id = #{projectId,jdbcType=VARCHAR}
         </if>
@@ -62,37 +73,6 @@
             <![CDATA[  and t.create_date <= #{syncDate,jdbcType=VARCHAR}  ]]>
         </if>
         ORDER BY t.task_level,t.create_date
-    </select>
-
-    <select id="listProjectProcessByTaskId"
-            resultType="com.maoding.corp.module.corpserver.dto.CoProjectProcessDTO"
-            parameterType="java.util.Map">
-        select a.id,a.process_name,a.company_id,a.project_id,a.task_manage_id
-        from maoding_web_project_process a
-        where a.task_manage_id = #{taskId,jdbcType=VARCHAR} and a.status = 0
-        <if test="syncDate != null">
-            <![CDATA[  and a.create_date <= #{syncDate,jdbcType=VARCHAR}  ]]>
-        </if>
-        order by a.seq
-    </select>
-
-
-    <select id="getTaskPrincipal" resultType="com.maoding.corp.module.corpserver.dto.CoUserDTO"
-            parameterType="java.lang.String">
-        SELECT
-            u.id        AS companyUserId,
-            u.user_name AS companyUserName,
-            u.company_id,
-            a.id        AS accountId,
-            a.user_name AS
-                           accountName,
-            a.cellphone,
-            a.status
-        FROM maoding_web_project_task_responsibler r
-            LEFT JOIN maoding_web_company_user u ON r.target_id = u.id
-            LEFT JOIN maoding_web_account a ON a.id = u.user_id
-        WHERE r.type = 1 AND a.id IS NOT NULL
-              AND r.task_id = #{projectTaskId,jdbcType=VARCHAR}
     </select>
 
     <!-- 根据不同的参数查询我的任务 -->
@@ -132,6 +112,14 @@
         FROM maoding_web_company_user u
             LEFT JOIN maoding_web_account a ON a.id = u.user_id
         WHERE u.company_id = #{companyId,jdbcType=VARCHAR} AND a.id IS NOT NULL
+    </select>
+
+    <select id="listCompanyIdByProjectId" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT DISTINCT company_id
+        FROM maoding_web_project_task
+        <where>
+            <![CDATA[ project_id = #{projectId} AND task_status = '0' AND task_type < 3 ]]>
+        </where>
     </select>
 
     <select id="getAccountByCellphone" resultType="com.maoding.corp.module.corpserver.model.AccountDO"

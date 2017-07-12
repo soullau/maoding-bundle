@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public ApiResult MethodArgumentNotValidException(HttpServletRequest req, ConstraintViolationException ex) {
         StringBuffer errorMsg = new StringBuffer();
-        ex.getConstraintViolations().forEach(c->errorMsg.append(c.getMessage()).append(";"));
+        ex.getConstraintViolations().forEach(c -> errorMsg.append(c.getMessage()).append(";"));
         return ApiResult.failed("参数验证失败（#02）：" + errorMsg.toString(), null);
     }
 

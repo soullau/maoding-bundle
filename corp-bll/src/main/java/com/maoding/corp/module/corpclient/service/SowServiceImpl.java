@@ -58,7 +58,11 @@ public class SowServiceImpl extends BaseService implements SowService {
 
             for (int i = 0; i < users.size(); i++) {
                 CoUserDTO user = users.get(i);
-                statuss.add(user.getStatus().equals("0") ? "1" : "0");
+                if (user.getStatus() != null)
+                    statuss.add(user.getStatus().equals("0") ? "1" : "0");
+                else
+                    statuss.add("0");
+
                 ids.add(user.getAccountId());
                 names.add(user.getAccountName());
                 loginIds.add(user.getCellphone());
@@ -85,8 +89,8 @@ public class SowServiceImpl extends BaseService implements SowService {
      * 通过组织Id获取组织的项目
      */
     @Override
-    public ApiResult pushProjectByCompanyId(String companyId, LocalDateTime syncDate) throws Exception {
-        Map<String, Object> param = Maps.newHashMap();
+    public ApiResult pushProjectByCompanyId2(String companyId, LocalDateTime syncDate) throws Exception {
+        /*Map<String, Object> param = Maps.newHashMap();
         param.put("companyId", companyId);
         if (syncDate != null)
             param.put("syncDate", syncDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
@@ -108,7 +112,7 @@ public class SowServiceImpl extends BaseService implements SowService {
 
                     //判断项目是否有效，推送子节点信息
                     if (coProject.getStatus() == 1)
-                        setProjectNodes(companyId, p.getProjectId(), syncDate);
+                        setProjectNodes(p.getProjectId(), syncDate);
 
                 } else {
                     log.error("setProject 失败 ，postData:{} pushResult:{}", JsonUtils.obj2json(coProject), JsonUtils.obj2json(pushResult));
@@ -116,7 +120,7 @@ public class SowServiceImpl extends BaseService implements SowService {
             }
 
             return ApiResult.success(null, null);
-        }
+        }*/
         return ApiResult.failed(null, null);
     }
 
@@ -124,12 +128,7 @@ public class SowServiceImpl extends BaseService implements SowService {
      * 设置项目
      */
     @Override
-    public ApiResult setProject(String companyId, String projectId, LocalDateTime syncDate) throws Exception {
-       /* Map<String, Object> param = Maps.newHashMap();
-        param.put("companyId", companyId);
-        param.put("projectId", projectId);
-        if (syncDate != null)
-            param.put("syncDate", syncDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));*/
+    public ApiResult setProject(String projectId, LocalDateTime syncDate, Boolean pushAllNodes) throws Exception {
         ApiResult apiResult = syncService.pullFromCorpServer(CorpServer.URL_GET_PROJECT_BY_ID + '/' + projectId);
         if (!apiResult.isSuccessful()) {
             log.error("拉取项目（{}）失败：{}", projectId, apiResult.getMsg());
@@ -142,8 +141,6 @@ public class SowServiceImpl extends BaseService implements SowService {
         coProject.setId(resultDTO.getProjectId());
         coProject.setCode(resultDTO.getPstatus() + "nnn");
         coProject.setName(resultDTO.getProjectName());
-           /* if (!StringUtils.isBlank(resultDTO.getCreateBy()))
-                coProject.setOwerUserId(resultDTO.getCreateBy());*/
         coProject.setStatus(resultDTO.getPstatus().equals("0") ? 1 : 0);
 
         //推送到对方协同服务端
@@ -151,8 +148,8 @@ public class SowServiceImpl extends BaseService implements SowService {
         if (pushResult.isSuccessful()) {
 
             //判断项目是否有效，推送子节点信息
-            if (coProject.getStatus() == 1)
-                return setProjectNodes(companyId, projectId, syncDate);
+            if (coProject.getStatus() == 1 && pushAllNodes)
+                return setProjectNodes(projectId, syncDate, null);
 
             return ApiResult.success(null, null);
 
@@ -162,13 +159,15 @@ public class SowServiceImpl extends BaseService implements SowService {
         }
     }
 
+
     /**
      * 设置项目节点（含任务成员状态信息）
+     * @param phaseId 设为NULL则表示所有阶段
+     * @throws Exception
      */
     @Override
-    public ApiResult setProjectNodes(String companyId, String projectId, LocalDateTime syncDate) throws Exception {
+    public ApiResult setProjectNodes(String projectId, LocalDateTime syncDate, String phaseId) throws Exception {
         Map<String, Object> param = Maps.newHashMap();
-        param.put("companyId", companyId);
         param.put("projectId", projectId);
         if (syncDate != null)
             param.put("syncDate", syncDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
@@ -178,6 +177,9 @@ public class SowServiceImpl extends BaseService implements SowService {
             if (nodes.size() > 0) {
                 for (CoProjectPhaseDTO node : nodes) {
 
+                    if (phaseId != null && !node.getProjectPhaseId().equalsIgnoreCase(phaseId))
+                        continue;
+
                     //项目阶段
                     CoProjectPhaseDTO coPhase = new CoProjectPhaseDTO();
                     BeanUtils.copyProperties(node, coPhase);
@@ -185,6 +187,13 @@ public class SowServiceImpl extends BaseService implements SowService {
 
                     //推送阶段
                     PushResult pushResult = syncService.postToSOWServer(coPhase, SowServer.URL_SET_PROJECT_PHASE);
+                    if (!pushResult.isSuccessful()) {
+                        //有可能因为项目推送失败导致空引用，所以这里重推项目
+                        //TODO 后期要求对方先判断
+                        setProject(projectId, syncDate, false);
+                        pushResult = syncService.postToSOWServer(coPhase, SowServer.URL_SET_PROJECT_PHASE);
+                    }
+
                     if (pushResult.isSuccessful()) {
 
                         //判断阶段是否有效，推送子任务
@@ -195,6 +204,7 @@ public class SowServiceImpl extends BaseService implements SowService {
                         log.error("setProjectPhase 失败 ，postData:{} pushResult:{}", JsonUtils.obj2json(coPhase), JsonUtils.obj2json(pushResult));
                     }
                 }
+
                 //发布项目（同步任务文件夹）
                 return publicProject(projectId);
             }

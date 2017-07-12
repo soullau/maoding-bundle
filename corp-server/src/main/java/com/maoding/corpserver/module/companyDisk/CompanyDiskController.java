@@ -26,11 +26,10 @@ public class CompanyDiskController {
     @RequestMapping(value = "/recalcSizeByCompanyId", method = RequestMethod.POST)
     @ResponseBody
     public ApiResult recalcSizeByCompanyId(@RequestBody RecalcSizeDTO dto) {
-        if(dto.getSumType()==null)
+        if (dto.getSumType() == null)
             return companyDiskService.recalcSize(dto.getCompanyId(), null);
         return companyDiskService.recalcSize(dto.getCompanyId(), FileSizeSumType.valueOf(dto.getSumType()));
     }
-
 
 
     /**
@@ -39,7 +38,7 @@ public class CompanyDiskController {
     @RequestMapping(value = "/switchCorpDeployType", method = RequestMethod.POST)
     @ResponseBody
     public ApiResult switchCorpDeployType(@RequestBody CorpDeployTypeDTO dto) {
-        return companyDiskService.switchCorpDeployType(dto.getCompanyId(),dto.getCorpOnCloud());
+        return companyDiskService.switchCorpDeployType(dto.getCompanyId(), dto.getCorpOnCloud());
     }
 
     /**

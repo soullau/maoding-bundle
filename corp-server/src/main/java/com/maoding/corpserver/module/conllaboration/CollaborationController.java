@@ -70,9 +70,8 @@ public class CollaborationController extends BaseController {
     @RequestMapping(value = "/listNode", method = RequestMethod.POST)
     @ResponseBody
     public ApiResult listNode(@RequestBody Map<String, Object> param) throws Exception {
-        String companyId = (String) param.get("companyId");
         String projectId = (String) param.get("projectId");
-        List<CoProjectPhaseDTO> nodes = collaborationService.listNode(companyId, projectId);
+        List<CoProjectPhaseDTO> nodes = collaborationService.listNode(projectId);
         return ApiResult.success("获取项目节点成功！", nodes);
     }
 
@@ -95,5 +94,15 @@ public class CollaborationController extends BaseController {
             default:
                 return ApiResult.failed("未指定节点状态", null);
         }
+    }
+
+    /**
+     * 根据Endpoint同步所有内容
+     */
+    @RequestMapping(value = "/syncAllByEndpoint/{endpoint}", method = RequestMethod.GET)
+    @ResponseBody
+    public ApiResult syncAllByEndpoint(@PathVariable String endpoint) throws Exception {
+        collaborationService.pushSyncCMD_SyncAllByEndpoint(endpoint);
+        return ApiResult.success(null, null);
     }
 }

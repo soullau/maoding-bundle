@@ -2,19 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.maoding.corp.module.corpserver.dao.ProcessNodeDAO">
 
-    <select id="listProcessNodeByProcessId"
+    <select id="listProcessNodeByTaskId"
             resultType="com.maoding.corp.module.corpserver.dto.CoProjectProcessNodeDTO"
-            parameterType="java.util.Map">
+            parameterType="java.lang.String">
         select
         n.id, n.process_id, n.node_name, n.seq, n.node_seq,n.status,n.company_user_id,n.complete_time,u.user_name as
         companyUserName,a.id as accountId,a.user_name as accountName
         from maoding_web_project_process_node n
         LEFT JOIN maoding_web_company_user u on u.id = n.company_user_id
         LEFT JOIN maoding_web_account a on a.id=u.user_id
-        where n.process_id = #{processId,jdbcType=VARCHAR} AND a.id IS NOT NULL
-        <if test="syncDate != null">
-            <![CDATA[  and n.create_date <= #{syncDate,jdbcType=VARCHAR}  ]]>
-        </if>
+        where n.process_id = #{taskId} AND a.id IS NOT NULL
         order by n.seq
     </select>
 

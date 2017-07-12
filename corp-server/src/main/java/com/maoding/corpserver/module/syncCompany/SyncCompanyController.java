@@ -2,7 +2,6 @@ package com.maoding.corpserver.module.syncCompany;
 
 import com.maoding.core.base.BaseController;
 import com.maoding.core.bean.ApiResult;
-import com.maoding.constDefine.corp.SyncCmd;
 import com.maoding.corp.module.corpserver.dto.SyncCompanyDTO_Create;
 import com.maoding.corp.module.corpserver.dto.SyncCompanyDTO_Update;
 import com.maoding.corp.module.corpserver.service.CollaborationService;
@@ -69,12 +68,12 @@ public class SyncCompanyController extends BaseController {
     }
 
     /**
-     * 同步组织到Redis
+     * 根据SyncCompanyId同步所有内容
      */
     @RequestMapping(value = "/pushSyncAllCmd/{syncCompanyId}", method = RequestMethod.POST)
     @ResponseBody
     public ApiResult pushSyncAllCmd(@PathVariable String syncCompanyId) throws Exception {
-        collaborationService.pushChanges(syncCompanyId, SyncCmd.ALL,null);
-        return ApiResult.success(null,null);
+        collaborationService.pushSyncCMD_SyncAllByCompany(syncCompanyId);
+        return ApiResult.success(null, null);
     }
 }

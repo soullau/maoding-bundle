@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface ProcessNodeDAO extends BaseDao<ProjectProcessNodeDO> {
 
-    List<CoProjectProcessNodeDTO> listProcessNodeByProcessId(@Param("processId") String processId, @Param("syncDate") String syncDate);
+    List<CoProjectProcessNodeDTO> listProcessNodeByTaskId(String taskId);
 
     CoProjectProcessNodeDTO getProcessNodeById(String id);
 

@@ -65,4 +65,14 @@ public class CoServiceImpl extends BaseService implements CoService {
         ApiResult apiResult = syncService.pullFromCorpServer(param, CorpServer.URL_HANDLE_MY_TASK_BY_PROJECT_NODE_ID);
         return apiResult;
     }
+
+    /**
+     * 同步端点下所有内容
+     */
+    @Override
+    public ApiResult syncAllByEndpoint(String endpoint) throws Exception {
+        ApiResult apiResult = syncService.pullFromCorpServer(CorpServer.URL_SYNC_ALL_BY_ENDPOINT + "/" + endpoint);
+        return apiResult;
+    }
 }
+

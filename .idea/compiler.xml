@@ -32,6 +32,8 @@
         <module name="file-center-bll" />
         <module name="im-easemob" />
         <module name="notify-endpoint" />
+        <module name="web-admin" />
+        <module name="web-admin-bll" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -46,6 +48,8 @@
       <module name="im-easemob" target="1.8" />
       <module name="maoding-bundle" target="1.8" />
       <module name="notify-endpoint" target="1.8" />
+      <module name="web-admin" target="1.8" />
+      <module name="web-admin-bll" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

@@ -3,6 +3,7 @@ package com.maoding.filecenter.module.file;
 import com.maoding.core.bean.ApiResult;
 import com.maoding.filecenter.module.file.dto.DeleteDTO;
 import com.maoding.filecenter.module.file.dto.NetFileOrderDTO;
+import com.maoding.filecenter.module.file.dto.SaveCompanyLogoDTO;
 import com.maoding.filecenter.module.file.service.AttachmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -38,12 +39,30 @@ public class AttachmentController {
     }
 
     /**
+     * 保存公司logo
+     */
+    @RequestMapping(value = "/saveCompanyLogo", method = RequestMethod.POST)
+    @ResponseBody
+    public ApiResult saveCompanyLogo(@RequestBody SaveCompanyLogoDTO dto) throws Exception {
+        return attachmentService.saveCompanyLogo(dto);
+    }
+
+    /**
      * 上传公司轮播图
      */
     @RequestMapping(value = "/uploadCompanyBanner", method = RequestMethod.POST)
     @ResponseBody
     public ApiResult uploadCompanyBanner(HttpServletRequest request) throws Exception {
         return attachmentService.uploadCompanyBanner(request);
+    }
+
+    /**
+     * 上传组织认证附件
+     */
+    @RequestMapping(value = "/uploadOrgAuthenticationAttach", method = RequestMethod.POST)
+    @ResponseBody
+    public ApiResult uploadOrgAuthenticationAttach(HttpServletRequest request) throws Exception {
+        return attachmentService.uploadOrgAuthenticationAttach(request);
     }
 
     /**

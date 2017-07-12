@@ -1,6 +1,5 @@
 package com.maoding.corpclient;
 
-import com.maoding.corp.config.CorpClientConfig;
 import com.maoding.corp.module.corpclient.service.SyncTaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,13 +21,13 @@ public class StartupRunner implements CommandLineRunner {
     @Override
     public void run(String... strings) throws Exception {
         log.info("------- ResetTaskStatus Start -------");
-        syncTaskService.resetTaskStatus();
+        syncTaskService.resetTaskStatusOnStartup();
 
         if (!Application.EnableSchedule)
             return;
 
-        log.info("-------------- SyncAll Start --------------");
-        syncTaskService.syncAllCompanyUserAndProject(CorpClientConfig.EndPoint);
+        //log.info("-------------- SyncAll Start --------------");
+        //syncTaskService.syncAll(CorpClientConfig.EndPoint);
     }
 
 }

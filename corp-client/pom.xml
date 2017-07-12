@@ -256,7 +256,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.maoding.corpserver.Application</mainClass>
+                    <mainClass>com.maoding.corpclient.Application</mainClass>
                     <layout>ZIP</layout>
                 </configuration>
                 <executions>

@@ -9,4 +9,5 @@ public class SyncPriority {
     public static final int L1 = 1;
     public static final int L2 = 2;
     public static final int L3 = 3;
+    public static final int L4 = 4;
 }

@@ -20,17 +20,15 @@ public interface CollaborationDAO extends BaseDao<CollaborationDO> {
 
     List<CoCompanyDTO> listCompanyByIds(@Param("companyIds") List<String> companyIds);
 
+    List<String> listCompanyIdByProjectId(String projectId);
+
     List<ProjectDTO> listProjectByCompanyId(@Param("companyId") String companyId, @Param("syncDate") String syncDate);
+
+    List<String> listProjectIdByCompanyId(String companyId);
 
     ProjectDTO getProjectById(@Param("projectId") String projectId);
 
     List<CoUserDTO> listUserByCompanyId(@Param("companyId") String companyId);
 
-    List<CoProjectProcessDTO> listProjectProcessByTaskId(@Param("taskId") String taskId, @Param("syncDate") String syncDate);
-
     List<ProjectTaskDO> listProjectTask(@Param("projectId") String projectId, @Param("syncDate") String syncDate);
-
-    CoUserDTO getTaskPrincipal(@Param("projectTaskId") String projectTaskId);
-
-    Long sumDocmgrSizeByCompanyId(@Param("companyId") String companyId);
 }

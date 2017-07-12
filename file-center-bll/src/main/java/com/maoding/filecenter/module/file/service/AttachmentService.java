@@ -3,6 +3,7 @@ package com.maoding.filecenter.module.file.service;
 import com.maoding.core.bean.ApiResult;
 import com.maoding.filecenter.module.file.dto.DeleteDTO;
 import com.maoding.filecenter.module.file.dto.NetFileOrderDTO;
+import com.maoding.filecenter.module.file.dto.SaveCompanyLogoDTO;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -10,6 +11,11 @@ import javax.servlet.http.HttpServletRequest;
  * Created by Wuwq on 2017/05/27.
  */
 public interface AttachmentService {
+
+    /**
+     * 保存公司logo文件（仅Web端）
+     */
+    ApiResult saveCompanyLogo(SaveCompanyLogoDTO dto);
 
     /**
      * 上传公司logo图片
@@ -27,6 +33,11 @@ public interface AttachmentService {
      */
     ApiResult orderCompanyBanner(NetFileOrderDTO dto) throws Exception;
 
+
+    /**
+     *上传组织认证附件
+     */
+    ApiResult uploadOrgAuthenticationAttach(HttpServletRequest request) throws Exception;
 
     /**
      * 上传报销附件

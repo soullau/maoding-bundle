@@ -118,7 +118,7 @@ var corpserver_setting = {
         });
 
         $('a[name="btnSync"]').click(function () {
-            var id = $(this).attr('data-company-id');
+            var id = $(this).attr('data-id');
             var ajaxOpts = {
                 url: restApi.url_syncCompany_pushSyncAllCmd + '/' + id
             };

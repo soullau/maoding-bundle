@@ -65,5 +65,5 @@ mapper:
 # Redisson
 # ===================================================================
 redisson:
-    address: "redis://r-wz910fa53bf10114.redis.rds.aliyuncs.com:6379"
-    password: "ReMD864g"
+    address: "redis://r-wz9479a43c317664.redis.rds.aliyuncs.com:6379"
+    password: "M93Di3d2"
