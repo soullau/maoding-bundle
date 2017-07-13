@@ -176,14 +176,17 @@ public class OrgAuthServiceImpl extends BaseService implements OrgAuthService {
 
         OrgAuthAuditDO auditDO = new OrgAuthAuditDO();
         BeanUtils.copyProperties(authorizeResult,auditDO);
-        auditDO.setOrgId(authorizeResult.getId());
-        if (entity.getUpdateDate() != null) auditDO.setApproveDate(entity.getUpdateDate());
-        if (authorizeResult.getRejectType() != null) auditDO.setAuditMessage(authorizeResult.getRejectType().toString());
         auditDO.setIsNew(1);
-        if (entity.getApplyDate() != null) auditDO.setSubmitDate(entity.getApplyDate());
+        auditDO.setOrgId(authorizeResult.getId());
+        auditDO.setApproveDate(entity.getUpdateDate());
+        if (authorizeResult.getRejectType() != null) auditDO.setAuditMessage(authorizeResult.getRejectType().toString());
+        auditDO.setSubmitDate(entity.getApplyDate());
         auditDO.setCreateDate(entity.getUpdateDate());
         auditDO.setCreateBy(entity.getUpdateBy());
-        auditDO.resetUpdateDate();
+        auditDO.setUpdateBy(null);
+        auditDO.setUpdateDate(null);
+        auditDO.setAuditPerson(authorizeResult.getAuditorName());
+        auditDO.setStatus(entity.getAuthenticationStatus());
         auditDO.resetId();
         orgAuthAuditDAO.insert(auditDO);
 

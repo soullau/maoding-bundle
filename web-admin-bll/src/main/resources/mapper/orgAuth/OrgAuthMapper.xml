@@ -9,7 +9,7 @@
             a.id as id, a.org_name, a.authentication_status, a.operator_name, a.reject_reason, a.legal_representative
             ,a.business_license_number, a.business_license_type, a.apply_date, a.expiry_date
             ,b.company_name as org_alias
-            ,c.approve_date as approve_date,c.audit_person as audit_person,c.audit_message as audit_message
+            ,c.approve_date as audit_date,c.audit_person as auditor_name,convert(c.audit_message,signed) as reject_type
         from
             maoding_web_org_auth a
             INNER JOIN maoding_web_company b on (a.id=b.id)
