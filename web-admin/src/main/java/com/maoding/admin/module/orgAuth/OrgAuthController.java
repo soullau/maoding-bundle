@@ -8,9 +8,10 @@ import com.maoding.admin.module.orgAuth.service.OrgAuthService;
 import com.maoding.core.bean.ApiResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Created by Wuwq on 2017/07/11.
@@ -35,18 +36,6 @@ public class OrgAuthController {
     public ApiResult authorizeAuthentication(@RequestBody OrgAuthAuditDTO authorizeResult) throws Exception {
         OrgAuthDTO result = orgAuthService.authorizeAuthentication(authorizeResult);
         return (result!=null) ? ApiResult.success(result) : ApiResult.failed("审核失败");
-    }
-
-    /**
-     * 方法：列出申请审核记录
-     * 作者：zhangchengliang
-     * 日期：2017/7/11
-     */
-    @RequestMapping(value = "/listAuthentication", method = RequestMethod.POST)
-    @ResponseBody
-    public ApiResult listAuthentication(@RequestBody OrgAuthQueryDTO query) throws Exception {
-        List<OrgAuthDTO> result = orgAuthService.listAuthentication(query);
-        return ApiResult.success(result);
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.maoding.admin.module.orgAuth.service;
 
+import com.maoding.admin.config.FastdfsConfig;
 import com.maoding.admin.module.orgAuth.dao.CommonDAO;
 import com.maoding.admin.module.orgAuth.dao.OrgAuthAuditDAO;
 import com.maoding.admin.module.orgAuth.dao.OrgAuthDAO;
@@ -9,12 +10,15 @@ import com.maoding.admin.module.orgAuth.model.OrgAuthDO;
 import com.maoding.constDefine.netFile.NetFileType;
 import com.maoding.core.base.BaseService;
 import com.maoding.utils.BeanUtils;
+import com.maoding.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by Wuwq on 2017/07/11.
@@ -22,7 +26,8 @@ import java.util.List;
 @Service("orgAuthService")
 public class OrgAuthServiceImpl extends BaseService implements OrgAuthService {
 
-    protected String fastdfsUrl = "http://172.16.6.73/";
+    @Autowired
+    private FastdfsConfig fastdfsConfig;
 
     @Autowired
     private OrgAuthDAO orgAuthDAO;
@@ -143,18 +148,18 @@ public class OrgAuthServiceImpl extends BaseService implements OrgAuthService {
      */
     @Override
     public OrgAuthDTO authorizeAuthentication(OrgAuthAuditDTO authorizeResult) {
-        if ((authorizeResult == null) || (authorizeResult.getOrgId() == null))
+        if ((authorizeResult == null) || (authorizeResult.getId() == null))
             throw new IllegalArgumentException("authorizeAuthentication 参数错误");
 
-        if ((authorizeResult.getStatus() != 1) && (authorizeResult.getRejectType() == null)) throw new IllegalArgumentException("不通过审核原因不能为空");
+        if ((authorizeResult.getAuthenticationStatus() != 1) && (authorizeResult.getRejectType() == null)) throw new IllegalArgumentException("不通过审核原因不能为空");
 
         //保存当次审核结果
-        OrgAuthDO origin = orgAuthDAO.selectByPrimaryKey(authorizeResult.getOrgId());
+        OrgAuthDO origin = orgAuthDAO.selectById(authorizeResult.getId());
         if (origin == null) throw new IllegalArgumentException("authorizeAuthentication 参数错误");
         OrgAuthDO entity = new OrgAuthDO();
         BeanUtils.copyProperties(origin,entity);
         BeanUtils.copyProperties(authorizeResult,entity);
-        if ((origin.getAuthenticationStatus() != 1) && (entity.getAuthenticationStatus() == 1)){ //首次通过认证
+        if ((origin.getAuthenticationStatus() != 2) && (entity.getAuthenticationStatus() == 2)){ //首次通过认证
             final Integer EXPIRY_DAYS = 30;
             LocalDateTime expiryDate = (origin.getExpiryDate() != null) ? origin.getExpiryDate().plusDays(EXPIRY_DAYS) : null;
             if ((expiryDate == null) && (origin.getApplyDate() != null)) expiryDate = origin.getApplyDate().plusDays(EXPIRY_DAYS);
@@ -167,57 +172,22 @@ public class OrgAuthServiceImpl extends BaseService implements OrgAuthService {
         orgAuthDAO.updateByPrimaryKey(entity);
 
         //更新认证信息历史
-        orgAuthAuditDAO.updateStatusByOrgId(authorizeResult.getOrgId()); //更新以往数据的isNew字段，设置为0
+        orgAuthAuditDAO.updateStatusByOrgId(authorizeResult.getId()); //更新以往数据的isNew字段，设置为0
 
         OrgAuthAuditDO auditDO = new OrgAuthAuditDO();
         BeanUtils.copyProperties(authorizeResult,auditDO);
-        if (entity.getUpdateDate() != null) {
-            auditDO.setApproveDate(entity.getUpdateDate());
-        }
-        auditDO.setAuditMessage(authorizeResult.getRejectType().toString());
+        auditDO.setOrgId(authorizeResult.getId());
+        if (entity.getUpdateDate() != null) auditDO.setApproveDate(entity.getUpdateDate());
+        if (authorizeResult.getRejectType() != null) auditDO.setAuditMessage(authorizeResult.getRejectType().toString());
         auditDO.setIsNew(1);
-        if (entity.getApplyDate() != null) {
-            auditDO.setSubmitDate(entity.getApplyDate());
-        }
+        if (entity.getApplyDate() != null) auditDO.setSubmitDate(entity.getApplyDate());
         auditDO.setCreateDate(entity.getUpdateDate());
         auditDO.setCreateBy(entity.getUpdateBy());
         auditDO.resetUpdateDate();
-        if (auditDO.getId() == null) auditDO.resetId();
+        auditDO.resetId();
         orgAuthAuditDAO.insert(auditDO);
 
-        OrgAuthDataDTO data = orgAuthDAO.getOrgAuthenticationInfo(entity.getId());
-        return createAuthenticationByEntity(data);
-    }
-
-    /**
-     * 方法：列出申请审核记录
-     * 作者：zhangchengliang
-     * 日期：2017/7/11
-     *
-     * @param query 查询过滤条件
-     */
-    @Override
-    public List<OrgAuthDTO> listAuthentication(OrgAuthQueryDTO query) {
-        if (query == null) throw new IllegalArgumentException("listAuthentication 参数错误");
-        List<OrgAuthDataDTO> dataList = orgAuthDAO.listOrgAuthenticationInfo(query);
-        List<OrgAuthDTO> dtoList = new ArrayList<>();
-        for (OrgAuthDataDTO data : dataList) {
-            OrgAuthDTO dto = createAuthenticationByEntity(data);
-            dtoList.add(dto);
-        }
-        return dtoList;
-    }
-
-    @Override
-    public OrgAuthPageDTO getAuthenticationPage(OrgAuthQueryDTO query) {
-        if (query == null) throw new IllegalArgumentException("getAuthenticationPage 参数错误");
-        OrgAuthPageDTO result = new OrgAuthPageDTO();
-        List<OrgAuthDTO> list = listAuthentication(query);
-        result.setTotal(commonMapper.getLastQueryCount());
-        if (result.getTotal() > 0) {
-            result.setList(list);
-        }
-        return result;
+        return getAuthenticationById(entity.getId());
     }
 
     /**
@@ -229,32 +199,67 @@ public class OrgAuthServiceImpl extends BaseService implements OrgAuthService {
      */
     @Override
     public OrgAuthDTO getAuthenticationById(String orgId) {
-        if (orgId == null) throw new IllegalArgumentException("getAuthenticationById 参数错误");
-        OrgAuthDataDTO dto = orgAuthDAO.getOrgAuthenticationInfo(orgId);
-        return createAuthenticationByEntity(dto);
+        OrgAuthQueryDTO query = new OrgAuthQueryDTO();
+        query.setId(orgId);
+        query.setPageSize(1);
+        List<OrgAuthDTO> list = listAuthentication(query);
+        return (list.size() > 0) ? list.get(0) : null;
     }
 
-    private OrgAuthDTO createAuthenticationByEntity(OrgAuthDataDTO data){
-        if (data == null) throw new IllegalArgumentException("createAuthenticationByEntity 参数错误");
-        OrgAuthDTO authentication = new OrgAuthDTO();
-        BeanUtils.copyProperties(data,authentication);
-        List<OrgAuthAttachDTO> fileList = data.getAttachList();
-        //复制附件文件名
-        for (OrgAuthAttachDTO file : fileList) {
-            if (file.getType() == NetFileType.CERTIFICATE_ATTACH) {
-                authentication.setSealPhoto(getFilePath(file));
-            } else if (file.getType() == NetFileType.BUSINESS_LICENSE_ATTACH) {
-                authentication.setBusinessLicensePhoto(getFilePath(file));
-            } else if (file.getType() == NetFileType.LEGAL_REPRESENTATIVE_ATTACH){
-                authentication.setLegalRepresentativePhoto(getFilePath(file));
-            } else if (file.getType() == NetFileType.OPERATOR_ATTACH) {
-                authentication.setOperatorPhoto(getFilePath(file));
+    /**
+     * 方法：列出申请审核记录
+     * 作者：zhangchengliang
+     * 日期：2017/7/11
+     *
+     * @param query 查询过滤条件
+     */
+    private List<OrgAuthDTO> listAuthentication(OrgAuthQueryDTO query) {
+        return listAuthentication(query,null);
+    }
+
+    private List<OrgAuthDTO> listAuthentication(OrgAuthQueryDTO query, AtomicInteger total){
+        if (query == null) throw new IllegalArgumentException("listAuthentication 参数错误");
+        List<OrgAuthDTO> dataList = orgAuthDAO.listOrgAuthenticationInfo(query);
+        if (total != null) total.set(commonMapper.getLastQueryCount());
+        if ((total != null) && (total.get() > 0)) {
+            List<String> idList = new ArrayList<>();
+            for (OrgAuthDTO data : dataList) {
+                idList.add(data.getId());
+            }
+            List<OrgAuthAttachDTO> attachList = orgAuthDAO.listOrgAuthAttach(idList);
+            for (OrgAuthAttachDTO attach : attachList){
+                for (OrgAuthDTO data : dataList){
+                    if (StringUtils.isSame(attach.getCompanyId(),data.getId())){
+                        if (Objects.equals(attach.getType(), NetFileType.CERTIFICATE_ATTACH)) {
+                            data.setSealPhoto(getFilePath(attach));
+                        } else if (Objects.equals(attach.getType(), NetFileType.BUSINESS_LICENSE_ATTACH)) {
+                            data.setBusinessLicensePhoto(getFilePath(attach));
+                        } else if (Objects.equals(attach.getType(), NetFileType.LEGAL_REPRESENTATIVE_ATTACH)){
+                            data.setLegalRepresentativePhoto(getFilePath(attach));
+                        } else if (Objects.equals(attach.getType(), NetFileType.OPERATOR_ATTACH)) {
+                            data.setOperatorPhoto(getFilePath(attach));
+                        }                        
+                    }
+                }
             }
         }
-        return authentication;
+        return dataList;
+    }
+
+    @Override
+    public OrgAuthPageDTO getAuthenticationPage(OrgAuthQueryDTO query) {
+        if (query == null) throw new IllegalArgumentException("getAuthenticationPage 参数错误");
+        OrgAuthPageDTO result = new OrgAuthPageDTO();
+        AtomicInteger total = new AtomicInteger();
+        List<OrgAuthDTO> list = listAuthentication(query,total);
+        result.setTotal(total.get());
+        if (result.getTotal() > 0) {
+            result.setList(list);
+        }
+        return result;
     }
 
     private String getFilePath(OrgAuthAttachDTO entity){
-        return this.fastdfsUrl + entity.getFileGroup() + "/" + entity.getFilePath();
+        return fastdfsConfig.getWebServerUrl() + entity.getFileGroup() + "/" + entity.getFilePath();
     }
 }

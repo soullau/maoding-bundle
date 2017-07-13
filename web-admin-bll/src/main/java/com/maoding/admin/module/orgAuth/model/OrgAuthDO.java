@@ -18,7 +18,7 @@ public class OrgAuthDO extends BaseEntity {
     private String orgName;
 
     /**
-     * 认证状态(0.否，1.是，2申请认证)
+     * 认证状态(0.默认状态，1.提交审核，2认证通过，3，认证不通过)
      */
     private Integer authenticationStatus;
 

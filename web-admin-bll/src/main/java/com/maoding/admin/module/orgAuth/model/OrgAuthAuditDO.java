@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.maoding.core.base.BaseEntity;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
+@Table(name = "maoding_web_org_auth_audit")
 public class OrgAuthAuditDO extends BaseEntity implements java.io.Serializable {
     /**
      * 组织ID

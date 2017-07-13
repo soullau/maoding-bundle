@@ -1,51 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.maoding.admin.module.orgAuth.dao.OrgAuthDAO">
-    <resultMap id="OrgAuthDataDTOMap" type="com.maoding.admin.module.orgAuth.dto.OrgAuthDataDTO">
-        <id column="id" property="id" jdbcType="VARCHAR" />
-        <result column="org_alias" property="orgAlias" jdbcType="VARCHAR" />
-        <result column="org_name" property="orgName" jdbcType="VARCHAR" />
-        <result column="authentication_status" property="authenticationStatus" jdbcType="BIT" />
-        <result column="operator_name" property="operatorName" jdbcType="VARCHAR" />
-        <result column="legal_representative" property="legalRepresentative" jdbcType="VARCHAR" />
-        <result column="business_license_number" property="businessLicenseNumber" jdbcType="VARCHAR" />
-        <result column="business_license_type" property="businessLicenseType" jdbcType="SMALLINT" />
-        <result column="apply_date" property="applyDate" jdbcType="DATE" />
-        <result column="expiry_date" property="expiryDate" jdbcType="DATE" />
-        <result column="approve_date" property="auditDate" jdbcType="DATE" />
-        <result column="audit_message" property="rejectType" jdbcType="VARCHAR" javaType="INT" />
-        <result column="reject_reason" property="rejectReason" jdbcType="VARCHAR" />
-        <result column="audit_person" property="auditorName" jdbcType="VARCHAR" />
-        <collection property="attachList" ofType="com.maoding.admin.module.orgAuth.dto.OrgAuthAttachDTO">
-            <result column="type" property="type" jdbcType="SMALLINT" />
-            <result column="file_group" property="fileGroup" jdbcType="VARCHAR" />
-            <result column="file_path" property="filePath" jdbcType="VARCHAR" />
-        </collection>
-    </resultMap>
-
-    <select id="getOrgAuthenticationInfo" resultMap="OrgAuthDataDTOMap" parameterType="java.lang.String" >
-        select
-             a.id as id, a.org_name, a.authentication_status, a.operator_name, a.reject_reason, a.legal_representative
-            ,a.business_license_number, a.business_license_type, a.apply_date, a.expiry_date
-            ,a.deleted as deleted,a.create_date as create_date, a.create_by as create_by, a.update_date as update_date, a.update_by as update_by
-            ,c.type as type,c.file_group as file_group,c.file_path as file_path
-        from
-            maoding_web_org_auth a
-            LEFT JOIN maoding_web_project_sky_drive c on (c.type in (5,8,9,10) and c.status='0' and a.id=c.company_id)
-        where (a.deleted is null or a.deleted=0) and (a.id = #{id,jdbcType=VARCHAR})
+    <select id="selectById" resultType="com.maoding.admin.module.orgAuth.model.OrgAuthDO" parameterType="java.lang.String">
+        select * from maoding_web_org_auth where id=#{id}
     </select>
-    <select id="listOrgAuthenticationInfo" resultMap="OrgAuthDataDTOMap" parameterType="com.maoding.admin.module.orgAuth.dto.OrgAuthQueryDTO" >
+    <select id="listOrgAuthenticationInfo" resultType="com.maoding.admin.module.orgAuth.dto.OrgAuthDTO" parameterType="com.maoding.admin.module.orgAuth.dto.OrgAuthQueryDTO" >
         select <include refid="com.maoding.admin.module.orgAuth.dao.CommonDAO.countSQL"/>
             a.id as id, a.org_name, a.authentication_status, a.operator_name, a.reject_reason, a.legal_representative
             ,a.business_license_number, a.business_license_type, a.apply_date, a.expiry_date
             ,b.company_name as org_alias
-            ,c.type as type,c.file_group as file_group,c.file_path as file_path
-            ,d.approve_date as approve_date,d.audit_person as audit_person,d.audit_message as audit_message
+            ,c.approve_date as approve_date,c.audit_person as audit_person,c.audit_message as audit_message
         from
             maoding_web_org_auth a
             INNER JOIN maoding_web_company b on (a.id=b.id)
-            LEFT JOIN maoding_web_org_auth_audit d on (d.is_new=1 and a.id=d.org_id)
-            LEFT JOIN maoding_web_project_sky_drive c on (c.type in (5,8,9,10) and c.status='0' and a.id=c.company_id)
+            LEFT JOIN maoding_web_org_auth_audit c on (c.is_new=1 and a.id=c.org_id)
         where
             (a.deleted is null or a.deleted=0)
             <if test="id!=null">
@@ -70,5 +38,16 @@
                 and position(#{orgAliasMask},b.company_name)>0
             </if>
         <include refid="com.maoding.admin.module.orgAuth.dao.CommonDAO.limitSQL"/>
+    </select>
+    <select id="listOrgAuthAttach" resultType="com.maoding.admin.module.orgAuth.dto.OrgAuthAttachDTO" parameterType="java.util.List">
+        select d.company_id as company_id,d.type as type,d.file_group as file_group,d.file_path as file_path
+        from maoding_web_project_sky_drive d
+        where d.type in (5,8,9,10) and d.status='0'
+            <if test="list != null" >
+                and d.company_id in
+                <foreach collection="list" item="orgId" open="(" separator="," close=")">
+                    #{orgId}
+                </foreach>
+            </if>
     </select>
 </mapper>

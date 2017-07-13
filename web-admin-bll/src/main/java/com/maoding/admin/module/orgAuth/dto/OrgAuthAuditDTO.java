@@ -7,15 +7,15 @@ public class OrgAuthAuditDTO {
     /**
      * 组织ID
      */
-    String orgId;
+    String id;
     /**
      * 认证状态(0.否，1.是，2申请认证)
      */
-    Integer status;
+    Integer authenticationStatus;
     /**
      * 认证审核人姓名
      */
-    String auditPerson;
+    String auditorName;
     /**
      * 认证无法通过原因分类
      */
@@ -25,28 +25,28 @@ public class OrgAuthAuditDTO {
      */
     String rejectReason;
 
-    public String getOrgId() {
-        return orgId;
+    public String getId() {
+        return id;
     }
 
-    public void setOrgId(String orgId) {
-        this.orgId = orgId;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public Integer getStatus() {
-        return status;
+    public Integer getAuthenticationStatus() {
+        return authenticationStatus;
     }
 
-    public void setStatus(Integer status) {
-        this.status = status;
+    public void setAuthenticationStatus(Integer authenticationStatus) {
+        this.authenticationStatus = authenticationStatus;
     }
 
-    public String getAuditPerson() {
-        return auditPerson;
+    public String getAuditorName() {
+        return auditorName;
     }
 
-    public void setAuditPerson(String auditPerson) {
-        this.auditPerson = auditPerson;
+    public void setAuditorName(String auditorName) {
+        this.auditorName = auditorName;
     }
 
     public Integer getRejectType() {

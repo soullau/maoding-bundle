@@ -6,7 +6,6 @@ import com.maoding.admin.module.orgAuth.dto.OrgAuthPageDTO;
 import com.maoding.admin.module.orgAuth.dto.OrgAuthQueryDTO;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * Created by Wuwq on 2017/07/11.
@@ -42,13 +41,6 @@ public interface OrgAuthService {
      * 日期：2017/7/11
      */
     OrgAuthDTO authorizeAuthentication(OrgAuthAuditDTO authorizeResult);
-
-    /**
-     * 方法：列出申请审核记录
-     * 作者：zhangchengliang
-     * 日期：2017/7/11
-     */
-    List<OrgAuthDTO> listAuthentication(OrgAuthQueryDTO query);
 
     /**
      * 方法：按页列出申请审核记录

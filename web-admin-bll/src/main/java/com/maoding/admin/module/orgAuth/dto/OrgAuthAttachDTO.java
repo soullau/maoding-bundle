@@ -5,6 +5,10 @@ package com.maoding.admin.module.orgAuth.dto;
  */
 public class OrgAuthAttachDTO {
     /**
+     * 组织ID
+     */
+    private String companyId;
+    /**
      * 类型参考，同NetFileDO.type
      */
     private Integer type;
@@ -16,6 +20,14 @@ public class OrgAuthAttachDTO {
      * 文件在fastdfs中的路径 同NetFileDO.filePath
      */
     private String filePath;
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
 
     public Integer getType() {
         return type;
