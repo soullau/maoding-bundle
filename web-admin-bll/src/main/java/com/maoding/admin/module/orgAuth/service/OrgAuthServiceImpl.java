@@ -116,10 +116,11 @@ public class OrgAuthServiceImpl extends BaseService implements OrgAuthService {
      */
     @Override
     public OrgAuthDTO authorizeAuthentication(OrgAuthAuditDTO authorizeResult) {
+        final Integer AUTH_PASS_STATUS = 2;
         if ((authorizeResult == null) || (authorizeResult.getId() == null))
             throw new IllegalArgumentException("authorizeAuthentication 参数错误");
 
-        if ((authorizeResult.getAuthenticationStatus() != 1) && (authorizeResult.getRejectType() == null)) throw new IllegalArgumentException("不通过审核原因不能为空");
+        if ((authorizeResult.getAuthenticationStatus() != AUTH_PASS_STATUS) && (authorizeResult.getRejectType() == null)) throw new IllegalArgumentException("不通过审核原因不能为空");
 
         //保存当次审核结果
         OrgAuthDO origin = orgAuthDAO.selectById(authorizeResult.getId());
@@ -127,7 +128,7 @@ public class OrgAuthServiceImpl extends BaseService implements OrgAuthService {
         OrgAuthDO entity = new OrgAuthDO();
         BeanUtils.copyProperties(origin,entity);
         BeanUtils.copyProperties(authorizeResult,entity);
-        if ((origin.getAuthenticationStatus() != 2) && (entity.getAuthenticationStatus() == 2)){ //首次通过认证
+        if ((origin.getAuthenticationStatus() != AUTH_PASS_STATUS) && (entity.getAuthenticationStatus() == AUTH_PASS_STATUS)){ //首次通过认证
             final Integer EXPIRY_DAYS = 30;
             LocalDateTime expiryDate = (origin.getExpiryDate() != null) ? origin.getExpiryDate().plusDays(EXPIRY_DAYS) : null;
             if ((expiryDate == null) && (origin.getApplyDate() != null)) expiryDate = origin.getApplyDate().plusDays(EXPIRY_DAYS);
