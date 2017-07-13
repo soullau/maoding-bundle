@@ -4,23 +4,35 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.maoding.core.base.BaseQueryDTO;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.Date;
+import java.time.LocalDate;
+
 
 /**
  * Created by Chengliang.zhang on 2017/7/12.
  */
 public class OrgAuthQueryDTO extends BaseQueryDTO {
     /**
-     * 认证状态(0.否，1.是，2申请认证)
+     * 要过滤的公司的认证状态(0.所有公司，1.提交过认证的公司，2.经过审核的公司，3.认证未通过的公司)
      */
-    Integer authenticationStatus;
-
+    Integer filterStatus;
+    /**
+     * 申请审核日期需在此日期之前
+     */
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd",timezone = "GMT+8")
+    LocalDate applyDateBefore;
+    /**
+     * 申请审核日期需在此日期之后
+     */
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd",timezone = "GMT+8")
+    LocalDate applyDateAfter;
     /**
      * 有效期需在此日期之前
      */
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern="yyyy-MM-dd",timezone = "GMT+8")
-    Date expiryDateBefore;
+    LocalDate expiryDateBefore;
 
     /**
      * 组织法定名称过滤条件
@@ -31,19 +43,35 @@ public class OrgAuthQueryDTO extends BaseQueryDTO {
      */
     String orgAliasMask;
 
-    public Integer getAuthenticationStatus() {
-        return authenticationStatus;
+    public Integer getFilterStatus() {
+        return filterStatus;
     }
 
-    public void setAuthenticationStatus(Integer authenticationStatus) {
-        this.authenticationStatus = authenticationStatus;
+    public void setFilterStatus(Integer filterStatus) {
+        this.filterStatus = filterStatus;
     }
 
-    public Date getExpiryDateBefore() {
+    public LocalDate getApplyDateBefore() {
+        return applyDateBefore;
+    }
+
+    public void setApplyDateBefore(LocalDate applyDateBefore) {
+        this.applyDateBefore = applyDateBefore;
+    }
+
+    public LocalDate getApplyDateAfter() {
+        return applyDateAfter;
+    }
+
+    public void setApplyDateAfter(LocalDate applyDateAfter) {
+        this.applyDateAfter = applyDateAfter;
+    }
+
+    public LocalDate getExpiryDateBefore() {
         return expiryDateBefore;
     }
 
-    public void setExpiryDateBefore(Date expiryDateBefore) {
+    public void setExpiryDateBefore(LocalDate expiryDateBefore) {
         this.expiryDateBefore = expiryDateBefore;
     }
 

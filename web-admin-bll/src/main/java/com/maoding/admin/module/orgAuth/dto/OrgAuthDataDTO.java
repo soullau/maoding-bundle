@@ -2,16 +2,23 @@ package com.maoding.admin.module.orgAuth.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.maoding.admin.module.orgAuth.model.ProjectSkyDriveEntity;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class OrgAuthDataDTO {
 
+    /**
+     * 组织ID
+     */
     private String id;
+
+    /**
+     * 卯丁内组织名称
+     */
+    String orgAlias;
 
     /**
      * 企业名称
@@ -27,9 +34,12 @@ public class OrgAuthDataDTO {
      * 经办人
      */
     private String operatorName;
-
     /**
-     * 认证不通过原因
+     * 认证不通过原因分类
+     */
+    private Integer rejectType;
+    /**
+     * 认证不通过原因文字解释
      */
     private String rejectReason;
 
@@ -53,20 +63,54 @@ public class OrgAuthDataDTO {
      */
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern="yyyy-MM-dd",timezone = "GMT+8")
-    private Date applyDate;
+    private LocalDate applyDate;
 
     /**
      * 有效期（结束日期）
      */
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern="yyyy-MM-dd",timezone = "GMT+8")
-    private Date  expiryDate;
+    private LocalDate expiryDate;
+    /**
+     * 审核日期
+     */
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd",timezone = "GMT+8")
+    private LocalDate auditDate;
 
+    /**
+     * 审核人姓名
+     */
+    private String auditorName;
 
     /**
      * 附件
      */
-    List<ProjectSkyDriveEntity> attachList = new ArrayList<>();
+    List<OrgAuthAttachDTO> attachList = new ArrayList<>();
+
+    public Integer getRejectType() {
+        return rejectType;
+    }
+
+    public void setRejectType(Integer rejectType) {
+        this.rejectType = rejectType;
+    }
+
+    public LocalDate getAuditDate() {
+        return auditDate;
+    }
+
+    public void setAuditDate(LocalDate auditDate) {
+        this.auditDate = auditDate;
+    }
+
+    public String getAuditorName() {
+        return auditorName;
+    }
+
+    public void setAuditorName(String auditorName) {
+        this.auditorName = auditorName;
+    }
 
     public String getId() {
         return id;
@@ -74,6 +118,14 @@ public class OrgAuthDataDTO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getOrgAlias() {
+        return orgAlias;
+    }
+
+    public void setOrgAlias(String orgAlias) {
+        this.orgAlias = orgAlias;
     }
 
     public String getOrgName() {
@@ -92,19 +144,19 @@ public class OrgAuthDataDTO {
         this.authenticationStatus = authenticationStatus;
     }
 
-    public Date getApplyDate() {
+    public LocalDate getApplyDate() {
         return applyDate;
     }
 
-    public void setApplyDate(Date applyDate) {
+    public void setApplyDate(LocalDate applyDate) {
         this.applyDate = applyDate;
     }
 
-    public Date getExpiryDate() {
+    public LocalDate getExpiryDate() {
         return expiryDate;
     }
 
-    public void setExpiryDate(Date expiryDate) {
+    public void setExpiryDate(LocalDate expiryDate) {
         this.expiryDate = expiryDate;
     }
 
@@ -148,11 +200,11 @@ public class OrgAuthDataDTO {
         this.businessLicenseNumber = businessLicenseNumber;
     }
 
-    public List<ProjectSkyDriveEntity> getAttachList() {
+    public List<OrgAuthAttachDTO> getAttachList() {
         return attachList;
     }
 
-    public void setAttachList(List<ProjectSkyDriveEntity> attachList) {
+    public void setAttachList(List<OrgAuthAttachDTO> attachList) {
         this.attachList = attachList;
     }
 }

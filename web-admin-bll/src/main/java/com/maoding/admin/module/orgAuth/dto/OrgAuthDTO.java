@@ -105,6 +105,18 @@ public class OrgAuthDTO {
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern="yyyy-MM-dd",timezone = "GMT+8")
     LocalDate auditDate;
+    /**
+     * 认证不通过原因分类
+     */
+    private Integer rejectType;
+
+    public Integer getRejectType() {
+        return rejectType;
+    }
+
+    public void setRejectType(Integer rejectType) {
+        this.rejectType = rejectType;
+    }
 
     public String getId() {
         return id;

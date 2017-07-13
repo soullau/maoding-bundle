@@ -6,7 +6,6 @@ import com.maoding.admin.module.orgAuth.dao.OrgAuthDAO;
 import com.maoding.admin.module.orgAuth.dto.*;
 import com.maoding.admin.module.orgAuth.model.OrgAuthAuditDO;
 import com.maoding.admin.module.orgAuth.model.OrgAuthDO;
-import com.maoding.admin.module.orgAuth.model.ProjectSkyDriveEntity;
 import com.maoding.constDefine.netFile.NetFileType;
 import com.maoding.core.base.BaseService;
 import com.maoding.utils.BeanUtils;
@@ -239,9 +238,9 @@ public class OrgAuthServiceImpl extends BaseService implements OrgAuthService {
         if (data == null) throw new IllegalArgumentException("createAuthenticationByEntity 参数错误");
         OrgAuthDTO authentication = new OrgAuthDTO();
         BeanUtils.copyProperties(data,authentication);
-        List<ProjectSkyDriveEntity> fileList = data.getAttachList();
+        List<OrgAuthAttachDTO> fileList = data.getAttachList();
         //复制附件文件名
-        for (ProjectSkyDriveEntity file : fileList) {
+        for (OrgAuthAttachDTO file : fileList) {
             if (file.getType() == NetFileType.CERTIFICATE_ATTACH) {
                 authentication.setSealPhoto(getFilePath(file));
             } else if (file.getType() == NetFileType.BUSINESS_LICENSE_ATTACH) {
@@ -255,7 +254,7 @@ public class OrgAuthServiceImpl extends BaseService implements OrgAuthService {
         return authentication;
     }
 
-    private String getFilePath(ProjectSkyDriveEntity entity){
+    private String getFilePath(OrgAuthAttachDTO entity){
         return this.fastdfsUrl + entity.getFileGroup() + "/" + entity.getFilePath();
     }
 }
