@@ -108,38 +108,6 @@ public class OrgAuthServiceImpl extends BaseService implements OrgAuthService {
     }
 
     /**
-     * 方法：提交审核
-     * 作者：zhangchengliang
-     * 日期：2017/7/11
-     *
-     * @param authentication
-     */
-    @Override
-    public void applyAuthentication(OrgAuthDTO authentication) {
-        if (authentication == null) throw new IllegalArgumentException("applyAuthentication 参数错误");
-        //更新审核记录，如果在审核表内没有找到记录创建一条
-        OrgAuthDO entity = (authentication.getId() != null) ? orgAuthDAO.selectByPrimaryKey(authentication.getId()) : null;
-        Boolean isNew = false;
-        if (entity == null){
-            entity = new OrgAuthDO();
-            isNew = true;
-        }
-        BeanUtils.copyProperties(authentication,entity);
-        entity.setApplyDate(LocalDateTime.now());
-        entity.setAuthenticationStatus(2);
-        entity.setRejectReason("");
-
-        if (isNew){
-            if (entity.getId() == null) entity.resetId();
-            entity.setCreateDate(entity.getApplyDate());
-            orgAuthDAO.insert(entity);
-        } else {
-            entity.setUpdateDate(entity.getApplyDate());
-            orgAuthDAO.updateByPrimaryKey(entity);
-        }
-    }
-
-    /**
      * 方法：处理审核
      * 作者：zhangchengliang
      * 日期：2017/7/11

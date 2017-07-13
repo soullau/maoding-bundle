@@ -29,13 +29,6 @@ public interface OrgAuthService {
     void extendExpiryDate(String orgId, Integer days);
 
     /**
-     * 方法：提交审核
-     * 作者：zhangchengliang
-     * 日期：2017/7/11
-     */
-    void applyAuthentication(OrgAuthDTO authentication);
-
-    /**
      * 方法：处理审核
      * 作者：zhangchengliang
      * 日期：2017/7/11
