@@ -49,6 +49,10 @@ public interface AttachmentService {
      */
     ApiResult uploadProjectContract(HttpServletRequest request) throws Exception;
 
+    /**
+     * 上传自定义群组头像
+     */
+    ApiResult uploadGroupImg(HttpServletRequest request) throws Exception;
 
     /**
      * 删除附件

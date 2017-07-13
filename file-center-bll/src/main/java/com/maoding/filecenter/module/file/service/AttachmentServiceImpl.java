@@ -398,6 +398,37 @@ public class AttachmentServiceImpl extends BaseService implements AttachmentServ
         return ApiResult.failed(null, null);
     }
 
+    @Override
+    public ApiResult uploadGroupImg(HttpServletRequest request) throws Exception {
+        MultipartFileParam param = MultipartFileParam.parse(request);
+        FastdfsUploadResult fuResult = fastdfsService.upload(param);
+        if (fuResult.getNeedFlow())
+            return ApiResult.success(null, fuResult);
+
+//        String companyId = (String) param.getParam().get("companyId");
+//        String accountId = (String) param.getParam().get("accountId");
+        String orgId = (String) param.getParam().get("orgId");
+
+//        if (StringUtils.isNullOrEmpty(companyId))
+//            return ApiResult.failed("组织ID不能为空", null);
+//
+//        if (StringUtils.isNullOrEmpty(accountId))
+//            return ApiResult.failed("账号ID不能为空", null);
+
+        if (StringUtils.isNullOrEmpty(orgId))
+            return ApiResult.failed("群组orgId不能为空", null);
+
+        //更新群组LOGO
+        GroupImgUpdateDTO imgUpdateDTO = new GroupImgUpdateDTO();
+        imgUpdateDTO.setOrgId(orgId);
+        imgUpdateDTO.setGroupType(ImGroupType.CUSTOM);
+        imgUpdateDTO.setImg(fuResult.getFastdfsGroup() + "/" + fuResult.getFastdfsPath());
+        imGroupDAO.updateGroupImg(imgUpdateDTO);
+
+        return ApiResult.success("文件已上传成功", fuResult);
+
+    }
+
     /**
      * 删除附件
      */

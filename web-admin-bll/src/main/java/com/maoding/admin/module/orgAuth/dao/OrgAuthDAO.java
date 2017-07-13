@@ -1,7 +1,6 @@
 package com.maoding.admin.module.orgAuth.dao;
 
 import com.maoding.admin.module.orgAuth.dto.OrgAuthDataDTO;
-import com.maoding.admin.module.orgAuth.dto.OrgAuthDataPageDTO;
 import com.maoding.admin.module.orgAuth.dto.OrgAuthQueryDTO;
 import com.maoding.admin.module.orgAuth.model.OrgAuthDO;
 import com.maoding.core.base.BaseDao;
@@ -25,11 +24,4 @@ public interface OrgAuthDAO extends BaseDao<OrgAuthDO> {
      * 日期：2017/7/11
      */
     List<OrgAuthDataDTO> listOrgAuthenticationInfo(OrgAuthQueryDTO query);
-
-    /**
-     * 方法：根据查询条件分页查找审核信息列表，并返回全部记录数
-     * 作者：ZCL
-     * 日期：2017/7/11
-     */
-    OrgAuthDataPageDTO getOrgAuthenticationInfoPage(OrgAuthQueryDTO query);
 }

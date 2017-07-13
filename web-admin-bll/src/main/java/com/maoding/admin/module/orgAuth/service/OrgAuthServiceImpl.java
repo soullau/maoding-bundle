@@ -1,5 +1,6 @@
 package com.maoding.admin.module.orgAuth.service;
 
+import com.maoding.admin.module.orgAuth.dao.CommonDAO;
 import com.maoding.admin.module.orgAuth.dao.OrgAuthAuditDAO;
 import com.maoding.admin.module.orgAuth.dao.OrgAuthDAO;
 import com.maoding.admin.module.orgAuth.dto.*;
@@ -30,6 +31,8 @@ public class OrgAuthServiceImpl extends BaseService implements OrgAuthService {
     @Autowired
     private OrgAuthAuditDAO orgAuthAuditDAO;
 
+    @Autowired
+    private CommonDAO commonMapper;
 
     /**
      * 方法：设置免费期
@@ -209,16 +212,11 @@ public class OrgAuthServiceImpl extends BaseService implements OrgAuthService {
     @Override
     public OrgAuthPageDTO getAuthenticationPage(OrgAuthQueryDTO query) {
         if (query == null) throw new IllegalArgumentException("getAuthenticationPage 参数错误");
-        OrgAuthDataPageDTO dataPage = orgAuthDAO.getOrgAuthenticationInfoPage(query);
         OrgAuthPageDTO result = new OrgAuthPageDTO();
-        result.setTotal(dataPage.getTotal());
-        if ((result.getTotal() > 0) && (dataPage.getList() != null)) {
-            List<OrgAuthDTO> dtoList = new ArrayList<>();
-            for (OrgAuthDataDTO data : dataPage.getList()) {
-                OrgAuthDTO dto = createAuthenticationByEntity(data);
-                dtoList.add(dto);
-            }
-            result.setList(dtoList);
+        List<OrgAuthDTO> list = listAuthentication(query);
+        result.setTotal(commonMapper.getLastQueryCount());
+        if (result.getTotal() > 0) {
+            result.setList(list);
         }
         return result;
     }

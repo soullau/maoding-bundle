@@ -1,6 +1,6 @@
 server:
    port: 8181
-   context-path:
+   context-path: "/admin"
 spring:
    thymeleaf:
      enabled: true
@@ -60,4 +60,10 @@ mapper:
         - com.maoding.core.base.BaseDao
     not-empty: false
     identity: MYSQL
+
+# ===================================================================
+# Fastdfs
+# ===================================================================
+fastdfs:
+    webServerUrl: http://172.16.6.73/
 

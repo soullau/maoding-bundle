@@ -7,6 +7,7 @@ import com.maoding.admin.module.orgAuth.dto.OrgAuthQueryDTO;
 import com.maoding.admin.module.orgAuth.service.OrgAuthService;
 import com.maoding.core.bean.ApiResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,12 +15,15 @@ import java.util.List;
 /**
  * Created by Wuwq on 2017/07/11.
  */
-@RestController
-@RequestMapping("/admin/orgCenter")
+@Controller
+@RequestMapping("/orgAuth")
 public class OrgAuthController {
 
     @Autowired
     OrgAuthService orgAuthService;
+
+    @RequestMapping("/approveList")
+    public void approveList() {}
 
     /**
      * 方法：进行审核

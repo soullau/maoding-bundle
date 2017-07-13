@@ -84,6 +84,16 @@ public class AttachmentController {
     }
 
     /**
+     * 上传群组（自定义）头像
+     */
+    @RequestMapping(value = "/uploadGroupImg", method = RequestMethod.POST)
+    @ResponseBody
+    public ApiResult uploadGroupImg(HttpServletRequest request) throws Exception {
+        return attachmentService.uploadGroupImg(request);
+    }
+
+
+    /**
      * 删除文件
      */
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
