@@ -32,11 +32,12 @@
                 and #{expiryDateBefore}>=a.expiry_date
             </if>
             <if test="orgNameMask!=null">
-                and position(#{orgNameMask},a.org_name)>0
+                and (a.org_name like concat('%',#{orgNameMask},'%'))
             </if>
             <if test="orgAliasMask!=null">
-                and position(#{orgAliasMask},b.company_name)>0
+                and (b.company_name like concat('%',#{orgAliasMask},'%'))
             </if>
+        group by a.id
         <include refid="com.maoding.admin.module.orgAuth.dao.CommonDAO.limitSQL"/>
     </select>
     <select id="listOrgAuthAttach" resultType="com.maoding.admin.module.orgAuth.dto.OrgAuthAttachDTO" parameterType="java.util.List">

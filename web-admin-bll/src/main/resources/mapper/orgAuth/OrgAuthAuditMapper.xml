@@ -3,7 +3,7 @@
 <mapper namespace="com.maoding.admin.module.orgAuth.dao.OrgAuthAuditDAO">
     <update id="updateStatusByOrgId" parameterType="java.lang.String">
         update maoding_web_org_auth_audit
-        set status = 0
+        set is_new = 0
         where org_id = #{orgId}
     </update>
 </mapper>
