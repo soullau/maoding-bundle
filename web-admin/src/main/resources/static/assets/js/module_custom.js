@@ -239,9 +239,29 @@ function handleResponse(response) {
     return result;
 }
 
+var S_swal = {
+    confirm: function (options, callback) {
+        var defaults = {
+            title: '您确定要进行该操作吗？',
+            text: '',
+            type: 'info',
+            allowOutsideClick: true,
+            showConfirmButton: true,
+            showCancelButton: true,
+            confirmButtonClass: 'btn-success',
+            cancelButtonClass: 'btn-danger',
+            closeOnConfirm: true,
+            closeOnCancel: true,
+            confirmButtonText: '确定',
+            cancelButtonText: '取消'
+        };
+        var opts = $.extend(true, {}, defaults, options);
+        swal(opts, callback);
+    }
+};
 
 var S_toastr = {
-    success:function (text) {
+    success: function (text) {
         toastr.options = {
             "closeButton": false,
             "debug": false,
@@ -260,7 +280,7 @@ var S_toastr = {
         };
         toastr.success(text);
     },
-    warning:function (text) {
+    warning: function (text) {
         toastr.options = {
             "closeButton": false,
             "debug": false,
@@ -279,7 +299,7 @@ var S_toastr = {
         };
         toastr.warning(text);
     },
-    info:function (text) {
+    info: function (text) {
         toastr.options = {
             "closeButton": false,
             "debug": false,
@@ -298,7 +318,7 @@ var S_toastr = {
         };
         toastr.info(text);
     },
-    error:function (text) {
+    error: function (text) {
         toastr.options = {
             "closeButton": false,
             "debug": false,
@@ -319,37 +339,37 @@ var S_toastr = {
     }
 };
 
-var S_swal = {
-    confirm:function (option) {
-        swal({
-            title: option.title||"确定此操作吗?",
-            text: option.text,
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: option.confirmButtonText||"确定",
-            cancelButtonText: option.cancelButtonText||"取消",
-            closeOnConfirm:  option.closeOnConfirm||false
-        }, function () {
-            if(option.callBack!=null){
-                option.callBack();
-            }
-        });
-    },
-    sure:function (option) {
-        swal({
-            title: option.title||"确定此操作吗?",
-            text: option.text,
-            type: "success",
-            confirmButtonText: option.confirmButtonText||"确定",
-            closeOnConfirm: true
-        }, function () {
-            if(option.callBack!=null){
-                option.callBack();
-            }
-        });
-    }
-};
+/*var S_swal = {
+ confirm: function (option) {
+ swal({
+ title: option.title || "确定此操作吗?",
+ text: option.text,
+ type: "warning",
+ showCancelButton: true,
+ confirmButtonColor: "#DD6B55",
+ confirmButtonText: option.confirmButtonText || "确定",
+ cancelButtonText: option.cancelButtonText || "取消",
+ closeOnConfirm: option.closeOnConfirm || false
+ }, function () {
+ if (option.callBack != null) {
+ option.callBack();
+ }
+ });
+ },
+ sure: function (option) {
+ swal({
+ title: option.title || "确定此操作吗?",
+ text: option.text,
+ type: "success",
+ confirmButtonText: option.confirmButtonText || "确定",
+ closeOnConfirm: true
+ }, function () {
+ if (option.callBack != null) {
+ option.callBack();
+ }
+ });
+ }
+ };*/
 
 /******************************************** 弹窗方法 结束 *****************************************************/
 

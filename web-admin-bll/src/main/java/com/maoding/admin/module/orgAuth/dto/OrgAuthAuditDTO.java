@@ -9,7 +9,7 @@ public class OrgAuthAuditDTO {
      */
     String id;
     /**
-     * 认证状态(0.否，1.申请认证，2.通过认证，3.未通过认证)
+     * 认证状态(2:通过 3：不通过)
      */
     Integer authenticationStatus;
     /**
