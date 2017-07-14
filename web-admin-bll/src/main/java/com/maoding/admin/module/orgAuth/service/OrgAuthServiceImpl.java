@@ -159,7 +159,7 @@ public class OrgAuthServiceImpl extends BaseService implements OrgAuthService {
         auditDO.resetId();
         orgAuthAuditDAO.insert(auditDO);
 
-        return getAuthenticationById(entity.getId());
+        return null; //前端没有使用此信息进行加速，因此不需要返回值 return getAuthenticationById(entity.getId());
     }
 
     /**

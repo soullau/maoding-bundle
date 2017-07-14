@@ -19,9 +19,14 @@
             <if test="id!=null">
                 and a.id=#{id}
             </if>
-            <if test="filterStatus!=null">
-                and a.authentication_status>=#{filterStatus}
-            </if>
+            <choose>
+                <when test="authenticationStatus!=null">
+                    and a.authentication_status=#{authenticationStatus}
+                </when>
+                <otherwise>
+                    and a.authentication_status>=1
+                </otherwise>
+            </choose>
             <if test="applyDateBefore!=null">
                 and #{expiryDateBefore}>=a.apply_date
             </if>
@@ -37,7 +42,24 @@
             <if test="orgAliasMask!=null">
                 and (b.company_name like concat('%',#{orgAliasMask},'%'))
             </if>
+            <if test="auditNameMask!=null">
+                and (c.audit_person like concat('%',#{auditNameMask},'%'))
+            </if>
         group by a.id
+        <if test="orderCondition!=null">
+            order by
+            <foreach collection="orderCondition" index="condition" item="direct" open=" " separator="," close="">
+                <if test="condition=='applyDate'">
+                    a.apply_date
+                </if>
+                <if test="condition=='auditDate'">
+                    c.approve_date
+                </if>
+                <if test="direct==-1">
+                    desc
+                </if>
+            </foreach>
+        </if>
         <include refid="com.maoding.admin.module.orgAuth.dao.CommonDAO.limitSQL"/>
     </select>
     <select id="listOrgAuthAttach" resultType="com.maoding.admin.module.orgAuth.dto.OrgAuthAttachDTO" parameterType="java.util.List">

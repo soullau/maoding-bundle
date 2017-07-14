@@ -5,6 +5,7 @@ import com.maoding.core.base.BaseQueryDTO;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.Map;
 
 
 /**
@@ -12,9 +13,10 @@ import java.time.LocalDate;
  */
 public class OrgAuthQueryDTO extends BaseQueryDTO {
     /**
-     * 要过滤的公司的认证状态(0.所有公司，1.提交过认证的公司，2.经过审核的公司，3.认证未通过的公司)
+     * 要显示的认证状态(0.否，1.申请认证，2.通过认证，3.未通过认证)
      */
-    Integer filterStatus;
+    Integer authenticationStatus;
+
     /**
      * 申请审核日期需在此日期之前
      */
@@ -35,6 +37,10 @@ public class OrgAuthQueryDTO extends BaseQueryDTO {
     LocalDate expiryDateBefore;
 
     /**
+     * 审核人姓名过滤条件
+     */
+    String auditNameMask;
+    /**
      * 组织法定名称过滤条件
      */
     String orgNameMask;
@@ -43,12 +49,33 @@ public class OrgAuthQueryDTO extends BaseQueryDTO {
      */
     String orgAliasMask;
 
-    public Integer getFilterStatus() {
-        return filterStatus;
+    /**
+     * 排序条件
+     */
+    Map<String,Integer> orderCondition;
+
+    public String getAuditNameMask() {
+        return auditNameMask;
     }
 
-    public void setFilterStatus(Integer filterStatus) {
-        this.filterStatus = filterStatus;
+    public void setAuditNameMask(String auditNameMask) {
+        this.auditNameMask = auditNameMask;
+    }
+
+    public Map<String, Integer> getOrderCondition() {
+        return orderCondition;
+    }
+
+    public void setOrderCondition(Map<String, Integer> orderCondition) {
+        this.orderCondition = orderCondition;
+    }
+
+    public Integer getAuthenticationStatus() {
+        return authenticationStatus;
+    }
+
+    public void setAuthenticationStatus(Integer authenticationStatus) {
+        this.authenticationStatus = authenticationStatus;
     }
 
     public LocalDate getApplyDateBefore() {
