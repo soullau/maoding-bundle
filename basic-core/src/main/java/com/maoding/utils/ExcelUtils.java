@@ -57,17 +57,16 @@ public class ExcelUtils {
 	 * 作者：Zhangchengliang
 	 * 日期：2017/7/19
 	 */
-	public static Workbook getWorkbook(InputStream stream) throws IOException{
-		if (stream == null) return null;
+	public static Workbook getWorkbook(InputStream in) throws IOException{
+		if (in == null) return null;
 
 		Workbook wb = null;
 		try {
-			wb = WorkbookFactory.create(stream);
+			wb = WorkbookFactory.create(in);
 		} catch (InvalidFormatException e) {
 			throw new IOException("文件格式错误");
 		}
 		return wb;
-		
 	}
 
 	/**
