@@ -5,6 +5,7 @@ import com.maoding.admin.module.orgAuth.dto.OrgAuthDTO;
 import com.maoding.admin.module.orgAuth.dto.OrgAuthPageDTO;
 import com.maoding.admin.module.orgAuth.dto.OrgAuthQueryDTO;
 import com.maoding.admin.module.orgAuth.service.OrgAuthService;
+import com.maoding.core.base.BaseController;
 import com.maoding.core.bean.ApiResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,13 +19,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @RequestMapping("/orgAuth")
-public class OrgAuthController {
+public class OrgAuthController extends BaseController {
 
     @Autowired
     OrgAuthService orgAuthService;
 
     @RequestMapping("/approveList")
-    public void approveList() {}
+    public void approveList() {
+    }
 
     /**
      * 方法：进行审核
@@ -35,7 +37,7 @@ public class OrgAuthController {
     @ResponseBody
     public ApiResult authorizeAuthentication(@RequestBody OrgAuthAuditDTO authorizeResult) throws Exception {
         OrgAuthDTO result = orgAuthService.authorizeAuthentication(authorizeResult);
-        return (result!=null) ? ApiResult.success(result) : ApiResult.failed("审核失败");
+        return ApiResult.success(result);
     }
 
     /**

@@ -25,3 +25,9 @@ template.helper('_formatFileSize', function (fileSize) {
         return temp.substring(0, temp.length - 1) + 'GB';
     }
 });
+
+
+template.helper('_isNowDiffTargetDateNDaysMore', function (targetDate, n) {
+    var diff = moment().diff(moment(targetDate), 'days') + 1;
+    return diff >= n;
+});

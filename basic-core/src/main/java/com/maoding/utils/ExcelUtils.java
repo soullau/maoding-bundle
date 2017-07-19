@@ -110,25 +110,25 @@ public class ExcelUtils {
 	public static Object readFrom(Cell cell){
 		if(cell==null) return null;
 
-		switch (cell.getCellType()) {
-			case Cell.CELL_TYPE_BLANK:
+		switch (cell.getCellTypeEnum()) {
+			case BLANK:
 				return "";
-			case Cell.CELL_TYPE_BOOLEAN:
+			case BOOLEAN:
 				return cell.getBooleanCellValue();
-			case Cell.CELL_TYPE_ERROR:
+			case ERROR:
 				return cell.getErrorCellValue();
-			case Cell.CELL_TYPE_FORMULA:
+			case FORMULA:
 				return cell.getCellFormula().replaceAll("\"", "");
-			case Cell.CELL_TYPE_NUMERIC:
+			case NUMERIC:
 				if (DateUtil.isCellDateFormatted(cell)) {
 					return cell.getDateCellValue();
 				} else {
 					return cell.getNumericCellValue();
 				}
-			case Cell.CELL_TYPE_STRING:
+			case STRING:
 				return cell.getStringCellValue();
 		}
-		return "Unknown Cell Type:" + cell.getCellType();
+		return "Unknown Cell Type:" + cell.getCellTypeEnum();
 	}
 
 	/**
@@ -191,5 +191,11 @@ public class ExcelUtils {
 	public static List<List<Object>> readFrom(Workbook workbook,String sheetName,Integer titleRow,Integer startRow,Short startColumn,Short endColumn){
 		if ((workbook == null) || (sheetName == null)) return null;
 		return readFrom(workbook.getSheet(sheetName),titleRow,startRow,startColumn,endColumn);
+	}
+	public static List<List<Object>> readFrom(String fileName,Integer sheetIndex,Integer titleRow,Integer startRow,Short startColumn,Short endColumn){
+		return readFrom(getWorkbook(fileName),sheetIndex,titleRow,startRow,startColumn,endColumn);
+	}
+	public static List<List<Object>> readFrom(String fileName,String sheetName,Integer titleRow,Integer startRow,Short startColumn,Short endColumn){
+		return readFrom(getWorkbook(fileName),sheetName,titleRow,startRow,startColumn,endColumn);
 	}
 }

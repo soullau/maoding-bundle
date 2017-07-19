@@ -1,5 +1,6 @@
 package com.maoding.admin.module.corp;
 
+import com.maoding.core.base.BaseController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -8,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/corp")
-public class CorpController {
+public class CorpController extends BaseController {
 
     @RequestMapping("/approveList")
     public void approveList() {}

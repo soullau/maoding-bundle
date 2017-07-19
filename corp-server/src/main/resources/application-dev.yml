@@ -22,7 +22,7 @@ spring:
 # Druid
 # ===================================================================
 druid:
-    url: jdbc:mysql://172.16.6.71:3306/maoding_new
+    url: jdbc:mysql://172.16.6.71:3306/maoding_xiaoluo
     username: idccapp
     password: idccapp
     driverClassName: com.mysql.jdbc.Driver
@@ -65,7 +65,7 @@ mapper:
 # Redisson
 # ===================================================================
 redisson:
-    #address: "redis://172.16.6.73:6679"
-    #password: "123456"
-    address: "redis://192.168.17.168:6679"
-    password: null
+    address: "redis://172.16.6.73:6679"
+    password: "123456"
+    #address: "redis://192.168.17.168:6679"
+    #password: null

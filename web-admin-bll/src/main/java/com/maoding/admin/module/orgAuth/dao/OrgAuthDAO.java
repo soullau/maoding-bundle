@@ -25,9 +25,4 @@ public interface OrgAuthDAO extends BaseDao<OrgAuthDO> {
      * 日期：2017/7/11
      */
     List<OrgAuthAttachDTO> listOrgAuthAttach(List<String> idList);
-
-    /**
-     * 获取记录
-     */
-    OrgAuthDO selectById(String id);
 }

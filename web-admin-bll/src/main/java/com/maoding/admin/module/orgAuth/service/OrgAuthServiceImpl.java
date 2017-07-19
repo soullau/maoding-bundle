@@ -123,7 +123,7 @@ public class OrgAuthServiceImpl extends BaseService implements OrgAuthService {
         if ((authorizeResult.getAuthenticationStatus() != AUTH_PASS_STATUS) && (authorizeResult.getRejectType() == null)) throw new IllegalArgumentException("不通过审核原因不能为空");
 
         //保存当次审核结果
-        OrgAuthDO origin = orgAuthDAO.selectById(authorizeResult.getId());
+        OrgAuthDO origin = orgAuthDAO.selectByPrimaryKey(authorizeResult.getId());
         if (origin == null) throw new IllegalArgumentException("authorizeAuthentication 参数错误");
         OrgAuthDO entity = new OrgAuthDO();
         BeanUtils.copyProperties(origin,entity);

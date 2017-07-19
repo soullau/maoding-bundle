@@ -31,24 +31,24 @@
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-autoconfigure:1.5.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-logging:1.5.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-aop:4.3.9.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.aspectj:aspectjweaver:1.8.5" level="project" />
+    <orderEntry type="library" name="Maven: org.aspectj:aspectjweaver:1.8.10" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-activemq:1.5.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-jms:4.3.9.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-messaging:4.3.9.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-tx:4.3.9.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: io.vertx:vertx-core:3.4.1" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-common:4.1.12.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-buffer:4.1.12.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-transport:4.1.12.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-handler:4.1.12.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-codec:4.1.12.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-handler-proxy:4.1.12.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-codec-socks:4.1.12.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-codec-http:4.1.12.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-codec-http2:4.1.12.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-resolver:4.1.12.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-resolver-dns:4.1.12.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-codec-dns:4.1.12.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-common:4.1.13.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-buffer:4.1.13.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-transport:4.1.13.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-handler:4.1.13.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec:4.1.13.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-handler-proxy:4.1.13.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec-socks:4.1.13.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec-http:4.1.13.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec-http2:4.1.13.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-resolver:4.1.13.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-resolver-dns:4.1.13.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec-dns:4.1.13.Final" level="project" />
     <orderEntry type="library" name="Maven: io.vertx:vertx-web:3.4.1" level="project" />
     <orderEntry type="library" name="Maven: io.vertx:vertx-auth-common:3.4.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.activemq:activemq-broker:5.14.4" level="project" />
@@ -62,7 +62,7 @@
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.8.8" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.8.8" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.datatype:jackson-datatype-joda:2.8.8" level="project" />
-    <orderEntry type="library" name="Maven: joda-time:joda-time:2.9.7" level="project" />
+    <orderEntry type="library" name="Maven: joda-time:joda-time:2.9.9" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.module:jackson-module-parameter-names:2.8.8" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.8.8" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.8" level="project" />

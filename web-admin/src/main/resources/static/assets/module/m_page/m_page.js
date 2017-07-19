@@ -6,7 +6,7 @@
     "use strict";
     var pluginName = "m_page",
         defaults = {
-            loadingId: null,
+            loadingEl: null,
             pageIndex: 0,
             pageSize: 10,
             total: 0,
@@ -56,18 +56,18 @@
     $.extend(Plugin.prototype, {
         init: function () {
             var that = this;
-            if (that.settings.loadingId !== null && that.settings.remote.beforeSend === null) {
+            if (that.settings.loadingEl !== null && that.settings.remote.beforeSend === null) {
                 that.settings.remote.beforeSend = function () {
                     App.blockUI({
-                        target: that.settings.loadingId,
+                        target: that.settings.loadingEl,
                         boxed: false,
                         animate: true
                     });
                 }
             }
-            if (that.settings.loadingId !== null && that.settings.remote.complete === null) {
+            if (that.settings.loadingEl !== null && that.settings.remote.complete === null) {
                 that.settings.remote.complete = function () {
-                    App.unblockUI(that.settings.loadingId);
+                    App.unblockUI(that.settings.loadingEl);
                 }
             }
 

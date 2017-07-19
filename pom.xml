@@ -86,7 +86,7 @@
         <mybatis.version>3.4.4</mybatis.version>
         <!-- mybatis通用Mapper -->
         <mapper.version>3.4.0</mapper.version>
-        <mapper-spring-boot-starter.version>1.1.1</mapper-spring-boot-starter.version>
+        <mapper-spring-boot-starter.version>1.1.2</mapper-spring-boot-starter.version>
         <!-- typehandlers for JSR 310: Date and Time API-->
         <mybatis-typehandlers-jsr310.version>1.0.2</mybatis-typehandlers-jsr310.version>
 
@@ -99,20 +99,27 @@
         <thymeleaf.version>3.0.6.RELEASE</thymeleaf.version>
         <thymeleaf-layout-dialect.version>2.2.2</thymeleaf-layout-dialect.version>
 
+        <!-- shiro -->
+        <shiro.version>1.4.0</shiro.version>
+        <!-- thymeleaf-shiro -->
+        <thymeleaf-shiro.version>2.0.0</thymeleaf-shiro.version>
+
         <!-- guava -->
         <guava.version>22.0</guava.version>
 
         <!-- proxy -->
         <javassist.version>3.21.0-GA</javassist.version>
-        <aspectj.version>1.8.5</aspectj.version>
-        <cglib.version>2.2.2</cglib.version>
+        <aspectj.version>1.8.10</aspectj.version>
+        <!--<cglib.version>2.2.2</cglib.version>-->
+        <cglib.version>3.2.5</cglib.version>
 
         <!-- Apache -->
-        <commons-lang3.version>3.4</commons-lang3.version>
-        <commons-io.version>2.4</commons-io.version>
+        <!--<commons-lang3.version>3.4</commons-lang3.version>-->
+        <commons-lang3.version>3.6</commons-lang3.version>
+        <commons-io.version>2.5</commons-io.version>
         <commons-codec.version>1.10</commons-codec.version>
         <commons-beanutils.version>1.9.3</commons-beanutils.version>
-        <commons-fileupload.version>1.3.2</commons-fileupload.version>
+        <commons-fileupload.version>1.3.3</commons-fileupload.version>
         <commons-pool2.version>2.4.2</commons-pool2.version>
 
         <!-- vert.x -->
@@ -125,25 +132,25 @@
         <jedis.version>2.9.0</jedis.version>
 
         <!-- redisson -->
-        <redisson.version>3.4.3</redisson.version>
+        <redisson.version>3.4.4</redisson.version>
 
         <!-- jackson -->
         <jackson.version>2.8.8</jackson.version>
 
         <!-- fastjson -->
-        <fastjson.version>1.2.33</fastjson.version>
+        <fastjson.version>1.2.35</fastjson.version>
 
         <!-- gson -->
-        <gson.version>2.8.0</gson.version>
+        <gson.version>2.8.1</gson.version>
 
         <!-- kryo -->
         <kryo.version>2.24.0</kryo.version>
 
         <!-- protobuf -->
-        <protobuf.version>2.5.0</protobuf.version>
+        <protobuf.version>3.3.1</protobuf.version>
 
         <!-- joda-time -->
-        <joda-time.version>2.9.7</joda-time.version>
+        <joda-time.version>2.9.9</joda-time.version>
 
         <!-- 缩略图 -->
         <thumbnailator.version>0.4.8</thumbnailator.version>
@@ -151,7 +158,7 @@
         <imageio.version>3.3.2</imageio.version>
 
         <!-- okhttp -->
-        <okhttp.version>3.8.0</okhttp.version>
+        <okhttp.version>3.8.1</okhttp.version>
 
         <!-- httpclient -->
         <httpcomponents.version>4.5.3</httpcomponents.version>
@@ -162,10 +169,10 @@
         <gexin.version>4.0.0.2</gexin.version>
 
         <!-- netty -->
-        <netty.version>4.1.12.Final</netty.version>
+        <netty.version>4.1.13.Final</netty.version>
 
         <!-- poi -->
-        <poi.version>3.15-beta2</poi.version>
+        <poi.version>3.16</poi.version>
 
     </properties>
 
@@ -388,6 +395,30 @@
                 <groupId>nz.net.ultraq.thymeleaf</groupId>
                 <artifactId>thymeleaf-layout-dialect</artifactId>
                 <version>${thymeleaf-layout-dialect.version}</version>
+            </dependency>
+
+            <!-- shiro -->
+            <dependency>
+                <groupId>org.apache.shiro</groupId>
+                <artifactId>shiro-config-ogdl</artifactId>
+                <version>${shiro.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-api</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.shiro</groupId>
+                <artifactId>shiro-spring</artifactId>
+                <version>${shiro.version}</version>
+            </dependency>
+            <!-- thymeleaf-shiro -->
+            <dependency>
+                <groupId>com.github.theborakompanioni</groupId>
+                <artifactId>thymeleaf-extras-shiro</artifactId>
+                <version>${thymeleaf-shiro.version}</version>
             </dependency>
 
             <!-- guava -->

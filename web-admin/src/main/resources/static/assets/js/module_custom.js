@@ -208,36 +208,149 @@ var cutString = function (str, length, suffix) {
 /*****************************验证公共方法--结束**********************************/
 
 //数据提交访问错误
-function handlePostJsonError(response) {
-    if (response.status == 404) {
+function handlePostJsonError(res) {
+    if (res.status == 404) {
         //当前请求地址未找到
         S_toastr.error('当前请求地址未找到！');
 
-    } else if (response.status == 0) {
+    } else if (res.status == 0) {
         //网络请求超时
         S_toastr.error('网络请求超时！');
     } else {
-        S_toastr.error('网络请求出现错误！status：' + response.status + "，statusText：" + response.statusText);
+        S_toastr.error('网络请求出现错误！status：' + res.status + "，statusText：" + res.statusText);
     }
-    //var text = '访问出现异常！<br/>status: ' + response.status + '<br/>statusText: ' + response.statusText;
-    //S_dialog.alert(text);
 }
+
 //数据提交访问错误
-function handleResponse(response) {
+function handleResponse(res) {
     var result = false;
-    if (response.code == "401") {
+    if (res.code === '401') {
         //session超时 !
-        S_dialog.error('当前用户状态信息已超时!点击“确定”后返回登录界面。', '提示', function () {
+        S_toastr.error('当前用户状态信息已超时!点击“确定”后返回登录界面。', '提示', function () {
             window.location.href = rootPath + '/iWork/sys/login';
         });
         result = true;
-    } else if (response.code == "500") {
+    } else if (res.code === '500') {
         //未捕获异常 X
-        S_dialog.error('出现异常错误 !详细信息：' + response.info);
+        S_toastr.error('出现异常错误 !详细信息：' + res.msg);
         result = true;
     }
     return result;
 }
+
+var S_layer = {
+    dialog: function (options) {
+        var defaults = {
+            id: '',
+            type: 1, /*0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层）*/
+            title: ' ', /*['文本', 'font-size:18px;'],false*/
+            anim: -1, /*弹出动画，0-6*/
+            isOutAnim: false, /*关闭动画*/
+            time: 0, /*自动关闭所需毫秒*/
+            area: 'auto', /*['390px', '330px'],auto*/
+            /*maxWidth: '360px', *//*只有当area: 'auto'时，maxWidth的设定才有效。*/
+            shade: 0.3,
+            shadeClose: false, /*是否点击遮罩关闭*/
+            closeBtn: 1, /*关闭按钮 0-2*/
+            move: '.layui-layer-title', /*触发拖动的元素,false*/
+            moveOut: true, /*是否允许拖拽到窗口外*/
+            maxmin: true,
+            moveEnd: null, /*function(layero){}*/
+            fixed: true, /*鼠标滚动时，层是否固定在可视区域*/
+            /*offset: [($(window).height() - 300)/2, ($(window).width() - 390)/2],*/
+            content: null,
+            btn: ['确定', '取消'],
+            btnAlign: 'r', /*按钮位置l-c-r*/
+            yes: function (index, layero) {
+                layer.close(index);
+            },
+            cancel: function (index, layero) {
+            },
+            btn2: function (index, layero) {
+                layer.close(index);
+                //layer.closeAll();
+                //return false 开启该代码可禁止点击该按钮关闭
+            },
+            resize: false,
+            resizing: null, /*function(layero){}*/
+            scrollbar: false,
+            zIndex: layer.zIndex,
+            success: function (layero) {
+                layer.setTop(layero);
+            },
+            full: null, /*function(layero){}*/
+            min: null, /*function(layero){}*/
+            restore: null, /*function(layero){}*/
+            end: null /*function(){}*/
+        };
+        var opts = $.extend(true, {}, defaults, options);
+        layer.open(opts);
+    },
+    panel: function (options) {
+        var defaults = {
+            id: '',
+            type: 1, /*0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层）*/
+            title: false, /*['文本', 'font-size:18px;'],false*/
+            anim: -1, /*弹出动画，0-6*/
+            isOutAnim: false, /*关闭动画*/
+            time: 0, /*自动关闭所需毫秒*/
+            area: 'auto', /*['390px', '330px'],auto*/
+            /*maxWidth: '360px', *//*只有当area: 'auto'时，maxWidth的设定才有效。*/
+            shade: 0.3,
+            shadeClose: false, /*是否点击遮罩关闭*/
+            closeBtn: 0, /*关闭按钮 0-2*/
+            move: '.layui-layer-title', /*触发拖动的元素,false*/
+            moveOut: true, /*是否允许拖拽到窗口外*/
+            maxmin: false,
+            moveEnd: null, /*function(layero){}*/
+            fixed: true, /*鼠标滚动时，层是否固定在可视区域*/
+            /*offset: [($(window).height() - 300)/2, ($(window).width() - 390)/2],*/
+            content: null,
+            btn: null,
+            btnAlign: 'r', /*按钮位置l-c-r*/
+            cancel: function (index, layero) {
+            },
+            shown: null, /*function(layero){}*/
+            resize: false,
+            resizing: null, /*function(layero){}*/
+            scrollbar: false,
+            zIndex: layer.zIndex,
+            full: null, /*function(layero){}*/
+            min: null, /*function(layero){}*/
+            restore: null, /*function(layero){}*/
+            end: null /*function(){}*/
+        };
+        var opts = $.extend(true, {}, defaults, options);
+        opts.type = 1;
+        opts.title = false;
+        opts.move = '.portlet-title';
+        opts.btn = null;
+        opts.maxmin = null;
+        opts.closeBtn = 0;
+        opts.success = function (layero) {
+            layer.setTop(layero);
+
+            var $btnYes = layero.find('button[data-action="layer-custom-btn-yes"]');
+            if ($btnYes && $btnYes.length > 0) {
+                $btnYes.off('click.yes').on('click.yes', function () {
+                    if (opts.yes !== void 0 && opts.yes !== null)
+                        opts.yes(layer.index, layero);
+                });
+            }
+
+            var $btnClose = layero.find('button[data-action="layer-custom-btn-close"]');
+            if ($btnClose && $btnClose.length > 0) {
+                $btnClose.off('click.close').on('click.close', function () {
+                    layer.close(layer.index);
+                });
+            }
+
+            if (opts.shown !== void 0 && opts.shown !== null)
+                opts.shown(layer.index, layero);
+        };
+        layer.open(opts);
+    }
+};
 
 var S_swal = {
     confirm: function (options, callback) {
@@ -375,80 +488,24 @@ var S_toastr = {
 
 
 var m_ajax = {
-    get: function (option, onHttpSuccess, onHttpError) {
+    getJson: function (options, onHttpSuccess, onHttpError) {
         $.ajax({
             type: 'GET',
-            url: option.url,
-            cache: false,
-            beforeSend: function () {
-                if (option.classId)
-                    $_loading.show(option.classId, '正在加载中...');
-
-                if (option.bindDisabled) {
-                    var $el = $(option.bindDisabled);
-                    if ($el.length > 0) {
-                        try {
-                            $el.attr('disabled', true);
-                        } catch (e) {
-                        }
-                        try {
-                            $el.prop('disabled', true);
-                        } catch (e) {
-                        }
-                    }
-                }
-            },
-            success: function (response) {
-
-                if (!handleResponse(response)) {
-                    if (onHttpSuccess)
-                        onHttpSuccess(response);
-                }
-
-            },
-            error: function (response) {
-                if (onHttpError)
-                    onHttpError();
-
-                handlePostJsonError(response);
-                //else
-                //tzTips.showOnTopRight("Ajax请求发生错误", "error");
-            },
-            complete: function () {
-                if (option.classId)
-                    $_loading.close(option.classId);
-
-                if (option.bindDisabled) {
-                    setTimeout(function () {
-                        var $el = $(option.bindDisabled);
-                        if ($el.length > 0) {
-                            try {
-                                $el.attr('disabled', false);
-                            } catch (e) {
-                            }
-                            try {
-                                $el.prop('disabled', false);
-                            } catch (e) {
-                            }
-                        }
-                    }, 1000);
-
-                }
-            }
-        });
-    },
-    getJson: function (option, onHttpSuccess, onHttpError) {
-        $.ajax({
-            type: 'GET',
-            url: option.url,
+            url: options.url,
             cache: false,
             contentType: "application/json",
             beforeSend: function () {
-                if (option.classId)
-                    $_loading.show(option.classId, '正在加载中...');
+                if (options.loadingEl)
+                {
+                    App.blockUI({
+                        target: options.loadingEl,
+                        boxed: false,
+                        animate: true
+                    });
+                }
 
-                if (option.bindDisabled) {
-                    var $el = $(option.bindDisabled);
+                if (options.bindDisabled) {
+                    var $el = $(options.bindDisabled);
                     if ($el.length > 0) {
                         try {
                             $el.attr('disabled', true);
@@ -478,12 +535,12 @@ var m_ajax = {
                 //tzTips.showOnTopRight("Ajax请求发生错误", "error");
             },
             complete: function () {
-                if (option.classId)
-                    $_loading.close(option.classId);
+                if (options.loadingEl)
+                    App.unblockUI();
 
-                if (option.bindDisabled) {
+                if (options.bindDisabled) {
                     setTimeout(function () {
-                        var $el = $(option.bindDisabled);
+                        var $el = $(options.bindDisabled);
                         if ($el.length > 0) {
                             try {
                                 $el.attr('disabled', false);
@@ -500,84 +557,26 @@ var m_ajax = {
             }
         });
     },
-    post: function (option, onHttpSuccess, onHttpError) {
-        //var pNotify;
+    postJson: function (options, onHttpSuccess, onHttpError) {
         $.ajax({
             type: 'POST',
-            url: option.url,
-            data: option.postData,
+            url: options.url,
             cache: false,
-            beforeSend: function () {
-                if (option.classId)
-                    $_loading.show(option.classId, '正在加载中...');
-
-                if (option.bindDisabled) {
-                    var $el = $(option.bindDisabled);
-                    if ($el.length > 0) {
-                        try {
-                            $el.attr('disabled', true);
-                        } catch (e) {
-                        }
-                        try {
-                            $el.prop('disabled', true);
-                        } catch (e) {
-                        }
-                    }
-                }
-            },
-            success: function (response) {
-
-                if (!handleResponse(response)) {
-                    if (onHttpSuccess)
-                        onHttpSuccess(response);
-                }
-
-            },
-            error: function (response) {
-                if (onHttpError)
-                    onHttpError();
-
-                handlePostJsonError(response);
-                //else
-                //tzTips.showOnTopRight("Ajax请求发生错误", "error");
-            },
-            complete: function () {
-                if (option.classId)
-                    $_loading.close(option.classId);
-
-                if (option.bindDisabled) {
-                    setTimeout(function () {
-                        var $el = $(option.bindDisabled);
-                        if ($el.length > 0) {
-                            try {
-                                $el.attr('disabled', false);
-                            } catch (e) {
-                            }
-                            try {
-                                $el.prop('disabled', false);
-                            } catch (e) {
-                            }
-                        }
-                    }, 1000);
-
-                }
-            }
-        });
-    },
-    postJson: function (option, onHttpSuccess, onHttpError) {
-        $.ajax({
-            type: 'POST',
-            url: option.url,
-            cache: false,
-            async: option.async == null ? true : option.async,
-            data: JSON.stringify(option.postData),
+            async: options.async == null ? true : options.async,
+            data: JSON.stringify(options.postData),
             contentType: "application/json",
             beforeSend: function () {
-                if (option.classId)
-                    $_loading.show(option.classId, '正在加载中...');
+                if (options.loadingEl)
+                {
+                    App.blockUI({
+                        target: options.loadingEl,
+                        boxed: false,
+                        animate: true
+                    });
+                }
 
-                if (option.bindDisabled) {
-                    var $el = $(option.bindDisabled);
+                if (options.bindDisabled) {
+                    var $el = $(options.bindDisabled);
                     if ($el.length > 0) {
                         try {
                             $el.attr('disabled', true);
@@ -605,76 +604,12 @@ var m_ajax = {
                 //tzTips.showOnTopRight("Ajax请求发生错误", "error");
             },
             complete: function () {
-                if (option.classId)
-                    $_loading.close(option.classId);
+                if (options.loadingEl)
+                    App.unblockUI();
 
-                if (option.bindDisabled) {
+                if (options.bindDisabled) {
                     setTimeout(function () {
-                        var $el = $(option.bindDisabled);
-                        if ($el.length > 0) {
-                            try {
-                                $el.attr('disabled', false);
-                            } catch (e) {
-                            }
-                            try {
-                                $el.prop('disabled', false);
-                            } catch (e) {
-                            }
-                        }
-                    }, 1000);
-                }
-            }
-        });
-    },
-    delete: function (option, onHttpSuccess, onHttpError) {
-        //var pNotify;
-        $.ajax({
-            type: 'DELETE',
-            url: option.url,
-            cache: false,
-            data: JSON.stringify(option.postData),
-            contentType: "application/json",
-            beforeSend: function () {
-                if (option.classId)
-                    $_loading.show(option.classId, '正在加载中...');
-
-                if (option.bindDisabled) {
-                    var $el = $(option.bindDisabled);
-                    if ($el.length > 0) {
-                        try {
-                            $el.attr('disabled', true);
-                        } catch (e) {
-                        }
-                        try {
-                            $el.prop('disabled', true);
-                        } catch (e) {
-                        }
-                    }
-                }
-            },
-            success: function (response) {
-
-                if (!handleResponse(response)) {
-                    if (onHttpSuccess)
-                        onHttpSuccess(response);
-                }
-
-            },
-            error: function (response) {
-                if (onHttpError)
-                    onHttpError();
-
-                handlePostJsonError(response);
-                //else
-                //tzTips.showOnTopRight("Ajax请求发生错误", "error");
-            },
-            complete: function () {
-                if (option.classId)
-                    $_loading.close(option.classId);
-
-                if (option.bindDisabled) {
-                    setTimeout(function () {
-                        var $el = $(option.bindDisabled);
+                        var $el = $(options.bindDisabled);
                         if ($el.length > 0) {
                             try {
                                 $el.attr('disabled', false);
