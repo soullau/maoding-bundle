@@ -11,8 +11,6 @@ public class BaseRequest implements Serializable {
     String userId;
     /** 操作者组织ID */
     String companyId;
-    /** 操作者雇员ID */
-    String companyUserId;
 
     public String getUserId() {
         return userId;
@@ -28,13 +26,5 @@ public class BaseRequest implements Serializable {
 
     public void setCompanyId(String companyId) {
         this.companyId = companyId;
-    }
-
-    public String getCompanyUserId() {
-        return companyUserId;
-    }
-
-    public void setCompanyUserId(String companyUserId) {
-        this.companyUserId = companyUserId;
     }
 }
