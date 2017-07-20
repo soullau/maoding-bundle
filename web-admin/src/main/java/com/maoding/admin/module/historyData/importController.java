@@ -1,5 +1,6 @@
 package com.maoding.admin.module.historyData;
 
+import com.maoding.admin.module.historyData.dto.ImportResultDTO;
 import com.maoding.admin.module.historyData.dto.ProjectImportDTO;
 import com.maoding.admin.module.historyData.service.ImportService;
 import com.maoding.core.base.BaseController;
@@ -24,7 +25,7 @@ public class importController extends BaseController {
     @RequestMapping(value = "/projects", method = RequestMethod.POST)
     @ResponseBody
     public ApiResult importProjects(@RequestBody ApiRequestInsert<ProjectImportDTO> request) {
-        importService.importProjects(request);
-        return ApiResult.success(null);
+        ImportResultDTO result = importService.importProjects(request);
+        return ApiResult.success(result);
     }
 }

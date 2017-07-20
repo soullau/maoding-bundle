@@ -2,6 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.maoding.admin.module.historyData.dao.UserDAO">
     <select id="getUserIdByCompanyNameAndUserName" parameterType="java.util.Map" resultType="java.lang.String">
-
+        select b.id
+        from
+            maoding_web_company_user a
+            inner join maoding_web_account b on (a.user_id=b.id)
+            inner join maoding_web_company c on (a.company_id=c.id)
+            left join maoding_web_business_partner d on (c.id=d.company_id)
+        where
+            (a.user_name=#{userName} or b.user_name=#{userName})
+            and (c.company_name=#{companyName} or c.company_short_name=#{companyName} or d.nick_name=#{companyName})
+        limit 1
     </select>
 </mapper>

@@ -11,7 +11,7 @@ public interface ProjectMapper {
     final String PROJECT_NAME = "项目名称*";
     final String PROJECT_COMPANY_NAME = "立项组织*";
     final String PROJECT_CREATOR_NAME = "立项人*";
-    final String PROJECT_CONTRACT_DATE = "合同签订日期*";
+    final String PROJECT_CONTRACT_DATE = "立项日期*";
     final String PROJECT_PROVINCE = "省/直辖市";
     final String PROJECT_CITY = "市/直辖市区";
     final String PROJECT_COUNTY = "区/县";

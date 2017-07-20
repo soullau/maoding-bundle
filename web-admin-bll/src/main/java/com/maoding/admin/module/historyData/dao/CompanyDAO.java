@@ -7,6 +7,6 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface CompanyDAO {
     String getCompanyIdByCompanyNameAndUserName(@Param("companyName") String companyName, @Param("userName") String userName);
-    String getCompanyIdByCompanyNameForA(@Param("companyName") String companyName);
+    String getCompanyIdByCompanyNameForA(@Param("companyName") String companyName, @Param("relateCompanyId") String relateCompanyId);
     String getCompanyIdByCompanyNameForB(@Param("companyName") String companyName, @Param("relateCompanyId") String relateCompanyId);
 }

@@ -8,5 +8,5 @@ import com.maoding.core.base.BaseDao;
  * Created by Chengliang.zhang on 2017/7/20.
  */
 public interface ProjectDAO extends BaseDao<ProjectDO> {
-    ProjectDAO getProject(ProjectQueryDTO query);
+    ProjectDO getProject(ProjectQueryDTO query);
 }

@@ -1021,10 +1021,12 @@ public class DateUtils extends PropertyEditorSupport {
     }
 
     public static LocalDate getLocalDate(Date d){
-        return getLocalDateTime(d).toLocalDate();
+        LocalDateTime dt = getLocalDateTime(d);
+        return (dt!=null)? dt.toLocalDate() : null;
     }
 
     public static LocalDateTime getLocalDateTime(Date d){
+        if (d == null) return null;
         return LocalDateTime.ofInstant(d.toInstant(), ZoneId.systemDefault());
     }
 }

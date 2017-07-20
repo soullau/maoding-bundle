@@ -115,7 +115,7 @@ public class ExcelUtils {
 
 		switch (cell.getCellTypeEnum()) {
 			case BLANK:
-				return "";
+				return null;
 			case BOOLEAN:
 				return cell.getBooleanCellValue();
 			case ERROR:
@@ -145,11 +145,14 @@ public class ExcelUtils {
 		if ((endColumn == null) || (endColumn == -1)) endColumn = row.getLastCellNum();
 		
 		//从startColumn处开始读取数据
-		Map<String,Object> dataMap = new HashMap<>();
+		Map<String,Object> dataMap = null;
 		for(Short i=startColumn; i<=endColumn; i++){
 			String name = ((titleMap != null) && (titleMap.containsKey(i))) ? titleMap.get(i) : i.toString();
 			Object data = readFrom(row.getCell(i));
-			dataMap.put(name,data);
+			if (data != null) {
+				if (dataMap == null) dataMap = new HashMap<>();
+				dataMap.put(name, data);
+			}
 		}
 		return dataMap;
 	}
@@ -164,7 +167,6 @@ public class ExcelUtils {
 		if ((titleRow == null) || (titleRow == -1)) titleRow = sheet.getFirstRowNum();
 
 		//读取标题数据,从titleRow倒序读取第一个不为空的值，实现多标题行合并
-		List<Map<String,Object>> dataList = new ArrayList<>();
 		Map<Short,String> titleMap = new HashMap<>();
 		if ((sheet.getFirstRowNum() <= titleRow) && (titleRow <= sheet.getLastRowNum())) {
 			Row row = sheet.getRow(titleRow);
@@ -186,10 +188,15 @@ public class ExcelUtils {
 		}
 		
 		//读取数据行
+		List<Map<String,Object>> dataList = null;
 		if ((startRow == null) || (startRow == -1)) startRow = titleRow + 1;
 		Integer endRow = sheet.getLastRowNum();
 		for (Integer i=startRow; i<=endRow; i++){
-			dataList.add(readFrom(sheet.getRow(i),titleMap,startColumn,endColumn));
+			Map<String,Object> r = readFrom(sheet.getRow(i),titleMap,startColumn,endColumn);
+			if (r != null) {
+				if (dataList == null) dataList = new ArrayList<>();
+				dataList.add(readFrom(sheet.getRow(i), titleMap, startColumn, endColumn));
+			}
 		}
 		return dataList;
 	}

@@ -4,6 +4,7 @@ import com.maoding.admin.constDefine.ProjectMapper;
 import com.maoding.admin.module.historyData.dao.CompanyDAO;
 import com.maoding.admin.module.historyData.dao.ProjectDAO;
 import com.maoding.admin.module.historyData.dao.UserDAO;
+import com.maoding.admin.module.historyData.dto.ImportResultDTO;
 import com.maoding.admin.module.historyData.dto.ProjectImportDTO;
 import com.maoding.admin.module.historyData.dto.ProjectQueryDTO;
 import com.maoding.admin.module.historyData.model.ProjectDO;
@@ -13,6 +14,8 @@ import com.maoding.core.bean.ApiRequestInsert;
 import com.maoding.utils.DateUtils;
 import com.maoding.utils.ExcelUtils;
 import com.maoding.utils.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +29,9 @@ import java.util.Map;
  */
 @Service("importService")
 public class ImportServiceImpl extends BaseService implements ImportService {
+    /** 日志对象 */
+    private static final Logger log = LoggerFactory.getLogger(ImportServiceImpl.class);
+
     @Autowired
     CompanyDAO companyDAO;
 
@@ -41,7 +47,7 @@ public class ImportServiceImpl extends BaseService implements ImportService {
      * @param request 操作请求
      */
     @Override
-    public void importProjects(ApiRequestInsert<ProjectImportDTO> request) {
+    public ImportResultDTO importProjects(ApiRequestInsert<ProjectImportDTO> request) {
         if ((request == null) || (request.getData() == null)) throw new IllegalArgumentException("importProjects 参数错误");
 
         final Integer DEFAULT_SHEET_INDEX = -1;
@@ -49,22 +55,47 @@ public class ImportServiceImpl extends BaseService implements ImportService {
         List<Map<String,Object>> dataList = ExcelUtils.readFrom(request.getData().getImportFile(),DEFAULT_SHEET_INDEX,DEFAULT_TITLE_ROW);
         if ((dataList == null) || (dataList.isEmpty())) throw new IllegalArgumentException("importProjects 无有效数据");
 
+        ImportResultDTO result = new ImportResultDTO();
         for (Map<String,Object> data : dataList){
+            result.addTotalCount();
+
             ProjectDO project = createProjectDOFrom(data,request);
-            if (project == null) continue;
             //检查数据有效性
-            if ((project.getProjectNo() == null) && (ProjectMapper.PROJECT_NO.contains("*"))) continue;
-            if ((project.getProjectName() == null) && (ProjectMapper.PROJECT_NAME.contains("*"))) continue;
-            if ((project.getCompanyId() == null) && (ProjectMapper.PROJECT_COMPANY_NAME.contains("*"))) continue;
-            if ((project.getCreateBy() == null) && (ProjectMapper.PROJECT_CREATOR_NAME.contains("*"))) continue;
-            if ((project.getCreateDate() == null) && (ProjectMapper.PROJECT_CONTRACT_DATE.contains("*"))) continue;
+            if ((project == null)
+                    || ((project.getProjectNo() == null) && (ProjectMapper.PROJECT_NO.contains("*")))
+                    || ((project.getProjectName() == null) && (ProjectMapper.PROJECT_NAME.contains("*")))
+                    || ((project.getCompanyId() == null) && (ProjectMapper.PROJECT_COMPANY_NAME.contains("*")))
+                    || ((project.getCreateBy() == null) && (ProjectMapper.PROJECT_CREATOR_NAME.contains("*")))
+                    || ((project.getCreateDate() == null) && (ProjectMapper.PROJECT_CONTRACT_DATE.contains("*")))){
+                result.addFailed(data);
+                continue;
+            }
             //存储项目数据
             ProjectQueryDTO query = new ProjectQueryDTO(project.getCompanyId(),project.getProjectNo(),project.getProjectName(),project.getCreateDate());
             if (projectDAO.getProject(query) == null) {
-                if (project.getId() == null) project.setId(StringUtils.buildUUID());
-                projectDAO.insert(project);
+                try{
+                    insertProject(project);
+                }catch (Exception e){
+                    log.error("添加数据时产生错误",e);
+                    result.addFailed(data);
+                    continue;
+                }
+            } else {
+                result.addFailed(data);
+                continue;
             }
         }
+        return result;
+    }
+
+    /** 添加项目 */
+    private void insertProject(ProjectDO project){
+        //添加项目数据
+        if (project.getId() == null) project.setId(StringUtils.buildUUID());
+        if (project.getPstatus() == null) project.setPstatus("0");
+        projectDAO.insert(project);
+        //添加项目负责人
+        //添加乙方项目负责人
     }
 
     /** 转换数据为实体对象 */
@@ -115,16 +146,19 @@ public class ImportServiceImpl extends BaseService implements ImportService {
         //甲方
         String aCompanyName = (String)data.get(ProjectMapper.PROJECT_A_NAME);
         if (!StringUtils.isEmpty(aCompanyName)) {
-            String aCompanyId = companyDAO.getCompanyIdByCompanyNameForA(aCompanyName);
+            String aCompanyId = companyDAO.getCompanyIdByCompanyNameForA(aCompanyName,creatorCompanyId);
             project.setConstructCompany(aCompanyId);
         }
 
         //乙方
         String bCompanyName = (String)data.get(ProjectMapper.PROJECT_B_NAME);
         if (!StringUtils.isEmpty(bCompanyName)) {
-            String bCompanyId = companyDAO.getCompanyIdByCompanyNameForB(bCompanyName, creatorCompanyId);
+            String bCompanyId = companyDAO.getCompanyIdByCompanyNameForB(bCompanyName,creatorCompanyId);
             project.setCompanyBid(bCompanyId);
         }
+
+        //建筑类型
+        project.setProjectType("1c6f48757e684b3cb059b94021e12baa");
 
         return project;
     }
