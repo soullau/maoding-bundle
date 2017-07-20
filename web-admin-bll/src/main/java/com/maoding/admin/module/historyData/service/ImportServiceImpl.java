@@ -1,6 +1,6 @@
 package com.maoding.admin.module.historyData.service;
 
-import com.maoding.admin.constDefine.ProjectMapper;
+import com.maoding.admin.constDefine.ProjectConst;
 import com.maoding.admin.module.historyData.dao.CompanyDAO;
 import com.maoding.admin.module.historyData.dao.ProjectDAO;
 import com.maoding.admin.module.historyData.dao.ProjectMemberDAO;
@@ -68,11 +68,11 @@ public class ImportServiceImpl extends BaseService implements ImportService {
             ProjectDO project = createProjectDOFrom(data,request);
             //检查数据有效性
             if ((project == null)
-                    || ((project.getProjectNo() == null) && (ProjectMapper.PROJECT_NO.contains("*")))
-                    || ((project.getProjectName() == null) && (ProjectMapper.PROJECT_NAME.contains("*")))
-                    || ((project.getCompanyId() == null) && (ProjectMapper.PROJECT_COMPANY_NAME.contains("*")))
-                    || ((project.getCreateBy() == null) && (ProjectMapper.PROJECT_CREATOR_NAME.contains("*")))
-                    || ((project.getCreateDate() == null) && (ProjectMapper.PROJECT_CONTRACT_DATE.contains("*")))){
+                    || ((project.getProjectNo() == null) && (ProjectConst.PROJECT_NO.contains("*")))
+                    || ((project.getProjectName() == null) && (ProjectConst.PROJECT_NAME.contains("*")))
+                    || ((project.getCompanyId() == null) && (ProjectConst.PROJECT_COMPANY_NAME.contains("*")))
+                    || ((project.getCreateBy() == null) && (ProjectConst.PROJECT_CREATOR_NAME.contains("*")))
+                    || ((project.getCreateDate() == null) && (ProjectConst.PROJECT_CONTRACT_DATE.contains("*")))){
                 result.addFailed(data);
                 continue;
             }
@@ -104,14 +104,14 @@ public class ImportServiceImpl extends BaseService implements ImportService {
 
         //添加立项人和项目负责人
         if (!StringUtils.isEmpty(project.getCompanyId())){
-            insertProjectMember(project.getCompanyId(),project.getId(),ProjectMapper.MEMBER_TYPE_CREATOR,project.getCreateBy());
-            insertProjectMember(project.getCompanyId(),project.getId(),ProjectMapper.MEMBER_TYPE_MANAGER,project.getCreateBy());
-            insertProjectMember(project.getCompanyId(),project.getId(),ProjectMapper.MEMBER_TYPE_DESIGN,project.getCreateBy());
+            insertProjectMember(project.getCompanyId(),project.getId(), ProjectConst.MEMBER_TYPE_CREATOR,project.getCreateBy());
+            insertProjectMember(project.getCompanyId(),project.getId(), ProjectConst.MEMBER_TYPE_MANAGER,project.getCreateBy());
+            insertProjectMember(project.getCompanyId(),project.getId(), ProjectConst.MEMBER_TYPE_DESIGN,project.getCreateBy());
         }
         //添加乙方项目负责人
         if (!StringUtils.isEmpty(project.getCompanyBid())){
-            insertProjectMember(project.getCompanyBid(),project.getId(),ProjectMapper.MEMBER_TYPE_MANAGER,project.getCreateBy());
-            insertProjectMember(project.getCompanyBid(),project.getId(),ProjectMapper.MEMBER_TYPE_DESIGN,project.getCreateBy());
+            insertProjectMember(project.getCompanyBid(),project.getId(), ProjectConst.MEMBER_TYPE_MANAGER,project.getCreateBy());
+            insertProjectMember(project.getCompanyBid(),project.getId(), ProjectConst.MEMBER_TYPE_DESIGN,project.getCreateBy());
         }
         //添加项目数据
         projectDAO.insert(project);
@@ -128,7 +128,7 @@ public class ImportServiceImpl extends BaseService implements ImportService {
             member.setCompanyId(companyId);
             member.setAccountId(userId);
             //在当前用户无权限时，更改为默认的项目负责人
-            String permissionId = ProjectMapper.PERMISSION_MAPPER.get(memberType);
+            String permissionId = ProjectConst.PERMISSION_MAPPER.get(memberType);
             if (permissionId != null) {
                 List<String> list = companyDAO.listUserIdByCompanyIdAndPermissionId(companyId,permissionId);
                 if ((userId == null) || ((list != null) && !(list.contains(userId)))) {
@@ -155,14 +155,14 @@ public class ImportServiceImpl extends BaseService implements ImportService {
         ProjectDO project = new ProjectDO();
 
         //项目编号
-        project.setProjectNo((String)data.get(ProjectMapper.PROJECT_NO));
+        project.setProjectNo((String)data.get(ProjectConst.PROJECT_NO));
 
         //项目名称
-        project.setProjectName((String)data.get(ProjectMapper.PROJECT_NAME));
+        project.setProjectName((String)data.get(ProjectConst.PROJECT_NAME));
 
         //立项组织和立项人
-        String creatorCompanyName = (String)data.get(ProjectMapper.PROJECT_COMPANY_NAME);
-        String creatorUserName = (String)data.get(ProjectMapper.PROJECT_CREATOR_NAME);
+        String creatorCompanyName = (String)data.get(ProjectConst.PROJECT_COMPANY_NAME);
+        String creatorUserName = (String)data.get(ProjectConst.PROJECT_CREATOR_NAME);
         if (StringUtils.isEmpty(creatorCompanyName) || StringUtils.isEmpty(creatorUserName)) return null;
 
         String creatorCompanyId = companyDAO.getCompanyIdByCompanyNameAndUserName(creatorCompanyName, creatorUserName);
@@ -171,37 +171,37 @@ public class ImportServiceImpl extends BaseService implements ImportService {
         project.setCreateBy(creatorUserId);
 
         //合同签订日期
-        project.setCreateDate(DateUtils.getLocalDateTime((Date)data.get(ProjectMapper.PROJECT_CONTRACT_DATE)));
+        project.setCreateDate(DateUtils.getLocalDateTime((Date)data.get(ProjectConst.PROJECT_CONTRACT_DATE)));
 
         //项目地点-省/直辖市
-        project.setProvince((String)data.get(ProjectMapper.PROJECT_PROVINCE));
+        project.setProvince((String)data.get(ProjectConst.PROJECT_PROVINCE));
 
         //项目地点-市/直辖市区
-        project.setCity((String)data.get(ProjectMapper.PROJECT_CITY));
+        project.setCity((String)data.get(ProjectConst.PROJECT_CITY));
 
         //项目地点-区/县
-        project.setCounty((String)data.get(ProjectMapper.PROJECT_COUNTY));
+        project.setCounty((String)data.get(ProjectConst.PROJECT_COUNTY));
 
         //项目地点-详细地址
-        project.setDetailAddress((String)data.get(ProjectMapper.PROJECT_DETAIL_ADDRESS));
+        project.setDetailAddress((String)data.get(ProjectConst.PROJECT_DETAIL_ADDRESS));
 
         //项目状态
-        String status = (String)data.get(ProjectMapper.PROJECT_STATUS);
-        if ((status != null) && ProjectMapper.STATUS_MAPPER.containsKey(status)){
-            project.setStatus(ProjectMapper.STATUS_MAPPER.get(status));
+        String status = (String)data.get(ProjectConst.PROJECT_STATUS);
+        if ((status != null) && ProjectConst.STATUS_MAPPER.containsKey(status)){
+            project.setStatus(ProjectConst.STATUS_MAPPER.get(status));
         } else {
-            project.setStatus(ProjectMapper.PROJECT_STATUS_FINISHED);
+            project.setStatus(ProjectConst.PROJECT_STATUS_FINISHED);
         }
 
         //甲方
-        String aCompanyName = (String)data.get(ProjectMapper.PROJECT_A_NAME);
+        String aCompanyName = (String)data.get(ProjectConst.PROJECT_A_NAME);
         if (!StringUtils.isEmpty(aCompanyName)) {
             String aCompanyId = companyDAO.getCompanyIdByCompanyNameForA(aCompanyName,creatorCompanyId);
             project.setConstructCompany(aCompanyId);
         }
 
         //乙方
-        String bCompanyName = (String)data.get(ProjectMapper.PROJECT_B_NAME);
+        String bCompanyName = (String)data.get(ProjectConst.PROJECT_B_NAME);
         if (!StringUtils.isEmpty(bCompanyName)) {
             String bCompanyId = companyDAO.getCompanyIdByCompanyNameForB(bCompanyName,creatorCompanyId);
             project.setCompanyBid(bCompanyId);

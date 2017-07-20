@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * Created by Chengliang.zhang on 2017/7/19.
  */
-public interface ProjectMapper {
+public interface ProjectConst {
     final String PROJECT_NO = "项目编号*";
     final String PROJECT_NAME = "项目名称*";
     final String PROJECT_COMPANY_NAME = "立项组织*";
