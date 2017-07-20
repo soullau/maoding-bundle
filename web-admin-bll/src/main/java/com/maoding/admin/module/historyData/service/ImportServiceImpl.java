@@ -3,11 +3,14 @@ package com.maoding.admin.module.historyData.service;
 import com.maoding.admin.constDefine.ProjectMapper;
 import com.maoding.admin.module.historyData.dao.CompanyDAO;
 import com.maoding.admin.module.historyData.dao.ProjectDAO;
+import com.maoding.admin.module.historyData.dao.ProjectMemberDAO;
 import com.maoding.admin.module.historyData.dao.UserDAO;
 import com.maoding.admin.module.historyData.dto.ImportResultDTO;
+import com.maoding.admin.module.historyData.dto.MemberQueryDTO;
 import com.maoding.admin.module.historyData.dto.ProjectImportDTO;
 import com.maoding.admin.module.historyData.dto.ProjectQueryDTO;
 import com.maoding.admin.module.historyData.model.ProjectDO;
+import com.maoding.admin.module.historyData.model.ProjectMemberDO;
 import com.maoding.core.base.BaseRequest;
 import com.maoding.core.base.BaseService;
 import com.maoding.core.bean.ApiRequestInsert;
@@ -40,6 +43,9 @@ public class ImportServiceImpl extends BaseService implements ImportService {
 
     @Autowired
     ProjectDAO projectDAO;
+
+    @Autowired
+    ProjectMemberDAO projectMemberDAO;
 
     /**
      * 导入项目数据
@@ -90,12 +96,56 @@ public class ImportServiceImpl extends BaseService implements ImportService {
 
     /** 添加项目 */
     private void insertProject(ProjectDO project){
-        //添加项目数据
-        if (project.getId() == null) project.setId(StringUtils.buildUUID());
+        if (project == null) return;
+        //补充缺失字段
+        if (project.getId() == null) project.resetId();
         if (project.getPstatus() == null) project.setPstatus("0");
-        projectDAO.insert(project);
-        //添加项目负责人
+        if (project.getCreateDate() == null) project.resetCreateDate();
+
+        //添加立项人和项目负责人
+        if (!StringUtils.isEmpty(project.getCompanyId())){
+            insertProjectMember(project.getCompanyId(),project.getId(),ProjectMapper.MEMBER_TYPE_CREATOR,project.getCreateBy());
+            insertProjectMember(project.getCompanyId(),project.getId(),ProjectMapper.MEMBER_TYPE_MANAGER,project.getCreateBy());
+            insertProjectMember(project.getCompanyId(),project.getId(),ProjectMapper.MEMBER_TYPE_DESIGN,project.getCreateBy());
+        }
         //添加乙方项目负责人
+        if (!StringUtils.isEmpty(project.getCompanyBid())){
+            insertProjectMember(project.getCompanyBid(),project.getId(),ProjectMapper.MEMBER_TYPE_MANAGER,project.getCreateBy());
+            insertProjectMember(project.getCompanyBid(),project.getId(),ProjectMapper.MEMBER_TYPE_DESIGN,project.getCreateBy());
+        }
+        //添加项目数据
+        projectDAO.insert(project);
+    }
+
+    /** 添加项目成员 */
+    private void insertProjectMember(String companyId, String projectId, Integer memberType, String userId){
+        if ((companyId == null) || (projectId == null) || (memberType == null)) return;
+        MemberQueryDTO query = new MemberQueryDTO(companyId,projectId,memberType);
+        if (projectMemberDAO.getProjectMember(query) == null) {
+            ProjectMemberDO member = new ProjectMemberDO();
+            member.resetId();
+            member.setProjectId(projectId);
+            member.setCompanyId(companyId);
+            member.setAccountId(userId);
+            //在当前用户无权限时，更改为默认的项目负责人
+            String permissionId = ProjectMapper.PERMISSION_MAPPER.get(memberType);
+            if (permissionId != null) {
+                List<String> list = companyDAO.listUserIdByCompanyIdAndPermissionId(companyId,permissionId);
+                if ((userId == null) || ((list != null) && !(list.contains(userId)))) {
+                    member.setAccountId(list.get(0));
+                }
+            }
+            if (!StringUtils.isEmpty(member.getCompanyId()) && (!StringUtils.isEmpty(member.getAccountId()))) {
+                member.setCompanyUserId(companyDAO.getCompanyUserIdByCompanyIdAndUserId(member.getCompanyId(),member.getAccountId()));
+            }
+            member.setMemberType(memberType);
+            member.setStatus(0);
+            member.setDeleted(0);
+            member.setSeq(0);
+            member.resetCreateDate();
+            member.setCreateBy(userId);
+            projectMemberDAO.insert(member);
+        }
     }
 
     /** 转换数据为实体对象 */

@@ -30,4 +30,21 @@ public interface ProjectMapper {
             put("进行中",PROJECT_STATUS_NO_FINISHED);
         }
     };
+
+    /** 项目成员类型 */
+    final Integer MEMBER_TYPE_CREATOR = 0;
+    final Integer MEMBER_TYPE_MANAGER = 1;
+    final Integer MEMBER_TYPE_DESIGN = 2;
+    final Integer MEMBER_TYPE_TASK_LEADER = 3;
+    final Integer MEMBER_TYPE_TASK_DESIGN = 4;
+    final Integer MEMBER_TYPE_TASK_CHECK = 5;
+    final Integer MEMBER_TYPE_TASK_AUDIT = 6;
+
+    /** 项目负责人类型 */
+    final Map<Integer,String> PERMISSION_MAPPER = new HashMap<Integer,String>(){
+        {
+            put(MEMBER_TYPE_MANAGER,"51");
+            put(MEMBER_TYPE_DESIGN,"52");
+        }
+    };
 }
