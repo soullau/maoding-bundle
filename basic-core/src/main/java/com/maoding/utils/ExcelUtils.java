@@ -63,6 +63,7 @@ public class ExcelUtils {
 		if (in == null) return null;
 
 		Workbook wb = null;
+
 		try {
 			wb = WorkbookFactory.create(in);
 		} catch (InvalidFormatException e) {
@@ -138,15 +139,17 @@ public class ExcelUtils {
 	 * 作者：Zhangchengliang
 	 * 日期：2017/7/19
 	 */
-	public static Map<Short,Object> readFrom(Row row, Short startColumn, Short endColumn){
+	public static Map<String,Object> readFrom(Row row, Map<Short,String> titleMap, Short startColumn, Short endColumn){
 		if (row == null) return null;
 		if ((startColumn == null) || (startColumn == -1)) startColumn = row.getFirstCellNum();
 		if ((endColumn == null) || (endColumn == -1)) endColumn = row.getLastCellNum();
 		
 		//从startColumn处开始读取数据
-		Map<Short,Object> dataMap = new HashMap<>();
+		Map<String,Object> dataMap = new HashMap<>();
 		for(Short i=startColumn; i<=endColumn; i++){
-			dataMap.put(i,readFrom(row.getCell(i)));
+			String name = ((titleMap != null) && (titleMap.containsKey(i))) ? titleMap.get(i) : i.toString();
+			Object data = readFrom(row.getCell(i));
+			dataMap.put(name,data);
 		}
 		return dataMap;
 	}
@@ -156,15 +159,14 @@ public class ExcelUtils {
 	 * 作者：Zhangchengliang
 	 * 日期：2017/7/19
 	 */
-	public static List<Map<Short,Object>> readFrom(Sheet sheet, Integer titleRow, Integer startRow,Short startColumn,Short endColumn){
+	public static List<Map<String,Object>> readFrom(Sheet sheet, Integer titleRow, Integer startRow,Short startColumn,Short endColumn){
 		if (sheet == null) return null;
 		if ((titleRow == null) || (titleRow == -1)) titleRow = sheet.getFirstRowNum();
 
 		//读取标题数据,从titleRow倒序读取第一个不为空的值，实现多标题行合并
-		List<Map<Short,Object>> dataList = new ArrayList<>();
-		Integer endRow = sheet.getLastRowNum();
+		List<Map<String,Object>> dataList = new ArrayList<>();
+		Map<Short,String> titleMap = new HashMap<>();
 		if ((sheet.getFirstRowNum() <= titleRow) && (titleRow <= sheet.getLastRowNum())) {
-			Map<Short,Object> titleMap = new HashMap<>();
 			Row row = sheet.getRow(titleRow);
 			if ((startColumn == null) || (startColumn == -1)) startColumn = row.getFirstCellNum();
 			if ((endColumn == null) || (endColumn == -1)) endColumn = row.getLastCellNum();
@@ -177,15 +179,17 @@ public class ExcelUtils {
 						if ((data != null) && !StringUtils.isEmpty(data.toString())) break;
 					}
 				}
-				titleMap.put(i,data);
+				if ((data != null) && !StringUtils.isEmpty(data.toString())) {
+					titleMap.put(i, data.toString());
+				}
 			}
-			dataList.add(titleMap);
 		}
 		
 		//读取数据行
 		if ((startRow == null) || (startRow == -1)) startRow = titleRow + 1;
+		Integer endRow = sheet.getLastRowNum();
 		for (Integer i=startRow; i<=endRow; i++){
-			dataList.add(readFrom(sheet.getRow(i),startColumn,endColumn));
+			dataList.add(readFrom(sheet.getRow(i),titleMap,startColumn,endColumn));
 		}
 		return dataList;
 	}
@@ -195,21 +199,24 @@ public class ExcelUtils {
 	 * 作者：Zhangchengliang
 	 * 日期：2017/7/19
 	 */
-	public static List<Map<Short,Object>> readFrom(Workbook workbook,Integer sheetIndex,Integer titleRow,Integer startRow,Short startColumn,Short endColumn){
+	public static List<Map<String,Object>> readFrom(Workbook workbook,Integer sheetIndex,Integer titleRow,Integer startRow,Short startColumn,Short endColumn){
 		if (workbook == null) return null;
 		if ((sheetIndex == null) || (sheetIndex == -1)) sheetIndex = workbook.getActiveSheetIndex();
 		
 		return ((0<=sheetIndex) && (sheetIndex<workbook.getNumberOfSheets())) ?
 				readFrom(workbook.getSheetAt(sheetIndex),titleRow,startRow,startColumn,endColumn) : null;
 	}
-	public static List<Map<Short,Object>> readFrom(Workbook workbook,String sheetName,Integer titleRow,Integer startRow,Short startColumn,Short endColumn){
+	public static List<Map<String,Object>> readFrom(Workbook workbook,String sheetName,Integer titleRow,Integer startRow,Short startColumn,Short endColumn){
 		if ((workbook == null) || (sheetName == null)) return null;
 		return readFrom(workbook.getSheet(sheetName),titleRow,startRow,startColumn,endColumn);
 	}
-	public static List<Map<Short,Object>> readFrom(String fileName,Integer sheetIndex,Integer titleRow,Integer startRow,Short startColumn,Short endColumn){
+	public static List<Map<String,Object>> readFrom(String fileName,Integer sheetIndex,Integer titleRow,Integer startRow,Short startColumn,Short endColumn){
 		return readFrom(getWorkbook(fileName),sheetIndex,titleRow,startRow,startColumn,endColumn);
 	}
-	public static List<Map<Short,Object>> readFrom(String fileName,String sheetName,Integer titleRow,Integer startRow,Short startColumn,Short endColumn){
+	public static List<Map<String,Object>> readFrom(String fileName,String sheetName,Integer titleRow,Integer startRow,Short startColumn,Short endColumn){
 		return readFrom(getWorkbook(fileName),sheetName,titleRow,startRow,startColumn,endColumn);
+	}
+	public static List<Map<String,Object>> readFrom(String fileName,Integer sheetIndex,Integer titleRow){
+		return readFrom(fileName,sheetIndex,titleRow,null,null,null);
 	}
 }

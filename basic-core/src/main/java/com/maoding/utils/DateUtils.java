@@ -1,12 +1,13 @@
 package com.maoding.utils;
 
-import org.springframework.util.*;
-
 import java.beans.PropertyEditorSupport;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -1019,4 +1020,11 @@ public class DateUtils extends PropertyEditorSupport {
         System.out.println(DateUtils.date2Str(DateUtils.datetimeFormat));
     }
 
+    public static LocalDate getLocalDate(Date d){
+        return getLocalDateTime(d).toLocalDate();
+    }
+
+    public static LocalDateTime getLocalDateTime(Date d){
+        return LocalDateTime.ofInstant(d.toInstant(), ZoneId.systemDefault());
+    }
 }

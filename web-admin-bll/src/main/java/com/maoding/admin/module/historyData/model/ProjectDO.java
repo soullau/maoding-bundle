@@ -3,6 +3,7 @@ package com.maoding.admin.module.historyData.model;
 
 import com.maoding.core.base.BaseEntity;
 
+import javax.persistence.Table;
 import java.math.BigDecimal;
 
 /**
@@ -12,8 +13,8 @@ import java.math.BigDecimal;
  * 作    者：ChenZJ
  * 日    期：2016年7月19日-下午4:11:50
  */
+@Table(name = "maoding_web_project")
 public class ProjectDO extends BaseEntity {
-
     /**
      * 企业id
      */
