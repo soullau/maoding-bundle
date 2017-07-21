@@ -4,27 +4,48 @@ import java.io.Serializable;
 
 /**
  * Created by Chengliang.zhang on 2017/7/18.
- * 操作请求基类
+ * 操作请求基类，后续可
  */
 public class BaseRequest implements Serializable {
-    /** 操作者用户ID */
-    String userId;
-    /** 操作者组织ID */
-    String companyId;
+    /** 操作者标识 */
+    AuthToken token;
 
-    public String getUserId() {
-        return userId;
+    /** 模拟token类型 */
+    public class AuthToken {
+        private String account;
+        private String password;
+        private String token;
+
+        public String getAccount() {
+            return account;
+        }
+
+        public void setAccount(String account) {
+            this.account = account;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+
+        public String getToken() {
+            return token;
+        }
+
+        public void setToken(String token) {
+            this.token = token;
+        }
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public AuthToken getToken() {
+        return token;
     }
 
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
+    public void setToken(AuthToken token) {
+        this.token = token;
     }
 }

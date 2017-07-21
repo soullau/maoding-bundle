@@ -1,84 +1,39 @@
 package com.maoding.core.bean;
 
-import com.maoding.utils.StringUtils;
+import com.maoding.core.base.BaseRequest;
 
-import java.util.HashMap;
+import java.util.List;
 
 /**
- * Created by Wuwq on 2016/12/15.
+ * Created by Chengliang.zhang on 2017/7/18.
+ * 请求操作数据时用到的参数类型
  */
-public class ApiRequest {
-    private Integer pageIndex;
-    private Integer pageSize;
-    private Integer pageStartIndex;
-    private String orderBy;
-    private HashMap<String, Object> params = new HashMap<>();
-
-    public HashMap<String, Object> getParams() {
-        return params;
-    }
-
-    public void setParams(HashMap<String, Object> params) {
-        params.putAll(params);
-    }
-
-    public String getOrderBy() {
-        return orderBy;
-    }
-
-    public void setOrderBy(String orderBy) {
-        resetPage(this.pageIndex, this.pageSize, orderBy);
-    }
-
-    public Integer getPageIndex() {
-        return pageIndex;
-    }
-
-    public void setPageIndex(Integer pageIndex) {
-        resetPage(pageIndex, this.pageSize, this.orderBy);
-    }
-
-    public Integer getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(Integer pageSize) {
-        resetPage(this.pageIndex, pageSize, this.orderBy);
-    }
-
-    public void addParam(String key, Object value) {
-        params.put(key, value);
-    }
-
-    public Integer getPageStartIndex() {
-        return pageStartIndex;
-    }
-
-    /**
-     * 重置分页
+public final class ApiRequest<T> extends BaseRequest {
+    /** 目标数据
+     * 除id字段的其他字段为null则不操作，为0或""记录保存为指定值
      */
-    public void resetPage(Integer pageIndex, Integer pageSize, String orderBy) {
-        this.pageIndex = pageIndex;
-        this.pageSize = pageSize;
-        this.orderBy = orderBy;
+    T data;
+    /** 要更改或删除的记录的id，可以是多个
+     */
+    List<String> idList;
 
-        if (pageIndex != null && pageSize != null) {
-            this.pageIndex = pageIndex;
-            this.pageSize = pageSize;
-            this.pageStartIndex = pageIndex * pageSize;
-            params.put("pageIndex", pageIndex);
-            params.put("pageSize", pageSize);
-            params.put("pageStartIndex", this.pageStartIndex);
-        } else {
-            this.pageStartIndex = null;
-            params.put("pageStartIndex", null);
-        }
+    /* 如果data内id字段为空，并且idList为空，则属于添加数据操作申请 */
+    /* 如果data为空，并且idList不为空，则属于删除数据操作申请 */
+    /* 如果data不为空，并且data内id不为空或idList不为空，则属于更改数据操作申请 */
 
-        if (StringUtils.isNotBlank(orderBy))
-            params.put("orderBy", orderBy.trim());
-        else {
-            this.orderBy = null;
-            params.put("orderBy", null);
-        }
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+
+    public List<String> getIdList() {
+        return idList;
+    }
+
+    public void setIdList(List<String> idList) {
+        this.idList = idList;
     }
 }

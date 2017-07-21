@@ -4,7 +4,7 @@ import com.maoding.admin.module.historyData.dto.ImportResultDTO;
 import com.maoding.admin.module.historyData.dto.ProjectImportDTO;
 import com.maoding.admin.module.historyData.service.ImportService;
 import com.maoding.core.base.BaseController;
-import com.maoding.core.bean.ApiRequestInsert;
+import com.maoding.core.bean.ApiRequest;
 import com.maoding.core.bean.ApiResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,7 +24,7 @@ public class importController extends BaseController {
 
     @RequestMapping(value = "/projects", method = RequestMethod.POST)
     @ResponseBody
-    public ApiResult importProjects(@RequestBody ApiRequestInsert<ProjectImportDTO> request) {
+    public ApiResult importProjects(@RequestBody ApiRequest<ProjectImportDTO> request) {
         ImportResultDTO result = importService.importProjects(request);
         return ApiResult.success(result);
     }

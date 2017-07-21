@@ -13,7 +13,7 @@ import com.maoding.admin.module.historyData.model.ProjectDO;
 import com.maoding.admin.module.historyData.model.ProjectMemberDO;
 import com.maoding.core.base.BaseRequest;
 import com.maoding.core.base.BaseService;
-import com.maoding.core.bean.ApiRequestInsert;
+import com.maoding.core.bean.ApiRequest;
 import com.maoding.utils.DateUtils;
 import com.maoding.utils.ExcelUtils;
 import com.maoding.utils.StringUtils;
@@ -53,7 +53,7 @@ public class ImportServiceImpl extends BaseService implements ImportService {
      * @param request 操作请求
      */
     @Override
-    public ImportResultDTO importProjects(ApiRequestInsert<ProjectImportDTO> request) {
+    public ImportResultDTO importProjects(ApiRequest<ProjectImportDTO> request) {
         if ((request == null) || (request.getData() == null)) throw new IllegalArgumentException("importProjects 参数错误");
 
         final Integer DEFAULT_SHEET_INDEX = -1;
