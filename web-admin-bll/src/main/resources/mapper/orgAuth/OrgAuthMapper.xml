@@ -21,17 +21,17 @@
                     and a.authentication_status=#{authenticationStatus}
                 </when>
                 <otherwise>
-                    and a.authentication_status>=1
+                    <![CDATA[ and a.authentication_status>=1 ]]>
                 </otherwise>
             </choose>
             <if test="applyDateBefore!=null">
-                and #{expiryDateBefore}>=a.apply_date
+                <![CDATA[ and #{expiryDateBefore}>=a.apply_date ]]>
             </if>
             <if test="applyDateAfter!=null">
-                and a.apply_date>=#{applyDateAfter}
+                <![CDATA[ and a.apply_date>=#{applyDateAfter} ]]>
             </if>
             <if test="expiryDateBefore!=null">
-                and #{expiryDateBefore}>=a.expiry_date
+                <![CDATA[ and #{expiryDateBefore}>=a.expiry_date ]]>
             </if>
             <if test="orgNameMask!=null">
                 and (a.org_name like concat('%',#{orgNameMask},'%'))
@@ -41,6 +41,9 @@
             </if>
             <if test="auditNameMask!=null">
                 and (c.audit_person like concat('%',#{auditNameMask},'%'))
+            </if>
+            <if test="operatorNameMask!=null">
+                and (a.operator_name like concat('%',#{operatorNameMask},'%'))
             </if>
         group by a.id
         <if test="orderCondition!=null">

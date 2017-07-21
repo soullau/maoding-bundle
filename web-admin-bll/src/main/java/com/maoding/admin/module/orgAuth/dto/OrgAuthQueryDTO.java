@@ -41,6 +41,10 @@ public class OrgAuthQueryDTO extends BaseQueryDTO {
      */
     String auditNameMask;
     /**
+     * 经办人姓名过滤条件
+     */
+    String operatorNameMask;
+    /**
      * 组织法定名称过滤条件
      */
     String orgNameMask;
@@ -118,4 +122,11 @@ public class OrgAuthQueryDTO extends BaseQueryDTO {
         this.orgAliasMask = orgAliasMask;
     }
 
+    public String getOperatorNameMask() {
+        return operatorNameMask;
+    }
+
+    public void setOperatorNameMask(String operatorNameMask) {
+        this.operatorNameMask = operatorNameMask;
+    }
 }
