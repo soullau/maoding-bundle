@@ -1029,4 +1029,13 @@ public class DateUtils extends PropertyEditorSupport {
         if (d == null) return null;
         return LocalDateTime.ofInstant(d.toInstant(), ZoneId.systemDefault());
     }
+
+    public static Date getDate(LocalDateTime d){
+        if (d == null) return null;
+        return Date.from(d.atZone(ZoneId.systemDefault()).toInstant());
+    }
+    public static Date getDate(LocalDate d){
+        if (d == null) return null;
+        return Date.from(d.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+    }
 }

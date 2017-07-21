@@ -1,19 +1,14 @@
 package com.maoding.admin.module.historyData.service;
 
 import com.maoding.admin.constDefine.ProjectConst;
-import com.maoding.admin.module.historyData.dao.CompanyDAO;
-import com.maoding.admin.module.historyData.dao.ProjectDAO;
-import com.maoding.admin.module.historyData.dao.ProjectMemberDAO;
-import com.maoding.admin.module.historyData.dao.UserDAO;
+import com.maoding.admin.module.historyData.dao.*;
 import com.maoding.admin.module.historyData.dto.ImportResultDTO;
 import com.maoding.admin.module.historyData.dto.MemberQueryDTO;
-import com.maoding.admin.module.historyData.dto.ProjectImportDTO;
 import com.maoding.admin.module.historyData.dto.ProjectQueryDTO;
+import com.maoding.admin.module.historyData.model.ProjectAuditDO;
 import com.maoding.admin.module.historyData.model.ProjectDO;
 import com.maoding.admin.module.historyData.model.ProjectMemberDO;
-import com.maoding.core.base.BaseRequest;
 import com.maoding.core.base.BaseService;
-import com.maoding.core.bean.ApiRequest;
 import com.maoding.utils.DateUtils;
 import com.maoding.utils.ExcelUtils;
 import com.maoding.utils.StringUtils;
@@ -22,6 +17,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -47,32 +44,39 @@ public class ImportServiceImpl extends BaseService implements ImportService {
     @Autowired
     ProjectMemberDAO projectMemberDAO;
 
+    @Autowired
+    ProjectAuditDAO projectAuditDAO;
+
+    LocalDate contractDate; //临时存放合同签订日期
+
     /**
      * 导入项目数据
      *
-     * @param request 操作请求
+     * @param in 输入流
+     * @param token 操作用户标识
+     * @return 导入结果
      */
     @Override
-    public ImportResultDTO importProjects(ApiRequest<ProjectImportDTO> request) {
-        if ((request == null) || (request.getData() == null)) throw new IllegalArgumentException("importProjects 参数错误");
+    public ImportResultDTO importProjects(InputStream in, String token) {
+        if (in == null) throw new IllegalArgumentException("importProjects 参数错误");
 
         final Integer DEFAULT_SHEET_INDEX = -1;
         final Integer DEFAULT_TITLE_ROW = 4;
-        List<Map<String,Object>> dataList = ExcelUtils.readFrom(request.getData().getImportFile(),DEFAULT_SHEET_INDEX,DEFAULT_TITLE_ROW);
-        if ((dataList == null) || (dataList.isEmpty())) throw new IllegalArgumentException("importProjects 无有效数据");
+        List<Map<String,Object>> dataList = ExcelUtils.readFrom(ExcelUtils.getWorkbook(in),DEFAULT_SHEET_INDEX,DEFAULT_TITLE_ROW);
+        if ((dataList == null) || (dataList.isEmpty())) throw new IllegalArgumentException("importProjects 找不到有效数据");
 
         ImportResultDTO result = new ImportResultDTO();
         for (Map<String,Object> data : dataList){
             result.addTotalCount();
 
-            ProjectDO project = createProjectDOFrom(data,request);
+            ProjectDO project = createProjectDOFrom(data,token);
             //检查数据有效性
             if ((project == null)
                     || ((project.getProjectNo() == null) && (ProjectConst.PROJECT_NO.contains("*")))
                     || ((project.getProjectName() == null) && (ProjectConst.PROJECT_NAME.contains("*")))
                     || ((project.getCompanyId() == null) && (ProjectConst.PROJECT_COMPANY_NAME.contains("*")))
                     || ((project.getCreateBy() == null) && (ProjectConst.PROJECT_CREATOR_NAME.contains("*")))
-                    || ((project.getCreateDate() == null) && (ProjectConst.PROJECT_CONTRACT_DATE.contains("*")))){
+                    || ((project.getCreateDate() == null) && (ProjectConst.PROJECT_CREATE_DATE.contains("*")))){
                 result.addFailed(data);
                 continue;
             }
@@ -84,11 +88,9 @@ public class ImportServiceImpl extends BaseService implements ImportService {
                 }catch (Exception e){
                     log.error("添加数据时产生错误",e);
                     result.addFailed(data);
-                    continue;
                 }
             } else {
                 result.addFailed(data);
-                continue;
             }
         }
         return result;
@@ -113,6 +115,14 @@ public class ImportServiceImpl extends BaseService implements ImportService {
             insertProjectMember(project.getCompanyBid(),project.getId(), ProjectConst.MEMBER_TYPE_MANAGER,project.getCreateBy());
             insertProjectMember(project.getCompanyBid(),project.getId(), ProjectConst.MEMBER_TYPE_DESIGN,project.getCreateBy());
         }
+        //保存合同签订日期
+        ProjectAuditDO audit = new ProjectAuditDO();
+        audit.resetId();
+        audit.setProjectId(project.getId());
+        audit.setAuditDate(contractDate);
+        audit.setCreateBy(project.getCreateBy());
+        audit.setCreateDate(project.getCreateDate());
+        projectAuditDAO.insert(audit);
         //添加项目数据
         projectDAO.insert(project);
     }
@@ -149,7 +159,7 @@ public class ImportServiceImpl extends BaseService implements ImportService {
     }
 
     /** 转换数据为实体对象 */
-    private ProjectDO createProjectDOFrom(Map<String,Object> data, BaseRequest request){
+    private ProjectDO createProjectDOFrom(Map<String,Object> data, String token){
         if (data == null) return null;
 
         ProjectDO project = new ProjectDO();
@@ -170,8 +180,12 @@ public class ImportServiceImpl extends BaseService implements ImportService {
         String creatorUserId = userReadOnlyDAO.getUserIdByCompanyNameAndUserName(creatorCompanyName, creatorUserName);
         project.setCreateBy(creatorUserId);
 
+        //立项日期
+        project.setCreateDate(DateUtils.getLocalDateTime((Date)data.get(ProjectConst.PROJECT_CREATE_DATE)));
+
         //合同签订日期
-        project.setCreateDate(DateUtils.getLocalDateTime((Date)data.get(ProjectConst.PROJECT_CONTRACT_DATE)));
+        contractDate = DateUtils.getLocalDate((Date)data.get(ProjectConst.PROJECT_CONTRACT_DATE));
+        //TODO 目前project内不存在合同签订日期字段，需要临时保存，并保存到maoding_web_project_audit
 
         //项目地点-省/直辖市
         project.setProvince((String)data.get(ProjectConst.PROJECT_PROVINCE));

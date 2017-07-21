@@ -59,7 +59,7 @@ public class ExcelUtils {
 	 * 作者：Zhangchengliang
 	 * 日期：2017/7/19
 	 */
-	public static Workbook getWorkbook(InputStream in) throws IOException{
+	public static Workbook getWorkbook(InputStream in) {
 		if (in == null) return null;
 
 		Workbook wb = null;
@@ -67,7 +67,9 @@ public class ExcelUtils {
 		try {
 			wb = WorkbookFactory.create(in);
 		} catch (InvalidFormatException e) {
-			throw new IOException("文件格式错误");
+			log.error("Excel文件格式错误",e);
+		} catch (IOException e) {
+			log.error("Excel文件读取错误",e);
 		}
 		return wb;
 	}
@@ -87,11 +89,6 @@ public class ExcelUtils {
 			wb = getWorkbook(in);
 		} catch (FileNotFoundException e) {
 			log.error("无法找到"+fileName, e);
-			closeInputSteam(in);
-		} catch (IOException e) {
-			log.error("读取"+fileName+"失败", e);
-			closeWorkbook(wb);
-			closeInputSteam(in);
 		}
 		return wb;
 	}
@@ -217,13 +214,10 @@ public class ExcelUtils {
 		if ((workbook == null) || (sheetName == null)) return null;
 		return readFrom(workbook.getSheet(sheetName),titleRow,startRow,startColumn,endColumn);
 	}
-	public static List<Map<String,Object>> readFrom(String fileName,Integer sheetIndex,Integer titleRow,Integer startRow,Short startColumn,Short endColumn){
-		return readFrom(getWorkbook(fileName),sheetIndex,titleRow,startRow,startColumn,endColumn);
+	public static List<Map<String,Object>> readFrom(Workbook workbook,Integer sheetIndex,Integer titleRow){
+		return readFrom(workbook,sheetIndex,titleRow,null,null,null);
 	}
-	public static List<Map<String,Object>> readFrom(String fileName,String sheetName,Integer titleRow,Integer startRow,Short startColumn,Short endColumn){
-		return readFrom(getWorkbook(fileName),sheetName,titleRow,startRow,startColumn,endColumn);
-	}
-	public static List<Map<String,Object>> readFrom(String fileName,Integer sheetIndex,Integer titleRow){
-		return readFrom(fileName,sheetIndex,titleRow,null,null,null);
+	public static List<Map<String,Object>> readFrom(Workbook workbook,String sheetName,Integer titleRow){
+		return readFrom(workbook,sheetName,titleRow,null,null,null);
 	}
 }
