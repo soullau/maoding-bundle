@@ -142,6 +142,7 @@ function dateDiff(d1, d2) {
     var result = Date.parse(d1.toString().replace(/-/g, "/")) - Date.parse(d2.toString().replace(/-/g, "/"));
     return result;
 }
+
 //获取当前日期
 function getNowDate() {
     var date = new Date();
@@ -151,6 +152,7 @@ function getNowDate() {
         nowDate = year + "-" + mon + "-" + day;
     return nowDate;
 }
+
 /**
  * 时间差
  * @param stime
@@ -205,38 +207,6 @@ var cutString = function (str, length, suffix) {
     return str;
 };
 
-/*****************************验证公共方法--结束**********************************/
-
-//数据提交访问错误
-function handlePostJsonError(res) {
-    if (res.status == 404) {
-        //当前请求地址未找到
-        S_toastr.error('当前请求地址未找到！');
-
-    } else if (res.status == 0) {
-        //网络请求超时
-        S_toastr.error('网络请求超时！');
-    } else {
-        S_toastr.error('网络请求出现错误！status：' + res.status + "，statusText：" + res.statusText);
-    }
-}
-
-//数据提交访问错误
-function handleResponse(res) {
-    var result = false;
-    if (res.code === '401') {
-        //session超时 !
-        S_toastr.error('当前用户状态信息已超时!点击“确定”后返回登录界面。', '提示', function () {
-            window.location.href = rootPath + '/iWork/sys/login';
-        });
-        result = true;
-    } else if (res.code === '500') {
-        //未捕获异常 X
-        S_toastr.error('出现异常错误 !详细信息：' + res.msg);
-        result = true;
-    }
-    return result;
-}
 
 var S_layer = {
     dialog: function (options) {
@@ -449,42 +419,131 @@ var S_toastr = {
             "hideMethod": "fadeOut"
         };
         toastr.error(text);
+    },
+    clear: function () {
+        toastr.clear();
     }
 };
 
-/*var S_swal = {
- confirm: function (option) {
- swal({
- title: option.title || "确定此操作吗?",
- text: option.text,
- type: "warning",
- showCancelButton: true,
- confirmButtonColor: "#DD6B55",
- confirmButtonText: option.confirmButtonText || "确定",
- cancelButtonText: option.cancelButtonText || "取消",
- closeOnConfirm: option.closeOnConfirm || false
- }, function () {
- if (option.callBack != null) {
- option.callBack();
- }
- });
- },
- sure: function (option) {
- swal({
- title: option.title || "确定此操作吗?",
- text: option.text,
- type: "success",
- confirmButtonText: option.confirmButtonText || "确定",
- closeOnConfirm: true
- }, function () {
- if (option.callBack != null) {
- option.callBack();
- }
- });
- }
- };*/
+var S_loading = {
+    _blockUI: function (options) {
+        options = $.extend(true, {}, options);
+        var html = '';
+        if (options.animate) {
+            html = '<div class="loading-message ' + (options.boxed ? 'loading-message-boxed' : '') + '">' + '<div class="block-spinner-bar"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>' + '</div>';
+        } else if (options.iconOnly) {
+            html = '<div class="loading-message ' + (options.boxed ? 'loading-message-boxed' : '') + '"><img src="' + this.getGlobalImgPath() + 'loading-spinner-grey.gif" align=""></div>';
+        } else if (options.textOnly) {
+            html = '<div class="loading-message ' + (options.boxed ? 'loading-message-boxed' : '') + '"><span>&nbsp;&nbsp;' + (options.message ? options.message : 'LOADING...') + '</span></div>';
+        } else {
+            html = '<div class="loading-message ' + (options.boxed ? 'loading-message-boxed' : '') + '"><img src="' + this.getGlobalImgPath() + 'loading-spinner-grey.gif" align=""><span>&nbsp;&nbsp;' + (options.message ? options.message : 'LOADING...') + '</span></div>';
+        }
 
-/******************************************** 弹窗方法 结束 *****************************************************/
+        if (options.target) { // element blocking
+            var el = $(options.target);
+            if (el.height() <= ($(window).height())) {
+                options.cenrerY = true;
+            }
+            el.block({
+                message: html,
+                baseZ: options.zIndex ? options.zIndex : 1000,
+                centerY: options.cenrerY !== undefined ? options.cenrerY : false,
+                css: {
+                    top: '10%',
+                    border: '0',
+                    padding: '0',
+                    backgroundColor: 'none'
+                },
+                overlayCSS: {
+                    backgroundColor: options.overlayColor ? options.overlayColor : '#555',
+                    opacity: options.boxed ? 0.05 : 0.1,
+                    cursor: 'wait'
+                }
+            });
+        } else { // page blocking
+            $.blockUI({
+                message: html,
+                baseZ: options.zIndex ? options.zIndex : 1000,
+                css: {
+                    border: '0',
+                    padding: '0',
+                    backgroundColor: 'none'
+                },
+                overlayCSS: {
+                    backgroundColor: options.overlayColor ? options.overlayColor : '#555',
+                    opacity: options.boxed ? 0.05 : 0.1,
+                    cursor: 'wait'
+                }
+            });
+        }
+    },
+    show: function (target, message) {
+        var that = this;
+        if (isNullOrBlank(message)) {
+            that._blockUI({
+                target: target,
+                boxed: false,
+                animate: false,
+                textOnly: true,
+                iconOnly: false,
+                message: message,
+                zIndex: null,
+                overlayColor: null
+            });
+        }
+        else {
+            that._blockUI({
+                target: target,
+                boxed: false,
+                animate: true,
+                textOnly: false,
+                iconOnly: false,
+                message: null,
+                zIndex: null,
+                overlayColor: null
+            });
+        }
+    },
+    hide: function (target) {
+        if (target) {
+            $(target).unblock({
+                onUnblock: function () {
+                    $(target).css('position', '');
+                    $(target).css('zoom', '');
+                }
+            });
+        } else
+            $.unblockUI();
+    }
+};
+
+
+//数据提交访问错误
+var handlePostJsonError = function (res) {
+    if (res.status == 404) {
+        //当前请求地址未找到
+        S_toastr.error('当前请求地址未找到！');
+
+    } else if (res.status == 0) {
+        //网络请求超时
+        S_toastr.error('网络请求超时！');
+    } else {
+        S_toastr.error('网络请求出现错误！status：' + res.status + "，statusText：" + res.statusText);
+    }
+};
+
+//数据提交访问错误
+var handleResponse = function (res) {
+    var result = false;
+    if (res.code === '401') {
+        S_toastr.error('用户登录已超时');
+        result = true;
+    } else if (res.code === '500') {
+        S_toastr.error('出现异常错误 !详细信息：' + res.msg);
+        result = true;
+    }
+    return result;
+};
 
 
 var m_ajax = {
@@ -496,13 +555,7 @@ var m_ajax = {
             contentType: "application/json",
             beforeSend: function () {
                 if (options.loadingEl)
-                {
-                    App.blockUI({
-                        target: options.loadingEl,
-                        boxed: false,
-                        animate: true
-                    });
-                }
+                    S_loading.show(options.loadingEl);
 
                 if (options.bindDisabled) {
                     var $el = $(options.bindDisabled);
@@ -518,25 +571,23 @@ var m_ajax = {
                     }
                 }
             },
-            success: function (response) {
+            success: function (res) {
 
-                if (!handleResponse(response)) {
+                if (!handleResponse(res)) {
                     if (onHttpSuccess)
-                        onHttpSuccess(response);
+                        onHttpSuccess(res);
                 }
 
             },
-            error: function (response) {
+            error: function (res) {
                 if (onHttpError)
                     onHttpError();
 
-                handlePostJsonError(response);
-                //else
-                //tzTips.showOnTopRight("Ajax请求发生错误", "error");
+                handlePostJsonError(res);
             },
             complete: function () {
                 if (options.loadingEl)
-                    App.unblockUI();
+                    S_loading.hide();
 
                 if (options.bindDisabled) {
                     setTimeout(function () {
@@ -567,13 +618,7 @@ var m_ajax = {
             contentType: "application/json",
             beforeSend: function () {
                 if (options.loadingEl)
-                {
-                    App.blockUI({
-                        target: options.loadingEl,
-                        boxed: false,
-                        animate: true
-                    });
-                }
+                    S_loading.show(options.loadingEl);
 
                 if (options.bindDisabled) {
                     var $el = $(options.bindDisabled);
@@ -589,23 +634,21 @@ var m_ajax = {
                     }
                 }
             },
-            success: function (response) {
-                if (!handleResponse(response)) {
+            success: function (res) {
+                if (!handleResponse(res)) {
                     if (onHttpSuccess)
-                        onHttpSuccess(response);
+                        onHttpSuccess(res);
                 }
             },
-            error: function (response) {
+            error: function (res) {
                 if (onHttpError)
                     onHttpError();
 
-                handlePostJsonError(response);
-                //else
-                //tzTips.showOnTopRight("Ajax请求发生错误", "error");
+                handlePostJsonError(res);
             },
             complete: function () {
                 if (options.loadingEl)
-                    App.unblockUI();
+                    S_loading.hide();
 
                 if (options.bindDisabled) {
                     setTimeout(function () {

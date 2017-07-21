@@ -1,8 +1,10 @@
 package com.maoding.admin;
 
+import com.maoding.config.MultipartConfig;
 import com.maoding.utils.SpringContextUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.MultipartAutoConfiguration;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -15,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * Created by Wuwq on 2016/12/13.
  */
 @Configuration
-@EnableAutoConfiguration
+@EnableAutoConfiguration(exclude = {MultipartAutoConfiguration.class})
 @ComponentScan({"com.maoding.admin"})
-@Import({SpringContextUtils.class})
+@Import({SpringContextUtils.class,MultipartConfig.class})
 @EnableAspectJAutoProxy(exposeProxy = true)
 @Controller
 public class Application extends SpringBootServletInitializer {

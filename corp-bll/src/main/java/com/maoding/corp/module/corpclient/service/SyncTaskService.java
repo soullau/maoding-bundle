@@ -9,20 +9,14 @@ import com.maoding.corp.module.corpclient.model.SyncTaskDO;
 public interface SyncTaskService {
 
     /**
+     * 跳过一个任务，并把该任务标记为同步成功
+     */
+    ApiResult skipOneTask(SyncTaskDO task);
+
+    /**
      * 同步一个任务
      */
-    void runOneTask(String syncTaskId);
-
-
-    /**
-     * 执行同步任务
-     */
-    void runSyncTask(String corpEndpoint) throws Exception;
-
-    /**
-     * 启动时把任务状态为“执行中”的重置为“等待执行”
-     */
-    void resetTaskStatusOnStartup();
+    ApiResult runOneTask(String syncTaskId);
 
     /**
      * 同步协同占用

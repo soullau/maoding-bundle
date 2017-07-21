@@ -3,7 +3,7 @@ package com.maoding.corpclient;
 import com.maoding.corp.config.CorpClientConfig;
 import com.maoding.corp.module.corpclient.service.CoService;
 import com.maoding.corp.module.corpclient.service.SyncService;
-import com.maoding.corp.module.corpclient.service.SyncTaskService;
+import com.maoding.corp.module.corpclient.service.SyncTaskDispatchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class Schedule {
     private SyncService syncService;
 
     @Autowired
-    private SyncTaskService syncTaskService;
+    private SyncTaskDispatchService syncTaskDispatchService;
 
     @Autowired
     private CoService coService;
@@ -33,7 +33,7 @@ public class Schedule {
     public void job_SyncAll() throws Exception {
         if (!Application.EnableSchedule)
             return;
-        log.info("-------------- SyncAll Start --------------");
+        log.info("------- ------- ------- SyncAll Start ------- ------- -------");
         coService.syncAllByEndpoint(CorpClientConfig.EndPoint);
     }
 
@@ -42,16 +42,16 @@ public class Schedule {
     public void job_PullChanges() throws Exception {
         if (!Application.EnableSchedule)
             return;
-        log.info("------- -------PullChanges Start --------------");
+        log.info("------- ------- ------- PullChanges Start ------- ------- -------");
         syncService.pullChanges(CorpClientConfig.EndPoint);
     }
 
     //执行同步任务
-    @Scheduled(initialDelay = 20 * 1000, fixedDelay = 15 * 1000)
+    @Scheduled(initialDelay = 20 * 1000, fixedDelay = 10 * 1000)
     public void job_RunSyncTask() throws Exception {
         if (!Application.EnableSchedule)
             return;
-        log.info("-------------- RunSyncTask Start --------------");
-        syncTaskService.runSyncTask(CorpClientConfig.EndPoint);
+        log.info("------- ------- ------- RunSyncTask Start ------- ------- -------");
+        syncTaskDispatchService.runTasksByEndpoint(CorpClientConfig.EndPoint);
     }
 }

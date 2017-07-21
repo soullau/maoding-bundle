@@ -7,5 +7,8 @@ var restApi = {
 
     /** 企业认证 **/
     url_getAuthenticationPage: window.rootPath + '/orgAuth/getAuthenticationPage',
-    url_authorizeAuthentication: window.rootPath + '/orgAuth/authorizeAuthentication'
+    url_authorizeAuthentication: window.rootPath + '/orgAuth/authorizeAuthentication',
+
+    /** 历史数据导入 **/
+    url_historyData_importProjects: window.rootPath + '/historyData/importProjects'
 };

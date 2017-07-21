@@ -4,7 +4,7 @@
     <td>{{o.orgAlias}}</td>
     <td>{{o.orgName}}</td>
 
-    <td>
+    <td style="width: 150px;max-width: 150px;">
         {{if o.businessLicenseType===0}}
         普通营业执照
         {{else if o.businessLicenseType===1}}
@@ -17,21 +17,21 @@
     </td>
 
     <td>{{o.businessLicenseNumber}}</td>
-    <td>
+    <td style="width: 80px;max-width: 80px;">
         {{o.legalRepresentative}}
         {{if !_isNullOrBlank(o.businessLicensePhoto)}}
         <a href="javascript:void(0);" data-action="preview" data-url="{{o.businessLicensePhoto}}"><i
                 class="fa fa-file-image-o"></i></a>
         {{/if}}
     </td>
-    <td>
+    <td style="width: 80px;max-width: 80px;">
         {{o.operatorName}}
         {{if !_isNullOrBlank(o.operatorPhoto)}}
         <a href="javascript:void(0);" data-action="preview" data-url="{{o.operatorPhoto}}"><i
                 class="fa fa-file-image-o"></i></a>
         {{/if}}
     </td>
-    <td>
+    <td style="width: 120px;max-width: 120px;">
         {{if o.authenticationStatus === 1 && _isNowDiffTargetDateNDaysMore(o.applyDate,3)}}
         <span style="color: red;">{{o.applyDate}}</span>
         {{else}}

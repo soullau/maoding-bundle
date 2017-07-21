@@ -142,6 +142,7 @@ function dateDiff(d1, d2) {
     var result = Date.parse(d1.toString().replace(/-/g, "/")) - Date.parse(d2.toString().replace(/-/g, "/"));
     return result;
 }
+
 //获取当前日期
 function getNowDate() {
     var date = new Date();
@@ -151,6 +152,7 @@ function getNowDate() {
         nowDate = year + "-" + mon + "-" + day;
     return nowDate;
 }
+
 /**
  * 时间差
  * @param stime
@@ -205,38 +207,6 @@ var cutString = function (str, length, suffix) {
     return str;
 };
 
-/*****************************验证公共方法--结束**********************************/
-
-//数据提交访问错误
-function handlePostJsonError(res) {
-    if (res.status == 404) {
-        //当前请求地址未找到
-        S_toastr.error('当前请求地址未找到！');
-
-    } else if (res.status == 0) {
-        //网络请求超时
-        S_toastr.error('网络请求超时！');
-    } else {
-        S_toastr.error('网络请求出现错误！status：' + res.status + "，statusText：" + res.statusText);
-    }
-}
-
-//数据提交访问错误
-function handleResponse(res) {
-    var result = false;
-    if (res.code === '401') {
-        //session超时 !
-        S_toastr.error('当前用户状态信息已超时!点击“确定”后返回登录界面。', '提示', function () {
-            window.location.href = rootPath + '/iWork/sys/login';
-        });
-        result = true;
-    } else if (res.code === '500') {
-        //未捕获异常 X
-        S_toastr.error('出现异常错误 !详细信息：' + res.msg);
-        result = true;
-    }
-    return result;
-}
 
 var S_layer = {
     dialog: function (options) {
@@ -449,42 +419,131 @@ var S_toastr = {
             "hideMethod": "fadeOut"
         };
         toastr.error(text);
+    },
+    clear: function () {
+        toastr.clear();
     }
 };
 
-/*var S_swal = {
- confirm: function (option) {
- swal({
- title: option.title || "确定此操作吗?",
- text: option.text,
- type: "warning",
- showCancelButton: true,
- confirmButtonColor: "#DD6B55",
- confirmButtonText: option.confirmButtonText || "确定",
- cancelButtonText: option.cancelButtonText || "取消",
- closeOnConfirm: option.closeOnConfirm || false
- }, function () {
- if (option.callBack != null) {
- option.callBack();
- }
- });
- },
- sure: function (option) {
- swal({
- title: option.title || "确定此操作吗?",
- text: option.text,
- type: "success",
- confirmButtonText: option.confirmButtonText || "确定",
- closeOnConfirm: true
- }, function () {
- if (option.callBack != null) {
- option.callBack();
- }
- });
- }
- };*/
+var S_loading = {
+    _blockUI: function (options) {
+        options = $.extend(true, {}, options);
+        var html = '';
+        if (options.animate) {
+            html = '<div class="loading-message ' + (options.boxed ? 'loading-message-boxed' : '') + '">' + '<div class="block-spinner-bar"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>' + '</div>';
+        } else if (options.iconOnly) {
+            html = '<div class="loading-message ' + (options.boxed ? 'loading-message-boxed' : '') + '"><img src="' + this.getGlobalImgPath() + 'loading-spinner-grey.gif" align=""></div>';
+        } else if (options.textOnly) {
+            html = '<div class="loading-message ' + (options.boxed ? 'loading-message-boxed' : '') + '"><span>&nbsp;&nbsp;' + (options.message ? options.message : 'LOADING...') + '</span></div>';
+        } else {
+            html = '<div class="loading-message ' + (options.boxed ? 'loading-message-boxed' : '') + '"><img src="' + this.getGlobalImgPath() + 'loading-spinner-grey.gif" align=""><span>&nbsp;&nbsp;' + (options.message ? options.message : 'LOADING...') + '</span></div>';
+        }
 
-/******************************************** 弹窗方法 结束 *****************************************************/
+        if (options.target) { // element blocking
+            var el = $(options.target);
+            if (el.height() <= ($(window).height())) {
+                options.cenrerY = true;
+            }
+            el.block({
+                message: html,
+                baseZ: options.zIndex ? options.zIndex : 1000,
+                centerY: options.cenrerY !== undefined ? options.cenrerY : false,
+                css: {
+                    top: '10%',
+                    border: '0',
+                    padding: '0',
+                    backgroundColor: 'none'
+                },
+                overlayCSS: {
+                    backgroundColor: options.overlayColor ? options.overlayColor : '#555',
+                    opacity: options.boxed ? 0.05 : 0.1,
+                    cursor: 'wait'
+                }
+            });
+        } else { // page blocking
+            $.blockUI({
+                message: html,
+                baseZ: options.zIndex ? options.zIndex : 1000,
+                css: {
+                    border: '0',
+                    padding: '0',
+                    backgroundColor: 'none'
+                },
+                overlayCSS: {
+                    backgroundColor: options.overlayColor ? options.overlayColor : '#555',
+                    opacity: options.boxed ? 0.05 : 0.1,
+                    cursor: 'wait'
+                }
+            });
+        }
+    },
+    show: function (target, message) {
+        var that = this;
+        if (isNullOrBlank(message)) {
+            that._blockUI({
+                target: target,
+                boxed: false,
+                animate: false,
+                textOnly: true,
+                iconOnly: false,
+                message: message,
+                zIndex: null,
+                overlayColor: null
+            });
+        }
+        else {
+            that._blockUI({
+                target: target,
+                boxed: false,
+                animate: true,
+                textOnly: false,
+                iconOnly: false,
+                message: null,
+                zIndex: null,
+                overlayColor: null
+            });
+        }
+    },
+    hide: function (target) {
+        if (target) {
+            $(target).unblock({
+                onUnblock: function () {
+                    $(target).css('position', '');
+                    $(target).css('zoom', '');
+                }
+            });
+        } else
+            $.unblockUI();
+    }
+};
+
+
+//数据提交访问错误
+var handlePostJsonError = function (res) {
+    if (res.status == 404) {
+        //当前请求地址未找到
+        S_toastr.error('当前请求地址未找到！');
+
+    } else if (res.status == 0) {
+        //网络请求超时
+        S_toastr.error('网络请求超时！');
+    } else {
+        S_toastr.error('网络请求出现错误！status：' + res.status + "，statusText：" + res.statusText);
+    }
+};
+
+//数据提交访问错误
+var handleResponse = function (res) {
+    var result = false;
+    if (res.code === '401') {
+        S_toastr.error('用户登录已超时');
+        result = true;
+    } else if (res.code === '500') {
+        S_toastr.error('出现异常错误 !详细信息：' + res.msg);
+        result = true;
+    }
+    return result;
+};
 
 
 var m_ajax = {
@@ -496,13 +555,7 @@ var m_ajax = {
             contentType: "application/json",
             beforeSend: function () {
                 if (options.loadingEl)
-                {
-                    App.blockUI({
-                        target: options.loadingEl,
-                        boxed: false,
-                        animate: true
-                    });
-                }
+                    S_loading.show(options.loadingEl);
 
                 if (options.bindDisabled) {
                     var $el = $(options.bindDisabled);
@@ -518,25 +571,23 @@ var m_ajax = {
                     }
                 }
             },
-            success: function (response) {
+            success: function (res) {
 
-                if (!handleResponse(response)) {
+                if (!handleResponse(res)) {
                     if (onHttpSuccess)
-                        onHttpSuccess(response);
+                        onHttpSuccess(res);
                 }
 
             },
-            error: function (response) {
+            error: function (res) {
                 if (onHttpError)
                     onHttpError();
 
-                handlePostJsonError(response);
-                //else
-                //tzTips.showOnTopRight("Ajax请求发生错误", "error");
+                handlePostJsonError(res);
             },
             complete: function () {
                 if (options.loadingEl)
-                    App.unblockUI();
+                    S_loading.hide();
 
                 if (options.bindDisabled) {
                     setTimeout(function () {
@@ -567,13 +618,7 @@ var m_ajax = {
             contentType: "application/json",
             beforeSend: function () {
                 if (options.loadingEl)
-                {
-                    App.blockUI({
-                        target: options.loadingEl,
-                        boxed: false,
-                        animate: true
-                    });
-                }
+                    S_loading.show(options.loadingEl);
 
                 if (options.bindDisabled) {
                     var $el = $(options.bindDisabled);
@@ -589,23 +634,21 @@ var m_ajax = {
                     }
                 }
             },
-            success: function (response) {
-                if (!handleResponse(response)) {
+            success: function (res) {
+                if (!handleResponse(res)) {
                     if (onHttpSuccess)
-                        onHttpSuccess(response);
+                        onHttpSuccess(res);
                 }
             },
-            error: function (response) {
+            error: function (res) {
                 if (onHttpError)
                     onHttpError();
 
-                handlePostJsonError(response);
-                //else
-                //tzTips.showOnTopRight("Ajax请求发生错误", "error");
+                handlePostJsonError(res);
             },
             complete: function () {
                 if (options.loadingEl)
-                    App.unblockUI();
+                    S_loading.hide();
 
                 if (options.bindDisabled) {
                     setTimeout(function () {
@@ -702,7 +745,10 @@ var restApi = {
 
     /** 企业认证 **/
     url_getAuthenticationPage: window.rootPath + '/orgAuth/getAuthenticationPage',
-    url_authorizeAuthentication: window.rootPath + '/orgAuth/authorizeAuthentication'
+    url_authorizeAuthentication: window.rootPath + '/orgAuth/authorizeAuthentication',
+
+    /** 历史数据导入 **/
+    url_historyData_importProjects: window.rootPath + '/historyData/importProjects'
 };
 /*TMODJS:{"version":"1.0.0"}*/
 !function () {
@@ -937,7 +983,9 @@ template('m_common/m_sidebar',function($data,$filename
 /**/) {
 'use strict';var $utils=this,$helpers=$utils.$helpers,$escape=$utils.$escape,_url=$helpers._url,$out='';$out+='  <div class="page-sidebar navbar-collapse collapse">        <ul class="page-sidebar-menu" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">  <li class="heading"> <h3 class="uppercase">企业认证</h3> </li> <li class="nav-item"> <a href="';
 $out+=$escape(_url('/orgAuth/approveList'));
-$out+='" class="nav-link" data-nav-id="orgAuth-approveList"> <i class="icon-briefcase"></i> <span class="title">认证审核</span> <span class="selected"></span> </a> </li>  </ul> </div>';
+$out+='" class="nav-link" data-nav-id="orgAuth-approveList"> <i class="icon-briefcase"></i> <span class="title">认证审核</span> <span class="selected"></span> </a> </li> <li class="heading"> <h3 class="uppercase">历史数据</h3> </li> <li class="nav-item"> <a href="';
+$out+=$escape(_url('/historyData/entry'));
+$out+='" class="nav-link" data-nav-id="historyData-entry"> <i class="icon-briefcase"></i> <span class="title">导入</span> </a> </li>  </ul> </div>';
 return new String($out);
 });/*v:1*/
 template('m_orgAuth/m_orgAuth_list','<div class="page-content" style="padding-top: 0;">  <div class="row"> <div class="col-md-12"> <div class="portlet light" style="overflow: hidden;"> <div class="portlet-title"> <div class="caption">  <span class="caption-subject bold font-yellow-casablanca uppercase">企业认证审核</span> </div> <div class="actions"> <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="javascript:void(0);"> </a> </div> <div class="inputs" style="margin-right: 10px;"> <div class="portlet-input input-inline input-medium"> <div class="input-group"> <input type="text" class="form-control input-circle-left search-input" placeholder="请输入关键字"> <span class="input-group-btn"> <button class="btn btn-circle-right btn-default" data-action="search">搜索</button> </span> </div> </div> </div> </div> <div class="portlet-body"> <table class="table table-striped table-bordered table-hover" id="list"> <thead> <tr> <th>序号</th> <th>组织名称</th> <th>企业名称</th> <th>证件类型</th> <th>注册号/统一社会代码</th> <th>法人</th> <th>经办人</th> <th name="field_applyDate">认证时间</th> <th class="text-center">审核状态</th> <th>审核人</th> <th name="field_auditDate">审核时间</th> </tr> </thead> <tbody class="m-page-data"> </tbody> </table> </div> <div class="clearfix"></div> <div id="orgAuthList_sortSwap"></div> <div class="m-page pull-right" style="margin-bottom: 20px;"></div> </div> </div> </div> </div>');/*v:1*/
@@ -950,7 +998,7 @@ $out+='</td> <td>';
 $out+=$escape(o.orgAlias);
 $out+='</td> <td>';
 $out+=$escape(o.orgName);
-$out+='</td> <td> ';
+$out+='</td> <td style="width: 150px;max-width: 150px;"> ';
 if(o.businessLicenseType===0){
 $out+=' 普通营业执照 ';
 }else if(o.businessLicenseType===1){
@@ -964,7 +1012,7 @@ $out+='"><i class="fa fa-file-image-o"></i></a> ';
 }
 $out+=' </td> <td>';
 $out+=$escape(o.businessLicenseNumber);
-$out+='</td> <td> ';
+$out+='</td> <td style="width: 80px;max-width: 80px;"> ';
 $out+=$escape(o.legalRepresentative);
 $out+=' ';
 if(!_isNullOrBlank(o.businessLicensePhoto)){
@@ -972,7 +1020,7 @@ $out+=' <a href="javascript:void(0);" data-action="preview" data-url="';
 $out+=$escape(o.businessLicensePhoto);
 $out+='"><i class="fa fa-file-image-o"></i></a> ';
 }
-$out+=' </td> <td> ';
+$out+=' </td> <td style="width: 80px;max-width: 80px;"> ';
 $out+=$escape(o.operatorName);
 $out+=' ';
 if(!_isNullOrBlank(o.operatorPhoto)){
@@ -980,7 +1028,7 @@ $out+=' <a href="javascript:void(0);" data-action="preview" data-url="';
 $out+=$escape(o.operatorPhoto);
 $out+='"><i class="fa fa-file-image-o"></i></a> ';
 }
-$out+=' </td> <td> ';
+$out+=' </td> <td style="width: 120px;max-width: 120px;"> ';
 if(o.authenticationStatus === 1 && _isNowDiffTargetDateNDaysMore(o.applyDate,3)){
 $out+=' <span style="color: red;">';
 $out+=$escape(o.applyDate);
@@ -1031,7 +1079,21 @@ $out+='</td> </tr> ';
 return new String($out);
 });/*v:1*/
 template('m_orgAuth/m_orgAuth_reject','<div class="portlet light" style="overflow: hidden;"> <div class="portlet-title"> <div class="caption">  <span class="caption-subject bold font-yellow-casablanca uppercase">不通过原因</span> </div> <div class="tools"> <a href="" class="remove" data-original-title="" title=""> </a> </div> </div> <div class="portlet-body"> <form class="form-horizontal" role="form"> <div class="form-body"> <div class="form-group"> <label class="col-md-2 control-label">原因：</label> <div class="col-md-9"> <select id="rejectType"></select> </div> </div> <div class="form-group"> <label class="col-md-2 control-label">说明：</label> <div class="col-md-9"> <textarea id="rejectReason" class="form-control" rows="5"></textarea> </div> </div> </div> </form> </div> <div class="modal-footer"> <button type="button" class="btn btn-success" data-action="layer-custom-btn-yes">确&nbsp;定</button> <button type="button" class="btn btn-default" data-action="layer-custom-btn-close">取&nbsp;消</button> </div> </div>');/*v:1*/
-template('m_orgAuth/m_orgAuth_view','<div class="portlet light" style="overflow: hidden;"> <div class="portlet-title"> <div class="caption">  <span class="caption-subject bold font-yellow-casablanca uppercase">不通过原因</span> </div> <div class="tools"> <a href="" class="remove" data-original-title="" title=""> </a> </div> </div> <div class="portlet-body"> <form class="form-horizontal" role="form"> <div class="form-body"> <div class="form-group"> <label class="col-md-2 control-label">原因：</label> <div class="col-md-9"> <select id="rejectType"></select> </div> </div> <div class="form-group"> <label class="col-md-2 control-label">说明：</label> <div class="col-md-9"> <textarea id="rejectReason" class="form-control" rows="5"></textarea> </div> </div> </div> </form> </div> <div class="modal-footer"> <button type="button" class="btn btn-default" data-action="layer-custom-btn-close">关&nbsp;闭</button> </div> </div>');
+template('m_orgAuth/m_orgAuth_view','<div class="portlet light" style="overflow: hidden;"> <div class="portlet-title"> <div class="caption">  <span class="caption-subject bold font-yellow-casablanca uppercase">不通过原因</span> </div> <div class="tools"> <a href="" class="remove" data-original-title="" title=""> </a> </div> </div> <div class="portlet-body"> <form class="form-horizontal" role="form"> <div class="form-body"> <div class="form-group"> <label class="col-md-2 control-label">原因：</label> <div class="col-md-9"> <select id="rejectType"></select> </div> </div> <div class="form-group"> <label class="col-md-2 control-label">说明：</label> <div class="col-md-9"> <textarea id="rejectReason" class="form-control" rows="5"></textarea> </div> </div> </div> </form> </div> <div class="modal-footer"> <button type="button" class="btn btn-default" data-action="layer-custom-btn-close">关&nbsp;闭</button> </div> </div>');/*v:1*/
+template('m_upload/m_uploadmgr','<div class="uploadmgr tag-box tag-box-v1 box-shadow shadow-effect-1"> <div class="alertmgr"></div> <a href="javascript:void(0)" class="btn-select btn-u btn-u-sm btn-u-orange rounded" type="button"><i class="fa fa-plus"></i>&nbsp;选择文件</a> <a href="javascript:void(0)" class="btn-start btn-u btn-u-sm btn-u-green2 rounded dp-none" type="button"><i class="fa fa-caret-right"></i>&nbsp;开始</a> <a href="javascript:void(0)" class="btn-stop btn-u btn-u-sm btn-u-red rounded dp-none" type="button"><i class="fa fa-times"></i>&nbsp;停止</a> <a href="javascript:void(0)" type="button" class="btn-close close">×</a> <div class="upload-item-list"> </div> <p class="pull-right"></p> </div>');/*v:1*/
+template('m_upload/m_uploadmgr_uploadItem',function($data,$filename
+/**/) {
+'use strict';var $utils=this,$helpers=$utils.$helpers,$escape=$utils.$escape,file=$data.file,pid=$data.pid,$out='';$out+='<div class="uploadItem uploadItem_';
+$out+=$escape(file.id);
+$out+='" data-fileId="';
+$out+=$escape(file.id);
+$out+='" data-pid="';
+$out+=$escape(pid);
+$out+='"> <button type="button" class="close removefile">×</button> <h3 class="heading-xs">';
+$out+=$escape(file.name);
+$out+='<span style="padding-left:5px;" class="span_progress"></span> <span class="span_status pull-right m-r-sm"></span></h3> <div class="progress progress-u progress-xs"> <div class="progress-bar progress-bar-u" role="progressbar" name="div_progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"> </div> </div> </div>';
+return new String($out);
+});
 
 }()
 ;(function ($, window, document, undefined) {
@@ -2073,6 +2135,889 @@ template('m_orgAuth/m_orgAuth_view','<div class="portlet light" style="overflow:
 
 })(jQuery, window, document);
 
+;(function ($, window, document, undefined) {
+    "use strict";
+
+    var pluginName = "m_fileUploader",
+        defaults = {
+            server: null,
+            auto: true,//选择文件后是否自动开始上传
+            chunked: false,//是否分块上传，需要后台配合
+            chunkSize: 5 * 1024 * 1024,
+            chunkRetry: 3,
+            fileExts: 'pdf,zip,rar,doc,docx,xls,xlsx,ppt,pptx,txt',
+            fileSingleSizeLimit: null,
+            formData: {},
+            uploadBeforeSend: null,
+            uploadSuccessCallback: null,
+            uploadProgressCallback: null,//进度处理方法
+            loadingId: null//锁屏加载ID
+        };
+
+    function Plugin(element, options) {
+        this.element = element;
+
+        this.settings = options;
+        this._defaults = defaults;
+        this._name = pluginName;
+        this._lastUploadFile = null;
+        this._uploader = null;
+        this.init();
+    }
+
+    $.extend(Plugin.prototype, {
+        init: function () {
+            var that = this;
+            that._initWebUploader();
+        },
+        _initWebUploader: function () {
+            var that = this;
+            that._uploader = WebUploader.create({
+                fileSingleSizeLimit: that.settings.fileSingleSizeLimit,
+                compress: false,// 不压缩image
+                auto: that.settings.auto,
+                swf: window.rootPath + '/assets2/lib/webuploader/Uploader.swf',
+                server: that.settings.server,
+                //timeout: 600000,
+                pick: {
+                    id: that.element,
+                    innerHTML: that.settings.innerHTML || '上传',
+                    multiple: false
+                },
+                duplicate: true,//是否可重复选择同一文件
+                resize: false,
+                chunked: that.settings.chunked,
+                chunkSize: that.settings.chunkSize,
+                chunkRetry: that.settings.chunkRetry,
+                formData: that.settings.formData,
+                accept: that.settings.accept || {
+                    extensions: that.settings.fileExts
+                },
+                threads: 1,
+                disableGlobalDnd: true
+            });
+            //文件队列
+            that._uploader.on('beforeFileQueued', function (file) {
+                if (_.isBlank(file.ext)) {
+                    S_toastr.error(file.name + ' 缺少扩展名，无法加入上传队列');
+                    return false;
+                }
+
+                if (that._uploader.isInProgress()) {
+                    //console.log('当前正在上传，禁止添加新文件到队列中');
+                    return false;
+                }
+                that._uploader.reset();//单个上传重置队列，防止队列不断增大
+                return true;
+            });
+            that._uploader.on('fileQueued', function (file) {
+                that._lastUploadFile = file;
+                that._uploader.option("formData", {
+                    uploadId: WebUploader.Base.guid()
+                });
+            });
+            that._uploader.on('startUpload', function (file) {
+                if (!isNullOrBlank(that.settings.loadingId))
+                    S_loading.show(that.settings.loadingId, '正在上传中...');
+            });
+            that._uploader.on('uploadStart', function (file) {
+                //console.log('uploadStart.');
+            });
+            that._uploader.on('uploadProgress', function (file, percentage) {
+                //console.log(percentage);
+                if (that.settings.uploadProgressCallback != null) {
+                    that.settings.uploadProgressCallback(file, percentage);
+                }
+            });
+            //当某个文件的分块在发送前触发，主要用来询问是否要添加附带参数，大文件在开起分片上传的前提下此事件可能会触发多次
+            that._uploader.on("uploadBeforeSend", function (object, data, headers) {
+                if (that.settings.chunked === true)
+                    data.chunkPerSize = that.settings.chunkSize;
+                if (that.settings.uploadBeforeSend)
+                    that.settings.uploadBeforeSend(object, data, headers);
+            });
+            //当某个文件上传到服务端响应后，会派送此事件来询问服务端响应是否有效。
+            that._uploader.on("uploadAccept", function (object, response) {
+                if (!handleResponse(response)) {
+                    if (response.code) {
+                        if (response.code === '0' && response.data) {
+                            //分片后续处理
+                            if (response.data.needFlow === true) {
+                                that._uploader.options.formData.fastdfsGroup = response.data.fastdfsGroup;
+                                that._uploader.options.formData.fastdfsPath = response.data.fastdfsPath;
+                            }
+                            return true;
+                        } else {
+
+                            var errorMsg = response.msg != null && response.msg != undefined ? response.msg : (response.info != null && response.info != undefined ? response.info : '');
+
+                            if (object && object.file && object.file.name) {
+                                object.file.uploadAcceptFailed = true;
+                                object.file.uploadAcceptFailedMsg = errorMsg;
+                            }
+                            else
+                                that._onError(null, "上传失败(#02)，" + errorMsg);
+                        }
+                    }
+                }
+                //返回False触发uploadError
+                return false;
+            });
+            //上传成功
+            that._uploader.on('uploadSuccess', function (file, response) {
+                //console.log('uploadSuccess');
+                //console.log(response);
+                if (!isNullOrBlank(that.settings.loadingId))
+                    S_loading.hide(that.settings.loadingId);
+
+                if (!handleResponse(response)) {
+                    if (response.code === '0') {
+                        if (that.settings.uploadSuccessCallback)
+                            that.settings.uploadSuccessCallback(file, response);
+                    }
+                    else {
+                        var errorMsg = response.msg != null && response.msg != undefined ? response.msg : (response.info != null && response.info != undefined ? response.info : '');
+                        that._onError(file, errorMsg);
+                    }
+                }
+            });
+            //当所有文件上传结束时触发
+            that._uploader.on("uploadFinished", function () {
+                //console.log("uploadFinished");
+            });
+            //上传失败
+            that._uploader.on('uploadError', function (file, reason) {
+                if (!isNullOrBlank(that.settings.loadingId))
+                    S_loading.hide(that.settings.loadingId);
+                if (file.uploadAcceptFailed === true)
+                    that._onError(file, file.uploadAcceptFailedMsg)
+                else
+                    that._onError(file, "上传失败，" + reason);
+            });
+            that._uploader.on('error', function (handler) {
+                var content;
+                switch (handler) {
+                    case 'F_EXCEED_SIZE':
+                        content = '文件大小超出范围（' + that.settings.fileSingleSizeLimit / (1024 * 1024) + 'MB）';
+                        break;
+                    case 'Q_EXCEED_NUM_LIMIT':
+                        content = '已超最大的文件上传数';
+                        break;
+                    case 'Q_TYPE_DENIED':
+                        content = '仅支持上传如下类型文件：' + that.settings.fileExts;
+                        break;
+                    case 'F_DUPLICATE':
+                        content = '文件已经添加';
+                        break;
+                    default:
+                        content = '文件添加失败';
+                        break;
+                }
+                that._onError(that._lastUploadFile, content);
+            });
+        },
+        _onError: function (file, msg) {
+            var that = this;
+            //为了可以重试，设置为错误状态
+            if (file !== void 0 && file !== null)
+                file.setStatus('error');
+            that._debounceShowError(msg);
+        },
+        _debounceShowError: _.debounce(function (msg) {
+            S_toastr.error(msg);
+        }, 200),
+        //获取WebUploader实例
+        getUploader: function () {
+            var that = this;
+            return that._uploader;
+        }
+    });
+
+    /*
+     1.一般初始化（缓存单例）： $('#id').pluginName(initOptions);
+     2.强制初始化（无视缓存）： $('#id').pluginName(initOptions,true);
+     3.调用方法： $('#id').pluginName('methodName',args);
+     */
+    $.fn[pluginName] = function (options, args) {
+        var instance;
+        var funcResult;
+        var jqObj = this.each(function () {
+
+            //从缓存获取实例
+            instance = $.data(this, "plugin_" + pluginName);
+
+            if (options === undefined || options === null || typeof options === "object") {
+
+                var opts = $.extend(true, {}, defaults, options);
+
+                //options作为初始化参数，若args===true则强制重新初始化，否则根据缓存判断是否需要初始化
+                if (args === true) {
+                    instance = new Plugin(this, opts);
+                } else {
+                    if (instance === undefined || instance === null)
+                        instance = new Plugin(this, opts);
+                }
+
+                //写入缓存
+                $.data(this, "plugin_" + pluginName, instance);
+            }
+            else if (typeof options === "string" && typeof instance[options] === "function") {
+
+                //options作为方法名，args则作为方法要调用的参数
+                //如果方法没有返回值，funcReuslt为undefined
+                funcResult = instance[options].call(instance, args);
+            }
+        });
+
+        return funcResult === undefined ? jqObj : funcResult;
+    };
+
+})(jQuery, window, document);
+
+;(function ($, window, document, undefined) {
+    "use strict";
+
+    var pluginName = "m_imgUploader",
+        defaults = {
+            server: null,
+            auto: true,//选择文件后是否自动开始上传
+            chunked: false,//是否分块上传，需要后台配合
+            chunkSize: 5 * 1024 * 1024,
+            chunkRetry: 3,
+            fileExts: 'gif,jpg,jpeg,bmp,png',
+            fileSingleSizeLimit: null,
+            formData: {},
+            uploadBeforeSend: null,
+            uploadSuccessCallback: null,
+            uploadProgressCallback: null,//进度处理方法
+            innerHTML: null,
+            loadingId: null//锁屏加载ID
+        };
+
+    function Plugin(element, options) {
+        this.element = element;
+
+        this.settings = options;
+        this._defaults = defaults;
+        this._name = pluginName;
+        this._lastUploadFile = null;
+        this._uploader = null;
+        this.init();
+    }
+
+    $.extend(Plugin.prototype, {
+        init: function () {
+            var that = this;
+            that._initWebUploader();
+        },
+        _initWebUploader: function () {
+            var that = this;
+            that._uploader = WebUploader.create({
+                compress: false,// 不压缩image
+                auto: true,
+                swf: window.rootPath + '/assets2/lib/webuploader/Uploader.swf',
+                server: that.settings.server,
+                //timeout: 600000,
+                pick: {
+                    id: that.element,
+                    innerHTML: that.settings.innerHTML || '上传',
+                    multiple: false
+                },
+                duplicate: true,//是否可重复选择同一文件
+                resize: false,
+                chunked: false,
+                formData: that.settings.formData,
+                accept: that.settings.accept || {
+                    extensions: that.settings.fileExts
+                },
+                threads: 1,
+                disableGlobalDnd: true
+            });
+            //文件队列
+            that._uploader.on('beforeFileQueued', function (file) {
+                if (_.isBlank(file.ext)) {
+                    S_toastr.error(file.name + ' 缺少扩展名，无法加入上传队列');
+                    return false;
+                }
+
+                if (that._uploader.isInProgress()) {
+                    //console.log('当前正在上传，禁止添加新文件到队列中');
+                    return false;
+                }
+                that._uploader.reset();//单个上传重置队列，防止队列不断增大
+                return true;
+            });
+            that._uploader.on('fileQueued', function (file) {
+                that._lastUploadFile = file;
+                that._uploader.option("formData", {
+                    uploadId: WebUploader.Base.guid()
+                });
+            });
+            that._uploader.on('startUpload', function (file) {
+                if (!isNullOrBlank(that.settings.loadingId))
+                    S_loading.show(that.settings.loadingId, '正在上传中...');
+            });
+            that._uploader.on('uploadStart', function (file) {
+                //console.log('uploadStart.');
+            });
+            that._uploader.on('uploadProgress', function (file, percentage) {
+                //console.log('进度:' + percentage);
+            });
+            //当某个文件的分块在发送前触发，主要用来询问是否要添加附带参数，大文件在开起分片上传的前提下此事件可能会触发多次
+            that._uploader.on("uploadBeforeSend", function (object, data, headers) {
+                if (that.settings.chunked === true)
+                    data.chunkPerSize = that.settings.chunkSize;
+                if (that.settings.uploadBeforeSend)
+                    that.settings.uploadBeforeSend(object, data, headers);
+            });
+            //当某个文件上传到服务端响应后，会派送此事件来询问服务端响应是否有效。
+            that._uploader.on("uploadAccept", function (object, response) {
+                if (!handleResponse(response)) {
+                    if (response.code) {
+                        if (response.code === '0' && response.data) {
+                            //分片后续处理
+                            if (response.data.needFlow === true) {
+                                that._uploader.options.formData.fastdfsGroup = response.data.fastdfsGroup;
+                                that._uploader.options.formData.fastdfsPath = response.data.fastdfsPath;
+                            }
+                            return true;
+                        } else {
+                            if (object && object.file && object.file.name)
+                                S_toastr.error(object.file.name + " 上传失败(#01)，" + response.msg);
+                            else
+                                S_toastr.error("上传失败(#02)，" + response.msg);
+                        }
+                    }
+                }
+                return false;
+            });
+            //上传成功
+            that._uploader.on('uploadSuccess', function (file, response) {
+                //console.log('uploadSuccess');
+                //console.log(response);
+                if (!isNullOrBlank(that.settings.loadingId))
+                    S_loading.hide(that.settings.loadingId);
+
+                if (!handleResponse(response)) {
+                    if (response.code === '0') {
+                        if (that.settings.uploadSuccessCallback)
+                            that.settings.uploadSuccessCallback(file, response);
+                    }
+                    else {
+                        S_toastr.error(response.msg);
+                    }
+                }
+            });
+            //当所有文件上传结束时触发
+            that._uploader.on("uploadFinished", function () {
+                //console.log("uploadFinished");
+            });
+            //上传失败
+            that._uploader.on('uploadError', function (file, reason) {
+                if (!isNullOrBlank(that.settings.loadingId))
+                    S_loading.hide(that.settings.loadingId);
+                that._onError(file, "上传失败，" + reason);
+            });
+            that._uploader.on('error', function (handler) {
+                var content;
+                switch (handler) {
+                    case 'F_EXCEED_SIZE':
+                        content = '文件大小超出范围';
+                        break;
+                    case 'Q_EXCEED_NUM_LIMIT':
+                        content = '已超最大的文件上传数';
+                        break;
+                    case 'Q_TYPE_DENIED':
+                        content = '文件类型不正确，请上传png、jpg、bmp、jpeg格式的图像文件';
+                        break;
+                    case 'F_DUPLICATE':
+                        content = '文件已经添加';
+                        break;
+                    default:
+                        content = '文件添加失败';
+                        break;
+                }
+                that._onError(that._lastUploadFile, content);
+            });
+        },
+        _onError: function (file, msg) {
+            //showMsg
+            //为了可以重试，设置为错误状态
+            if (file !== void 0 && file !== null)
+                file.setStatus('error');
+            S_toastr.error(msg);
+        }
+    });
+
+    /*
+     1.一般初始化（缓存单例）： $('#id').pluginName(initOptions);
+     2.强制初始化（无视缓存）： $('#id').pluginName(initOptions,true);
+     3.调用方法： $('#id').pluginName('methodName',args);
+     */
+    $.fn[pluginName] = function (options, args) {
+        var instance;
+        var funcResult;
+        var jqObj = this.each(function () {
+
+            //从缓存获取实例
+            instance = $.data(this, "plugin_" + pluginName);
+
+            if (options === undefined || options === null || typeof options === "object") {
+
+                var opts = $.extend(true, {}, defaults, options);
+
+                //options作为初始化参数，若args===true则强制重新初始化，否则根据缓存判断是否需要初始化
+                if (args === true) {
+                    instance = new Plugin(this, opts);
+                } else {
+                    if (instance === undefined || instance === null)
+                        instance = new Plugin(this, opts);
+                }
+
+                //写入缓存
+                $.data(this, "plugin_" + pluginName, instance);
+            }
+            else if (typeof options === "string" && typeof instance[options] === "function") {
+
+                //options作为方法名，args则作为方法要调用的参数
+                //如果方法没有返回值，funcReuslt为undefined
+                funcResult = instance[options].call(instance, args);
+            }
+        });
+
+        return funcResult === undefined ? jqObj : funcResult;
+    };
+
+})(jQuery, window, document);
+
+;(function ($, window, document, undefined) {
+    "use strict";
+    var pluginName = "m_uploadmgr",
+        defaults = {
+            server: null,
+            auto: false,//选择文件后是否自动开始上传
+            chunked: true,//是否分块上传，需要后台配合
+            chunkSize: 5 * 1024 * 1024,
+            chunkRetry: 3,
+            /*fileExts: 'pdf,zip,rar,gif,jpg,jpeg,bmp,png',*/
+            fileExts: '*',
+            fileSingleSizeLimit: null,
+            btnPickId: null,
+            btnPickText: '上传',
+            formData: {},
+            closeIfFinished: false,
+            uploadBeforeSend: null,
+            beforeFileQueued: null,
+            uploadSuccessCallback: null
+        };
+
+    // The actual plugin constructor
+    function Plugin(element, options) {
+        this.element = element;
+        this.settings = options;
+
+        this._defaults = defaults;
+        this._name = pluginName;
+        this._uploader = null;
+        this.init();
+    }
+
+    // Avoid Plugin.prototype conflicts
+    $.extend(Plugin.prototype, {
+        init: function () {
+            var that = this;
+            that._initWebUploader();
+        },
+        _initWebUploader: function () {
+            var that = this;
+
+            var html = template('m_docmgr/m_uploadmgr', {});
+            $(that.element).html(html);
+
+            that._uploader = WebUploader.create({
+                fileSingleSizeLimit: that.settings.fileSingleSizeLimit,
+                compress: false,// 不压缩image
+                auto: that.settings.auto,
+                swf: window.rootPath + '/assets2/lib/webuploader/Uploader.swf',
+                server: that.settings.server,
+                //timeout: 600000,
+                pick: {
+                    id: '.btn-select:eq(0)',
+                    innerHTML: null,
+                    multiple: true
+                },
+                duplicate: false,//是否可重复选择同一文件
+                resize: false,
+                chunked: that.settings.chunked,
+                chunkSize: that.settings.chunkSize,
+                chunkRetry: that.settings.chunkRetry,
+                formData: that.settings.formData,
+                accept: that.settings.accept || {
+                    extensions: that.settings.fileExts
+                },
+                threads: 1,
+                disableGlobalDnd: true
+            });
+
+            //文件队列
+            that._uploader.on('beforeFileQueued', function (file) {
+                if (_.isBlank(file.ext)) {
+                    that._alertError(file.name + ' 缺少扩展名，无法加入上传队列');
+                    return false;
+                }
+
+                /* if(getStringLength(file.name)>42)
+                 {
+                 that._alertError(file.name+' 文件名超出长度限制');
+                 return false;
+                 }*/
+
+                if (that._uploader.isInProgress()) {
+                    that._alertError('当前正在上传，禁止添加新文件到队列中');
+                    return false;
+                }
+
+
+                if (that.settings.beforeFileQueued && typeof that.settings.beforeFileQueued === 'function') {
+                    if (that.settings.beforeFileQueued(file, that) === false)
+                        return false;
+                }
+
+
+                //that._uploader.reset();//单个上传重置队列，防止队列不断增大
+                return true;
+            });
+            that._uploader.on('filesQueued', function (files) {
+                /* that._uploader.option("formData", {
+                 uploadId: WebUploader.Base.guid()
+                 });*/
+
+                if (files && files.length > 0) {
+                    $.each(files, function (index, file) {
+                        var html = template('m_docmgr/m_uploadmgr_uploadItem', {file: file});
+                        $(that.element).find('.upload-item-list:eq(0)').append(html);
+
+                        var $uploadItem = $(that.element).find('.uploadItem_' + file.id + ':eq(0)');
+                        $uploadItem.find('.span_status:eq(0)').html('待上传');
+
+                        $uploadItem.find('.removefile:eq(0)').click(function () {
+                            that._uploader.removeFile($uploadItem.attr('data-fileId'), true);
+                            $uploadItem.remove();
+                            return false;
+                        });
+                    });
+                    $(that.element).find('.btn-start:eq(0)').show();
+                }
+            });
+            that._uploader.on('startUpload', function (file) {
+                $(that.element).find('.btn-start:eq(0)').hide();
+                $(that.element).find('.btn-stop:eq(0)').show();
+            });
+            that._uploader.on('uploadStart', function (file) {
+                var $uploadItem = $(that.element).find('.uploadItem_' + file.id + ':eq(0)');
+                $uploadItem.find('.span_status:eq(0)').html('正在上传');
+            });
+            //进度
+            that._uploader.on('uploadProgress', function (file, percentage) {
+                var pc = (percentage * 100).toFixed(2);
+                if (percentage >= 1)
+                    pc = 100;
+                var $uploadItem = $(that.element).find('.uploadItem_' + file.id + ':eq(0)');
+                $uploadItem.find('.span_progress:eq(0)').html(pc + '%');
+                $uploadItem.find('.progress-bar:eq(0)').attr('aria-valuenow', pc).css('width', pc + '%')
+            });
+            //当某个文件的分块在发送前触发，主要用来询问是否要添加附带参数，大文件在开起分片上传的前提下此事件可能会触发多次
+            that._uploader.on("uploadBeforeSend", function (object, data, headers) {
+                if (that.settings.chunked === true)
+                    data.chunkPerSize = that.settings.chunkSize;
+                if (that.settings.uploadBeforeSend)
+                    that.settings.uploadBeforeSend(object, data, headers);
+            });
+            //当某个文件上传到服务端响应后，会派送此事件来询问服务端响应是否有效。
+            that._uploader.on("uploadAccept", function (object, response) {
+                if (!handleResponse(response)) {
+                    if (response.code) {
+                        if (response.code === '0' && response.data) {
+                            //分片后续处理
+                            if (response.data.needFlow === true) {
+                                that._uploader.options.formData.fastdfsGroup = response.data.fastdfsGroup;
+                                that._uploader.options.formData.fastdfsPath = response.data.fastdfsPath;
+                            }
+                            return true;
+                        } else {
+                            if (object && object.file && object.file.name)
+                                that._alertError(object.file.name + " 上传失败(#01)，" + response.msg);
+                            else
+                                that._alertError("上传失败(#02)，" + response.msg);
+                        }
+                    }
+                }
+                return false;
+            });
+            //上传成功
+            that._uploader.on('uploadSuccess', function (file, res) {
+                //还要判断response
+                if (!handleResponse(res)) {
+                    var $uploadItem = $(that.element).find('.uploadItem_' + file.id + ':eq(0)');
+                    if (res.code == 0) {
+                        $uploadItem.find('.span_status:eq(0)').html('上传成功');
+                        that._uploader.removeFile(file, true);
+                        if (that.settings.uploadSuccessCallback)
+                            that.settings.uploadSuccessCallback(file, res);
+                    } else if (res.code === '1') {
+                        S_dialog.error(res.msg);
+                        $uploadItem.find('.span_status:eq(0)').html('上传失败');
+                    } else {
+                        $uploadItem.find('.span_status:eq(0)').html('上传失败');
+                    }
+                }
+
+            });
+            //当所有文件上传结束时触发
+            that._uploader.on("uploadFinished", function () {
+                $(that.element).find('.btn-start:eq(0)').hide();
+                $(that.element).find('.btn-stop:eq(0)').hide();
+                if (that.settings.closeIfFinished) {
+                    setTimeout(function () {
+                        $(that.element).find('a.btn-close').click();
+
+                    }, 500);
+                }
+            });
+            //上传失败
+            that._uploader.on('uploadError', function (file, reason) {
+                var $uploadItem = $(that.element).find('.uploadItem_' + file.id + ':eq(0)');
+                if ($uploadItem.length > 0) {
+                    if (!!reason) {
+                        //that._alertError(file.name + ' 上传失败（' + reason + '）');
+                        $uploadItem.find('.span_status:eq(0)').html('上传失败（' + reason + '）');
+                    }
+                    else {
+                        //that._alertError(file.name + ' 上传失败');
+                        $uploadItem.find('.span_status:eq(0)').html('上传失败');
+                    }
+                }
+            });
+            that._uploader.on('error', function (handler) {
+                var content;
+                switch (handler) {
+                    case 'F_EXCEED_SIZE':
+                        content = '文件大小超出范围';
+                        break;
+                    case 'Q_EXCEED_NUM_LIMIT':
+                        content = '已超最大的文件上传数';
+                        break;
+                    case 'Q_TYPE_DENIED':
+                        content = '仅支持上传如下类型文件：' + that.settings.fileExts;
+                        break;
+                    case 'F_DUPLICATE':
+                        content = '文件已经添加';
+                        break;
+                    default:
+                        content = '文件添加失败';
+                        break;
+                }
+
+                that._alertError(content);
+            });
+
+            that._bindAction();
+        },
+        //绑定按钮
+        _bindAction: function () {
+            var that = this;
+            //开始
+            $(that.element).find('.btn-start:eq(0)').click(function () {
+
+                var start = function () {
+                    var server = that._uploader.option('server');
+                    if (server === null) {
+                        that._alertError('上传路径没有正确配置');
+                        return false;
+                    }
+
+                    var files = that._uploader.getFiles();
+                    if (!files || files.length == 0) {
+                        that._alertError('请先选择要上传的文件');
+                        return false;
+                    }
+
+                    var errorFiles = [];
+                    var interruptFiles = [];
+                    $.each(files, function (index, file) {
+                        var fileStatus = file.getStatus();
+                        if (fileStatus === 'error') {
+                            errorFiles.push(file);
+                            //that._uploader.retry(file);
+                            //console.log("error:"+file.name);
+                        } else if (fileStatus === 'interrupt') {
+                            interruptFiles.push(file);
+                            //that._uploader.retry(file);
+                            //console.log("interrupt:"+file.name);
+                        }
+
+                        //console.log(fileStatus);
+                    });
+
+                    if (errorFiles.length + interruptFiles.length > 0) {
+                        $.each(interruptFiles, function (index, file) {
+                            file.setStatus('error');
+                        });
+                        that._uploader.retry();
+                    }
+                    else
+                        that._uploader.upload();
+                };
+
+
+                var option = {
+                    ignoreError: true,
+                    url: restApi.url_getCompanyDiskInfo,
+                    postData: {
+                        companyId: window.currentCompanyId
+                    }
+                };
+                m_ajax.postJson(option, function (res) {
+                    if (res.code === '0') {
+                        var freeSize = parseFloat(res.data.freeSize);
+                        if (freeSize <= 0) {
+                            S_toastr.warning("当前组织网盘空间不足，无法上传，请联系客服")
+                        } else {
+                            start();
+                        }
+                    }
+                });
+
+
+                return false;
+            });
+
+            //停止
+            $(that.element).find('.btn-stop:eq(0)').click(function () {
+                var files = that._uploader.getFiles();
+                if (files && files.length > 0) {
+                    $.each(files, function (index, file) {
+                        if (file.getStatus() === 'progress');
+                        {
+                            try {
+                                that._uploader.stop(file);
+                            } catch (ex) {
+
+                            }
+                            if (file.getStatus() === 'interrupt') {
+                                var $uploadItem = $(that.element).find('.uploadItem_' + file.id + ':eq(0)');
+                                $uploadItem.find('.span_status:eq(0)').html('已中断');
+                            }
+                            //file.setStatus('error');
+                        }
+                        //console.log(file.getStatus());
+                    });
+                }
+                $(that.element).find('.btn-stop:eq(0)').hide();
+                $(that.element).find('.btn-start:eq(0)').show();
+            });
+
+            //关闭
+            $(that.element).find('.btn-close:eq(0)').click(function () {
+                if (that._uploader.isInProgress()) {
+                    that._alertError("当前正在上传，无法关闭")
+                } else {
+                    var files = that._uploader.getFiles();
+                    if (files && files.length > 0) {
+                        $.each(function (index, file) {
+                            that._uploader.removeFile(file, true);
+                        });
+                    }
+                    that._uploader.destroy();
+                    $(that.element).html('');
+                }
+                return false;
+            });
+        },
+        //暂时未用
+        _onError: function (file, msg) {
+            //showMsg
+            //为了可以重试，设置为错误状态
+            file.setStatus('error');
+            var that = this;
+            that._alertError(file.name + ' ' + msg);
+        },
+        //错误提示
+        _alertError: function (content, alertId) {
+            var that = this;
+            var html = template('m_alert/m_alert_error', {content: content, id: alertId});
+            $(that.element).find('.alertmgr:eq(0)').append(html);
+        },
+        //获取WebUploader实例
+        getUploader: function () {
+            var that = this;
+            return that._uploader;
+        }
+    });
+
+    /*
+     1.一般初始化（缓存单例）： $('#id').pluginName(initOptions);
+     2.强制初始化（无视缓存）： $('#id').pluginName(initOptions,true);
+     3.调用方法： $('#id').pluginName('methodName',args);
+     */
+    $.fn[pluginName] = function (options, args) {
+        var instance;
+        var funcResult;
+        var jqObj = this.each(function () {
+
+            //从缓存获取实例
+            instance = $.data(this, "plugin_" + pluginName);
+
+            if (options === undefined || options === null || typeof options === "object") {
+
+                var opts = $.extend(true, {}, defaults, options);
+
+                //options作为初始化参数，若args===true则强制重新初始化，否则根据缓存判断是否需要初始化
+                if (args === true) {
+                    instance = new Plugin(this, opts);
+                } else {
+                    if (instance === undefined || instance === null)
+                        instance = new Plugin(this, opts);
+                }
+
+                //写入缓存
+                $.data(this, "plugin_" + pluginName, instance);
+            }
+            else if (typeof options === "string" && typeof instance[options] === "function") {
+
+                //options作为方法名，args则作为方法要调用的参数
+                //如果方法没有返回值，funcReuslt为undefined
+                funcResult = instance[options].call(instance, args);
+            }
+        });
+
+        return funcResult === undefined ? jqObj : funcResult;
+    };
+
+})(jQuery, window, document);
+
+var historyData_entry = {
+    init: function () {
+        var that = this;
+        that._initAction();
+    },
+    _initAction: function () {
+        $('#btnImportProjects').m_fileUploader({
+            innerHTML:'导入项目',
+            server: restApi.url_historyData_importProjects,
+            formData: {abc:'123'},
+            accept: {
+                title: '请选择Excel文件',
+                extensions: 'xlsx,xls',
+                mimeTypes: '.xlsx,.xls'
+            },
+            loadingId: '',
+            uploadSuccessCallback: function (file, res) {
+                S_toastr.success(res.msg);
+            }
+        });
+    }
+};
 /**
  * Created by Wuwq on 2017/05/26.
  */

@@ -2,9 +2,12 @@ package com.maoding.corp.module.corpclient.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.maoding.core.base.BaseEntity;
+import com.maoding.utils.NumberUtils;
+import com.maoding.utils.StringUtils;
 
 import javax.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * Created by Wuwq on 2017/2/14.
