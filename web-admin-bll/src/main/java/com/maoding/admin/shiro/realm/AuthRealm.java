@@ -49,7 +49,7 @@ public class AuthRealm extends AuthorizingRealm {
         String password = String.valueOf(authToken.getPassword());
 
         List<AccountDTO> accountDTOS = accountDB.stream().filter(c -> c.getAccount().equalsIgnoreCase(account)).collect(Collectors.toList());
-        if (accountDTOS.size() > 0 && password.equalsIgnoreCase("852")) {
+        if (accountDTOS.size() > 0 && password.equalsIgnoreCase(account)) {
             return new SimpleAuthenticationInfo(accountDTOS.get(0), password, getName());
         } else {
             throw new AuthenticationException("token认证失败");

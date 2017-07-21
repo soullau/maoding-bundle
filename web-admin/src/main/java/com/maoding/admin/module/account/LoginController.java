@@ -2,7 +2,6 @@ package com.maoding.admin.module.account;
 
 import com.maoding.admin.module.account.dto.AccountDTO;
 import com.maoding.admin.module.account.dto.AccountLoginDTO;
-import com.maoding.admin.shiro.token.AuthToken;
 import com.maoding.core.base.BaseController;
 import com.maoding.core.bean.ApiResult;
 import org.apache.shiro.SecurityUtils;
@@ -24,12 +23,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class LoginController extends BaseController {
 
 
-    @RequestMapping(value ="/login", method = RequestMethod.GET)
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login() {
         if (SecurityUtils.getSubject().isAuthenticated()) {
             return "redirect:/";
         }
-        return "/account/login";
+        return "account/login";
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -40,8 +39,8 @@ public class LoginController extends BaseController {
         try {
             subject.login(token);
             if (subject.isAuthenticated()) {
-                AccountDTO account=((AccountDTO)subject.getPrincipal());
-                subject.getSession().setAttribute("accountName",account.getName());
+                AccountDTO account = ((AccountDTO) subject.getPrincipal());
+                subject.getSession().setAttribute("accountName", account.getName());
                 return ApiResult.success(null, "/");
             }
         } catch (AuthenticationException e) {
@@ -53,6 +52,6 @@ public class LoginController extends BaseController {
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public String logout() {
         SecurityUtils.getSubject().logout();
-        return "login";
+        return "account/login";
     }
 }
