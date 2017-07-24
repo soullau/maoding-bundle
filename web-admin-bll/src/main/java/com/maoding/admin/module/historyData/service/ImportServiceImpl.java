@@ -77,21 +77,49 @@ public class ImportServiceImpl extends BaseService implements ImportService {
                     || ((project.getCompanyId() == null) && (ProjectConst.PROJECT_COMPANY_NAME.contains("*")))
                     || ((project.getCreateBy() == null) && (ProjectConst.PROJECT_CREATOR_NAME.contains("*")))
                     || ((project.getCreateDate() == null) && (ProjectConst.PROJECT_CREATE_DATE.contains("*")))){
-                result.addFailed(data);
+                result.addInvalid(data);
+            } else {
+                result.addValid(data);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public ImportResultDTO importProjects(List<Map<String, Object>> dataList, String token) {
+        if (dataList == null) throw new IllegalArgumentException("importProjects 参数错误");
+
+        ImportResultDTO result = new ImportResultDTO();
+        for (Map<String,Object> data : dataList) {
+            result.addTotalCount();
+
+            ProjectDO project = createProjectDOFrom(data, token);
+            //检查数据有效性
+            if ((project == null)
+                    || ((project.getProjectNo() == null) && (ProjectConst.PROJECT_NO.contains("*")))
+                    || ((project.getProjectName() == null) && (ProjectConst.PROJECT_NAME.contains("*")))
+                    || ((project.getCompanyId() == null) && (ProjectConst.PROJECT_COMPANY_NAME.contains("*")))
+                    || ((project.getCreateBy() == null) && (ProjectConst.PROJECT_CREATOR_NAME.contains("*")))
+                    || ((project.getCreateDate() == null) && (ProjectConst.PROJECT_CREATE_DATE.contains("*")))) {
+                result.addInvalid(data);
                 continue;
             }
+
             //存储项目数据
-            ProjectQueryDTO query = new ProjectQueryDTO(project.getCompanyId(),project.getProjectNo(),project.getProjectName(),project.getCreateDate());
+            ProjectQueryDTO query = new ProjectQueryDTO(project.getCompanyId(), project.getProjectNo(), project.getProjectName(), project.getCreateDate());
             if (projectDAO.getProject(query) == null) {
-                try{
+                try {
                     insertProject(project);
-                }catch (Exception e){
-                    log.error("添加数据时产生错误",e);
-                    result.addFailed(data);
+                } catch (Exception e) {
+                    log.error("添加数据时产生错误", e);
+                    result.addInvalid(data);
+                    continue;
                 }
             } else {
-                result.addFailed(data);
+                result.addInvalid(data);
+                continue;
             }
+            result.addValid(data);
         }
         return result;
     }
@@ -120,6 +148,7 @@ public class ImportServiceImpl extends BaseService implements ImportService {
         audit.resetId();
         audit.setProjectId(project.getId());
         audit.setAuditDate(contractDate);
+        audit.setAuditType("2");
         audit.setCreateBy(project.getCreateBy());
         audit.setCreateDate(project.getCreateDate());
         projectAuditDAO.insert(audit);

@@ -5,18 +5,18 @@
         select *
         from maoding_web_project_member a
         where
-            (deleted is null or deleted=0)
+            (a.deleted is null or a.deleted=0)
             <if test="id!=null">
-                and id=#{id}
+                and a.id=#{id}
             </if>
             <if test="companyId!=null">
-                and company_id=#{companyId}
+                and a.company_id=#{companyId}
             </if>
             <if test="projectId!=null">
-                and project_id=#{projectId}
+                and a.project_id=#{projectId}
             </if>
             <if test="memberType!=null">
-                and member_type=#{memberType}
+                and a.member_type=#{memberType}
             </if>
         <include refid="com.maoding.admin.module.orgAuth.dao.CommonDAO.limitSQL"/>
     </select>

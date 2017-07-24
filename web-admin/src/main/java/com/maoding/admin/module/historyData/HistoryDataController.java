@@ -38,7 +38,10 @@ public class HistoryDataController extends BaseController {
         InputStream in = fileParam.getFileItem().getInputStream();
         Map<String,Object> param = fileParam.getParam();
         String token = (param != null) ? (String)param.get("token") : null;
-        ImportResultDTO result = importService.importProjects(in,token);
+        ImportResultDTO result = importService.importProjects(in,token); //读入文件
+        if ((request != null) && (result.getValidCount() > 0)) {
+            importService.importProjects(result.getValidList(), token); //生成数据库记录
+        }
 
         return ApiResult.success(result);
     }

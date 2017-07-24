@@ -6,11 +6,14 @@
         from
             maoding_web_company_user a
             inner join maoding_web_account b on (a.user_id=b.id)
-            inner join maoding_web_company c on (a.company_id=c.id)
-            left join maoding_web_business_partner d on (c.id=d.company_id)
+            inner join maoding_web_company h on (a.company_id=h.id)
+            left join maoding_web_business_partner i on (h.id=i.company_id)
+            left join maoding_web_org_auth j on ((j.deleted is null or j.deleted=0) and h.id=j.id)
         where
-            (a.user_name=#{userName} or b.user_name=#{userName})
-            and (c.company_name=#{companyName} or c.company_short_name=#{companyName} or d.nick_name=#{companyName})
+            (b.status is null or b.status='0')
+            and (h.status is null or h.status='0')
+            and (a.user_name=#{userName} or b.user_name=#{userName})
+            and (h.company_name=#{companyName} or h.company_short_name=#{companyName} or i.nick_name=#{companyName} or j.org_name=#{companyName})
         limit 1
     </select>
 </mapper>
