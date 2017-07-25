@@ -89,6 +89,9 @@ public class ExcelUtils {
 			wb = getWorkbook(in);
 		} catch (FileNotFoundException e) {
 			log.error("无法找到"+fileName, e);
+		} catch (Exception e) {
+			log.error("读取文件"+fileName+"错误",e);
+			closeInputSteam(in);
 		}
 		return wb;
 	}
