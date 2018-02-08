@@ -13,6 +13,6 @@
                 AND s.corp_endpoint= #{corpEndpoint}
             </if>
         </where>
-        ORDER BY s.corp_endpoint,s.company_id
+        ORDER BY s.corp_endpoint,s.create_date
     </select>
 </mapper>

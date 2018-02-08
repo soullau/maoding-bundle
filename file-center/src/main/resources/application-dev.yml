@@ -19,7 +19,7 @@ spring:
 # Druid
 # ===================================================================
 druid:
-    url: jdbc:mysql://172.16.6.71:3306/maoding_new
+    url: jdbc:mysql://127.0.0.1:3306/maoding_test
     username: idccapp
     password: idccapp
     driverClassName: com.mysql.jdbc.Driver
@@ -83,6 +83,7 @@ fastdfs:
       - 172.16.6.73:42122
 
 
+
 # ===================================================================
 # Multipart
 # ===================================================================
@@ -91,3 +92,7 @@ upload:
       maxInMemorySize: 10240    # 10*1024
       chunkSize: 5242880    # 5*1024*1024 要与前端保持一致
       maxUploadSize: 20971520 # 20*1024*1024
+
+
+ice:
+   isShow: false

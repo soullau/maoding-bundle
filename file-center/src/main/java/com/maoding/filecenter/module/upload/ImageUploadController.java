@@ -10,22 +10,18 @@ import com.maoding.fastdfsClient.domain.StorePath;
 import com.maoding.fastdfsClient.exception.FdfsServerException;
 import com.maoding.fastdfsClient.proto.storage.DownloadByteArray;
 import com.maoding.fastdfsClient.service.FastFileStorageClient;
+import com.maoding.filecenter.module.file.service.FastdfsService;
 import com.maoding.utils.StringUtils;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.Thumbnails.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.InputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -51,6 +47,9 @@ public class ImageUploadController extends BaseController {
 
     @Autowired
     private FastFileStorageClient storageClient;
+
+    @Autowired
+    private FastdfsService fastdfsService;
 
     /**
      * 上传临时图片并转换为JPG（服务器本地）
@@ -380,5 +379,12 @@ public class ImageUploadController extends BaseController {
         }*/
 
         return builder;
+    }
+
+
+    @RequestMapping(value = "downLoadFile/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public void downLoadFile(@PathVariable String id, HttpServletResponse response) throws Exception {
+         fastdfsService.downLoadFile(id,response);
     }
 }

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.maoding.yongyoucloud.module.enterprise.dao.EnterpriseDAO">
+
+    <select id="getEnterprise" parameterType="com.maoding.yongyoucloud.module.enterprise.dto.EnterpriseSearchQueryDTO"
+            resultType="com.maoding.yongyoucloud.module.enterprise.dto.EnterpriseDTO">
+        SELECT a.corpname,a.id, b.id as enterprise_org_id,b.company_id
+        from maoding_web_enterprise a
+        INNER  JOIN maoding_web_enterprise_org b on a.id = b.enterprise_id
+        where b.company_id = #{companyId}
+        <if test="pageSize != null">
+            limit
+            <if test="startLine != null">
+                #{startLine},
+            </if>
+            #{pageSize}
+        </if>
+    </select>
+
+    <select id="getEnterpriseByName" parameterType="com.maoding.yongyoucloud.module.enterprise.dto.EnterpriseSearchQueryDTO"
+            resultType="com.maoding.yongyoucloud.module.enterprise.model.EnterpriseDO">
+        SELECT a.*, b.id as enterprise_org_id,b.company_id
+        from maoding_web_enterprise a
+        LEFT JOIN maoding_web_enterprise_org b on a.id = b.enterprise_id and b.company_id = #{companyId}
+        where a.corpname = #{name}
+        and (a.enterprise_type =1 or b.company_id = #{companyId} and a.enterprise_type = 2)
+    </select>
+</mapper>

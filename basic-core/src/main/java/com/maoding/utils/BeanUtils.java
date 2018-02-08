@@ -7,7 +7,9 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -127,5 +129,19 @@ public class BeanUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+
+    /**
+     * 根据entityList复制dtoList
+     */
+    public static List copyFields(List sourceList, Class destClass) throws Exception {
+        List destList = new ArrayList();
+        for (Object source : sourceList) {
+            Object dest = destClass.newInstance();
+            copyProperties(source, dest);
+            destList.add(dest);
+        }
+        return destList;
     }
 }

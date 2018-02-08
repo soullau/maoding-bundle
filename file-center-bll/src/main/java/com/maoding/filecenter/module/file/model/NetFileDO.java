@@ -71,6 +71,21 @@ public class NetFileDO extends BaseEntity {
      */
     private String status;
 
+    /**
+     * oss 中的 bucket
+     */
+    private String bucket;
+
+    /**
+     * oss中的地址（只有bucket为公有访问的时候，该地址才有效
+     */
+    private String ossFilePath;
+
+    /**
+     * oos 中对应对象的key值
+     */
+    private String objectKey;
+
     public String getCompanyId() {
         return companyId;
     }
@@ -189,5 +204,29 @@ public class NetFileDO extends BaseEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getBucket() {
+        return bucket;
+    }
+
+    public void setBucket(String bucket) {
+        this.bucket = bucket;
+    }
+
+    public String getOssFilePath() {
+        return ossFilePath;
+    }
+
+    public void setOssFilePath(String ossFilePath) {
+        this.ossFilePath = ossFilePath;
+    }
+
+    public String getObjectKey() {
+        return objectKey;
+    }
+
+    public void setObjectKey(String objectKey) {
+        this.objectKey = objectKey;
     }
 }

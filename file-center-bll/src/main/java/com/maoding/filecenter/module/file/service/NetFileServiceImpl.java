@@ -1,6 +1,7 @@
 package com.maoding.filecenter.module.file.service;
 
 import com.maoding.common.module.companyDisk.service.CompanyDiskService;
+import com.maoding.common.module.dynamic.service.DynamicService;
 import com.maoding.constDefine.companyDisk.FileSizeSumType;
 import com.maoding.constDefine.netFile.NetFileStatus;
 import com.maoding.constDefine.netFile.NetFileType;
@@ -9,7 +10,6 @@ import com.maoding.core.bean.ApiResult;
 import com.maoding.core.bean.FastdfsUploadResult;
 import com.maoding.core.bean.MultipartFileParam;
 import com.maoding.core.exception.DataNotFoundException;
-import com.maoding.common.module.dynamic.service.DynamicService;
 import com.maoding.filecenter.module.file.dao.NetFileDAO;
 import com.maoding.filecenter.module.file.dto.DeleteDTO;
 import com.maoding.filecenter.module.file.dto.DirectoryDTO;
@@ -25,6 +25,7 @@ import tk.mybatis.mapper.entity.Example;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Created by Wuwq on 2017/4/24.
@@ -85,20 +86,20 @@ public class NetFileServiceImpl extends BaseService implements NetFileService {
 
         NetFileDO netFileDO = new NetFileDO();
         BeanUtils.copyProperties(dir, netFileDO);
-
+        List<DirectoryDTO> directoryDTOS = netFileDAO.getDirectoryDTOList(dir);
         netFileDO.initEntity();
         netFileDO.setCreateBy(dir.getAccountId());
         netFileDO.setUpdateBy(dir.getAccountId());
         netFileDO.setStatus(NetFileStatus.Normal.toString());
-        netFileDO.setType(NetFileType.DIRECTORY);
+        netFileDO.setType(NetFileType.NEW_FILE);
         netFileDO.setIsCustomize(0);
-
+        netFileDO.setParam4(null != directoryDTOS ? directoryDTOS.size() + 1 : 0);
         //根据PID重置IDPath
         resetSkyDrivePath(netFileDO);
 
         if (netFileDAO.insert(netFileDO) > 0) {
             //添加项目动态
-            dynamicService.addCreateDynamic(netFileDO,dir.getCompanyId(),dir.getAccountId());
+            dynamicService.addCreateDynamic(netFileDO, dir.getCompanyId(), dir.getAccountId());
             return ApiResult.success(null, null);
         }
         return ApiResult.failed(null, null);
@@ -111,8 +112,8 @@ public class NetFileServiceImpl extends BaseService implements NetFileService {
     public ApiResult uploadFile(HttpServletRequest request) throws Exception {
         MultipartFileParam param = MultipartFileParam.parse(request);
         //return ApiResult.failed("超出容量",FastdfsUploadResult.parse(param,null,null));
-
-
+        long startTime = System.currentTimeMillis();
+        log.info("开始时间====" + startTime);
         FastdfsUploadResult fuResult = fastdfsService.upload(param);
         if (fuResult.getNeedFlow())
             return ApiResult.success(null, fuResult);
@@ -153,9 +154,13 @@ public class NetFileServiceImpl extends BaseService implements NetFileService {
 
         if (netFileDAO.insert(netFileDO) > 0) {
             //计算剩余空间
+            long endTime = System.currentTimeMillis();    //获取结束时间
+            log.info("结束时间====" + endTime);
+//            log.info("最后一次用时=====" + (endTime - startTime) + "ms");
+            log.info("文件大小====" + (fuResult.getFileSize()) + "b");
             companyDiskService.recalcSizeOnFileAdded(companyId, FileSizeSumType.DOCMGR, fuResult.getFileSize());
             //添加项目动态
-            dynamicService.addCreateDynamic(netFileDO,companyId,accountId);
+            dynamicService.addCreateDynamic(netFileDO, companyId, accountId);
             return ApiResult.success(null, fuResult);
         }
         return ApiResult.failed(null, null);
@@ -184,7 +189,7 @@ public class NetFileServiceImpl extends BaseService implements NetFileService {
 
         if (netFileDAO.updateByPrimaryKeySelective(updateObj) > 0) {
             //添加项目动态
-            dynamicService.addDynamic(netFileDO,updateObj,netFileDO.getCompanyId(),dto.getAccountId());
+            dynamicService.addDynamic(netFileDO, updateObj, netFileDO.getCompanyId(), dto.getAccountId());
             return ApiResult.success(null, null);
         }
         return ApiResult.failed(null, null);
@@ -230,9 +235,14 @@ public class NetFileServiceImpl extends BaseService implements NetFileService {
             }
 
             //添加项目动态
-            dynamicService.addDeleteDynamic(netFileDO,netFileDO.getCompanyId(),dto.getAccountId());
+            dynamicService.addDeleteDynamic(netFileDO, netFileDO.getCompanyId(), dto.getAccountId());
             return ApiResult.success(null, null);
         }
         return ApiResult.failed(null, null);
+    }
+
+    @Override
+    public List<DirectoryDTO> getDirectoryDTOList(DirectoryDTO dir) {
+        return netFileDAO.getDirectoryDTOList(dir);
     }
 }

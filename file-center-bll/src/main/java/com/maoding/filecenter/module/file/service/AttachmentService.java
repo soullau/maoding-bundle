@@ -45,6 +45,11 @@ public interface AttachmentService {
     ApiResult uploadExpenseAttach(HttpServletRequest request) throws Exception;
 
     /**
+     * 上传通知公告附件
+     */
+    ApiResult uploadNoticeAttach(HttpServletRequest request) throws Exception;
+
+    /**
      * 上传项目合同扫描件
      */
     ApiResult uploadProjectContract(HttpServletRequest request) throws Exception;

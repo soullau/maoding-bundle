@@ -31,6 +31,7 @@
         <module name="file-center" />
         <module name="file-center-bll" />
         <module name="im-easemob" />
+        <module name="im-easemob-bll" />
         <module name="notify-endpoint" />
         <module name="web-admin" />
         <module name="web-admin-bll" />
@@ -46,6 +47,7 @@
       <module name="file-center" target="1.8" />
       <module name="file-center-bll" target="1.8" />
       <module name="im-easemob" target="1.8" />
+      <module name="im-easemob-bll" target="1.8" />
       <module name="maoding-bundle" target="1.8" />
       <module name="notify-endpoint" target="1.8" />
       <module name="web-admin" target="1.8" />

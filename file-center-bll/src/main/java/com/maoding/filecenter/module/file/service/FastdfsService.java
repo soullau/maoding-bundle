@@ -4,6 +4,7 @@ import com.maoding.core.bean.ApiResult;
 import com.maoding.core.bean.FastdfsUploadResult;
 import com.maoding.core.bean.MultipartFileParam;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -13,7 +14,7 @@ public interface FastdfsService {
     /**
      * 上传文件
      */
-    FastdfsUploadResult upload(MultipartFileParam param) throws IOException;
+    FastdfsUploadResult upload(MultipartFileParam param) throws Exception;
 
     /**
      * 上传LOGO
@@ -24,4 +25,10 @@ public interface FastdfsService {
      * 从 FastDFS 删除文件
      */
     ApiResult delete(String group, String path);
+
+    /**
+     * FastDFS下载文件
+     * @param id(文件id)
+     */
+    void downLoadFile(String id, HttpServletResponse response) throws Exception;
 }

@@ -32,6 +32,8 @@ public class FastdfsUploadResult {
      */
     private Integer netFileSeq;
 
+    private String fileFullPath;
+
     public static FastdfsUploadResult parse(MultipartFileParam param, String group, String path) {
         FastdfsUploadResult r = new FastdfsUploadResult();
         r.setUploadId(param.getUploadId());
@@ -152,5 +154,13 @@ public class FastdfsUploadResult {
 
     public void setNetFileSeq(Integer netFileSeq) {
         this.netFileSeq = netFileSeq;
+    }
+
+    public String getFileFullPath() {
+        return fileFullPath;
+    }
+
+    public void setFileFullPath(String fileFullPath) {
+        this.fileFullPath = fileFullPath;
     }
 }

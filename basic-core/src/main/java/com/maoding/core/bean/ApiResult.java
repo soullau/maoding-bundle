@@ -9,6 +9,7 @@ import java.io.Serializable;
  */
 public class ApiResult<T> implements Serializable {
 
+    private String error;
     private String code;
     private String msg;
     private T data;
@@ -88,5 +89,14 @@ public class ApiResult<T> implements Serializable {
 
     public void setData(T data) {
         this.data = data;
+    }
+
+    public String getError() {
+        this.error = this.code;
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 }

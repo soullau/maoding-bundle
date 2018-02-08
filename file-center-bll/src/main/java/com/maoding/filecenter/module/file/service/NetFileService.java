@@ -7,6 +7,7 @@ import com.maoding.filecenter.module.file.dto.DirectoryDTO;
 import com.maoding.filecenter.module.file.dto.NetFileRenameDTO;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * Created by Wuwq on 2017/05/27.
@@ -32,4 +33,9 @@ public interface NetFileService {
      * 删除文件
      */
     ApiResult delete(DeleteDTO dto);
+
+    /**
+     * 查询文件夹顺序
+     */
+    List<DirectoryDTO> getDirectoryDTOList(DirectoryDTO dir);
 }

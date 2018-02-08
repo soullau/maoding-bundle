@@ -7,20 +7,22 @@ import com.maoding.core.bean.MultipartFileParam;
 import com.maoding.fastdfsClient.FdfsClientConstants;
 import com.maoding.fastdfsClient.domain.FileInfo;
 import com.maoding.fastdfsClient.domain.StorePath;
+import com.maoding.fastdfsClient.proto.storage.DownloadByteArray;
 import com.maoding.fastdfsClient.service.AppendFileStorageClient;
 import com.maoding.fastdfsClient.service.FastFileStorageClient;
+import com.maoding.filecenter.module.file.dao.NetFileDAO;
+import com.maoding.filecenter.module.file.model.NetFileDO;
 import com.maoding.utils.StringUtils;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.fileupload.FileItem;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.Optional;
 
 /**
@@ -40,12 +42,13 @@ public class FastdfsServiceImpl extends BaseService implements FastdfsService {
     @Autowired
     private AppendFileStorageClient appendStorageClient;
 
-
+    @Autowired
+    private NetFileDAO netFileDAO;
     /**
      * 上传文件
      */
     @Override
-    public FastdfsUploadResult upload(MultipartFileParam param) throws IOException {
+    public FastdfsUploadResult upload(MultipartFileParam param) throws Exception {
         String extName = param.getFileExtName();
         FileItem fileItem = param.getFileItem();
         long size = fileItem.getSize();
@@ -60,19 +63,24 @@ public class FastdfsServiceImpl extends BaseService implements FastdfsService {
                 throw new UnsupportedOperationException("没有指定分片大小");
 
             int chunk = param.getChunk();
+            StorePath storePath=null;
             if (chunk == 0) {
                 //TODO 当FastDFS服务器存在多个组的时候需要分配逻辑
-                StorePath storePath = appendStorageClient.uploadAppenderFile(FdfsClientConstants.DEFAULT_GROUP, fileItem.getInputStream(), fileItem.getSize(), extName);
+                 storePath = appendStorageClient.uploadAppenderFile(FdfsClientConstants.DEFAULT_GROUP, fileItem.getInputStream(), fileItem.getSize(), extName);
                 fuResult = FastdfsUploadResult.parse(param, storePath.getGroup(), storePath.getPath());
                 fuResult.setNeedFlow(true);
                 return fuResult;
             }
-
+            // 上传第二段文字
+            String secondText = "This is second paragraph. \r\n";
+            InputStream secondIn = getTextInputStream(secondText);
             //分片叠加
             long offset = param.getChunkPerSize() * param.getChunk().longValue();
             String group = param.getFastdfsGroup();
             String path = param.getFastdfsPath();
             appendStorageClient.modifyFile(group, path, fileItem.getInputStream(), size, offset);
+
+//            appendStorageClient.appendFile(group, path, secondIn, offset);
 
             //非最后一块分片
             if (chunk < param.getChunks() - 1) {
@@ -92,6 +100,9 @@ public class FastdfsServiceImpl extends BaseService implements FastdfsService {
         }
         fuResult.setNeedFlow(false);
         return fuResult;
+    }
+    private InputStream getTextInputStream(String text) throws Exception {
+        return new ByteArrayInputStream(text.getBytes("UTF-8"));
     }
 
     /**
@@ -163,5 +174,25 @@ public class FastdfsServiceImpl extends BaseService implements FastdfsService {
             return ApiResult.failed("指定删除文件的参数无效", null);
         }
         return ApiResult.success(null, null);
+    }
+
+    @Override
+    public void downLoadFile(String id, HttpServletResponse response) throws Exception {
+        NetFileDO file = netFileDAO.selectByPrimaryKey(id);
+        if(file!=null){
+            String fileName = file.getFileName();
+            if(file.getFileName().indexOf(".")<0){
+                fileName = fileName+"."+file.getFileExtName();
+            }
+            byte[] bytes = storageClient.downloadFile(file.getFileGroup(), file.getFilePath(), new DownloadByteArray());
+            response.setContentType("application/octet-stream");
+            response.setHeader("Content-disposition", "attachment;filename="
+                    + new String(fileName.getBytes("UTF-8"),"iso-8859-1"));
+            OutputStream os = response.getOutputStream();
+            os.write(bytes);
+           // return ApiResult.success("下载成功",null);
+        }
+
+       // return ApiResult.failed("下载失败");
     }
 }

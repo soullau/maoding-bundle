@@ -60,4 +60,14 @@ public class NetFileType {
      */
     public static final Integer EXPENSE_ATTACH = 20;
 
+    /**
+     * 通知公告附件类型（21）
+     */
+    public static final Integer NOTICE_ATTACH = 21;
+
+    /**
+     * 新建文件夹
+     * */
+    public static final Integer NEW_FILE =2;
+
 }

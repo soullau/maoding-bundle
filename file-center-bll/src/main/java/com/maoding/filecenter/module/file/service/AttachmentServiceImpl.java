@@ -10,6 +10,7 @@ import com.maoding.core.bean.MultipartFileParam;
 import com.maoding.constDefine.im.ImGroupType;
 import com.maoding.constDefine.netFile.NetFileStatus;
 import com.maoding.constDefine.netFile.NetFileType;
+import com.maoding.fastdfsClient.conn.FdfsWebServer;
 import com.maoding.filecenter.module.file.dao.NetFileDAO;
 import com.maoding.filecenter.module.file.dto.DeleteDTO;
 import com.maoding.filecenter.module.file.dto.NetFileOrderDTO;
@@ -199,6 +200,8 @@ public class AttachmentServiceImpl extends BaseService implements AttachmentServ
         if (ar.isSuccessful()) {
             //计算剩余空间
             companyDiskService.recalcSizeOnFileAdded(companyId, FileSizeSumType.OTHER, fuResult.getFileSize());
+            //给出全路径
+            fuResult.setFileFullPath(FdfsWebServer.webServerUrl+fuResult.getFastdfsGroup()+"/"+fuResult.getFastdfsPath());
             return ApiResult.success(null,fuResult);
         }
 
@@ -338,6 +341,37 @@ public class AttachmentServiceImpl extends BaseService implements AttachmentServ
         return ApiResult.failed(null, null);
     }
 
+    @Override
+    public ApiResult uploadNoticeAttach(HttpServletRequest request) throws Exception {
+        MultipartFileParam param = MultipartFileParam.parse(request);
+        FastdfsUploadResult fuResult = fastdfsService.upload(param);
+        if (fuResult.getNeedFlow())
+            return ApiResult.success(null, fuResult);
+
+        String companyId = (String) param.getParam().get("companyId");
+        String accountId = (String) param.getParam().get("accountId");
+        String targetId = (String) param.getParam().get("targetId");
+
+        if (StringUtils.isNullOrEmpty(companyId))
+            return ApiResult.failed("组织ID不能为空", null);
+
+        if (StringUtils.isNullOrEmpty(accountId))
+            return ApiResult.failed("账号ID不能为空", null);
+
+        if (StringUtils.isNullOrEmpty(targetId))
+            return ApiResult.failed("通知公告ID不能为空", null);
+
+        //插入新记录
+        ApiResult ar = saveNewNetFile(companyId, accountId, null, NetFileType.NOTICE_ATTACH, 0, targetId, fuResult);
+        if (ar.isSuccessful()) {
+            //计算剩余空间
+            companyDiskService.recalcSizeOnFileAdded(companyId, FileSizeSumType.OTHER, fuResult.getFileSize());
+            return ApiResult.success(null,fuResult);
+        }
+
+        return ApiResult.failed(null, null);
+    }
+
     /**
      * 上传项目合同扫描件
      */
@@ -351,6 +385,7 @@ public class AttachmentServiceImpl extends BaseService implements AttachmentServ
         String companyId = (String) param.getParam().get("companyId");
         String accountId = (String) param.getParam().get("accountId");
         String projectId = (String) param.getParam().get("projectId");
+        Boolean replacePrev = (Boolean) param.getParam().get("replacePrev");
 
         if (StringUtils.isNullOrEmpty(companyId))
             return ApiResult.failed("组织ID不能为空", null);
@@ -361,30 +396,32 @@ public class AttachmentServiceImpl extends BaseService implements AttachmentServ
         if (StringUtils.isNullOrEmpty(projectId))
             return ApiResult.failed("项目ID不能为空", null);
 
-        //先逻辑删除已有的（正常情况下只有一个）
-        //TODO 计划清除被逻辑删除的物理文件
-        Example selectExample = new Example(NetFileDO.class);
-        selectExample.createCriteria()
-                .andCondition("company_id = ", companyId)
-                .andCondition("project_id = ", projectId)
-                .andCondition("type = ", NetFileType.PROJECT_CONTRACT_ATTACH)
-                .andCondition("status = ", NetFileStatus.Normal);
+        /** 只在明确覆盖时删除之前的合同文件，保留多个文件 */
+        if ((replacePrev != null) && (replacePrev == true)) {
+            Example selectExample = new Example(NetFileDO.class);
+            selectExample.createCriteria()
+                    .andCondition("company_id = ", companyId)
+                    .andCondition("project_id = ", projectId)
+                    .andCondition("type = ", NetFileType.PROJECT_CONTRACT_ATTACH)
+                    .andCondition("status = ", NetFileStatus.Normal)
+                    .andCondition("file_name = ",fuResult.getFileName());
 
-        List<NetFileDO> oldAttachs = netFileDAO.selectByExample(selectExample);
-        if (oldAttachs != null && oldAttachs.size() > 0) {
-            //累计扣减空间
-            long subFileSize = 0L;
-            for (NetFileDO oa : oldAttachs) {
-                oa.setStatus(NetFileStatus.Deleted.toString());
-                oa.setUpdateBy(accountId);
-                oa.setUpdateDate(LocalDateTime.now());
-                if (netFileDAO.updateByPrimaryKey(oa) > 0) {
-                    subFileSize += oa.getFileSize();
+            List<NetFileDO> oldAttachs = netFileDAO.selectByExample(selectExample);
+            if (oldAttachs != null && oldAttachs.size() > 0) {
+                //累计扣减空间
+                long subFileSize = 0L;
+                for (NetFileDO oa : oldAttachs) {
+                    oa.setStatus(NetFileStatus.Deleted.toString());
+                    oa.setUpdateBy(accountId);
+                    oa.setUpdateDate(LocalDateTime.now());
+                    if (netFileDAO.updateByPrimaryKey(oa) > 0) {
+                        subFileSize += oa.getFileSize();
+                    }
                 }
+                //计算剩余空间
+                if (subFileSize > 0L)
+                    companyDiskService.recalcSizeOnFileRemoved(companyId, FileSizeSumType.OTHER, subFileSize);
             }
-            //计算剩余空间
-            if (subFileSize > 0L)
-                companyDiskService.recalcSizeOnFileRemoved(companyId,FileSizeSumType.OTHER, subFileSize);
         }
 
         //插入新记录

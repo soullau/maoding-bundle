@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.maoding.im.module.imGroup.dao.ImGroupDAO">
+    <update id="updateWithOptimisticLock" parameterType="com.maoding.im.module.imGroup.model.ImGroupDO">
+        UPDATE maoding_im_group
+        <trim suffixOverrides=",">
+            <set>
+                up_version=up_version+1,
+                <if test="groupNo != null">group_no =#{groupNo},</if>
+                <if test="groupName != null">group_name =#{groupName},</if>
+                <if test="groupOwner != null">group_owner =#{groupOwner},</if>
+                <if test="groupImg != null">group_img =#{groupImg},</if>
+                <if test="groupStatus != null">group_status =#{groupStatus},</if>
+                <if test="topHold != null">top_hold =#{topHold},</if>
+                <if test="lastQueueNo != null">last_queue_no =#{lastQueueNo},</if>
+                <if test="deleted != null">deleted =#{deleted},</if>
+                <if test="updateDate != null">update_date =#{updateDate},</if>
+            </set>
+            WHERE id=#{id} AND up_version=#{upVersion}
+        </trim>
+    </update>
+</mapper>

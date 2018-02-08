@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = FdfsClientConstants.ROOT_CONFIG_PREFIX)
 public class FdfsWebServer {
 
-    private String webServerUrl;
+    public static String webServerUrl;
 
     public String getWebServerUrl() {
         return webServerUrl;

@@ -84,6 +84,16 @@ public class AttachmentController {
     }
 
     /**
+     * 上传通知公告附件
+     */
+    @RequestMapping(value = "/uploadNoticeAttach", method = RequestMethod.POST)
+    @ResponseBody
+    public ApiResult uploadNoticeAttach(HttpServletRequest request) throws Exception {
+        return attachmentService.uploadNoticeAttach(request);
+    }
+
+
+    /**
      * 上传群组（自定义）头像
      */
     @RequestMapping(value = "/uploadGroupImg", method = RequestMethod.POST)

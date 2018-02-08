@@ -2,6 +2,7 @@ package com.maoding.core.bean;
 
 import com.maoding.config.MultipartConfig;
 import com.maoding.utils.NumberUtils;
+import com.maoding.utils.StringUtils;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -141,6 +142,23 @@ public class MultipartFileParam {
                 default:
                     param.getParam().put(fieldName, fileItem.getString());
                     break;
+            }
+        }
+
+        //如果没有获取到filExtName,fileName的时候，做补偿处理
+        if(StringUtils.isNullOrEmpty(param.getFileName()) || StringUtils.isNullOrEmpty(param.getFileExtName())){
+            if(null !=param.getFileItem()
+                    && !StringUtils.isNullOrEmpty(param.getFileItem().getName())
+                    && param.getFileItem().getName().lastIndexOf(".")>-1){
+                param.setFileName(param.getFileItem().getName());
+                int extIndex = param.getFileItem().getName().lastIndexOf(".");
+                if (extIndex != -1) {
+                    String extName = param.getFileItem().getName().substring(extIndex + 1);
+                    param.setFileExtName(extName);
+                }
+            }else {
+                param.setFileName("未知.jpg");
+                param.setFileExtName("jgp");
             }
         }
 

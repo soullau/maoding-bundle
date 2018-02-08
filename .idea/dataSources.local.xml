@@ -2,10 +2,12 @@
 <project version="4">
   <component name="dataSourceStorageLocal">
     <data-source name="MySQL - maoding" uuid="66ba03f6-5014-489c-b0ad-b30e6c47c61b">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" />
       <secret-storage>master_key</secret-storage>
       <user-name>idccapp</user-name>
-      <introspection-scope>maoding_new:</introspection-scope>
+      <introspection-schemas>maoding_new:</introspection-schemas>
       <resolve-scope>maoding_new:</resolve-scope>
+      <unqualified-resolve-schemas>maoding_new:</unqualified-resolve-schemas>
     </data-source>
   </component>
 </project>
